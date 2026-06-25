@@ -21,6 +21,9 @@ anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(0.74, 0.87, 0.96, 1)
 
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+
 [node name="Hero" type="Area2D" parent="."]
 position = Vector2(920, 320)
 

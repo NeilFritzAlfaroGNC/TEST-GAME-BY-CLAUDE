@@ -8,10 +8,14 @@ func _ready() -> void:
 	title.add_theme_color_override("font_color", Color(0.3, 0.9, 0.4) if win else Color(0.95, 0.4, 0.4))
 	$CenterContainer/VBox/Score.text = "Final Score: %d" % GameData.score
 	$CenterContainer/VBox/HighScore.text = "High Score: %d" % GameData.high_score
+	Audio.stop_music()
+	Audio.play("win" if win else "lose")
 
 func _on_play_again_pressed() -> void:
+	Audio.play("click")
 	GameData.reset_run()
 	get_tree().change_scene_to_file("res://scenes/Main.tscn")
 
 func _on_menu_pressed() -> void:
+	Audio.play("click")
 	get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")

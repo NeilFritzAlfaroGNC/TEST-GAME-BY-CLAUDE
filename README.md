@@ -52,7 +52,26 @@ scripts/
 | 4. Levels & lesson popups | ✅ 3 levels, lives/lose, multiple enemies, lesson popup per level |
 | 6. Menus & UI | ✅ Main Menu, Win/Lose, score, lives, hint |
 | 7. SQLite save | ✅ Implemented offline with FileAccess + JSON (high score). Swap in the `godot-sqlite` plugin later if the study requires SQLite specifically. |
-| 5. Art & sound, 8. Effects, 9. Build | ⬜ Next steps — colored boxes are deliberately still in place |
+| 8. Special attack effects | ✅ Go = **zap** (lightning bolt), Glow = **heal** (green pulse + ring), Grow = **slam** (shockwave + screen shake + hero lunge) |
+| 5. Sound | ✅ Procedural SFX + looping music (correct / wrong / zap / heal / slam / click / win / lose / music) — generated, no downloads |
+| 5. Art (sprites) | ⬜ Next step — colored boxes still in place on purpose (art last) |
+| 9. Build & device testing | ⬜ Export Android `.apk` + Windows `.exe` |
+
+## Sound
+
+All sounds are generated locally by [`tools/generate_audio.py`](tools/generate_audio.py)
+(pure Python standard library — no assets to download) into `audio/*.wav`, and
+played through the `Audio` autoload ([scripts/Audio.gd](scripts/Audio.gd)).
+Re-run `python tools/generate_audio.py` any time to tweak/regenerate them.
+
+## Special attack effects
+
+When the correct food defeats a monster, the Hero plays the attack that matches
+the level's group (built procedurally in [scripts/Main.gd](scripts/Main.gd), no art needed):
+
+- **Go = Zap** — a jagged yellow lightning bolt from the Hero to the monster.
+- **Glow = Heal** — the Hero flashes green with an expanding healing ring.
+- **Grow = Slam** — an orange shockwave, a camera **screen-shake**, and the Hero lunges.
 
 ## Design notes / choices made
 
