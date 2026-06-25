@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Force \"D:\\\\TEST\" | Select-Object Name, Mode | Format-Table -AutoSize; Write-Output \"---GODOT CHECK---\"; $g = Get-Command godot -ErrorAction SilentlyContinue; if \\($g\\) { Write-Output \"godot found: $\\($g.Source\\)\" } else { Write-Output \"godot NOT on PATH\" })",
+      "PowerShell($sh = New-Object -ComObject WScript.Shell; $lnk = $sh.CreateShortcut\\(\"C:\\\\Users\\\\Neil\\\\Desktop\\\\GODOT.lnk\"\\); Write-Output \"Target: $\\($lnk.TargetPath\\)\"; Write-Output \"Args: $\\($lnk.Arguments\\)\"; Write-Output \"WorkDir: $\\($lnk.WorkingDirectory\\)\"; Write-Output \"Exists: $\\(Test-Path $lnk.TargetPath\\)\")"
+    ]
+  }
+}

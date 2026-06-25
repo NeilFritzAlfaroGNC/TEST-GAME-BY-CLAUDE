@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://bm0j2lmbob3nl"]
+
+[ext_resource type="Script" uid="uid://cyvg0qvkobr5h" path="res://scripts/MainMenu.gd" id="1_menu"]
+
+[node name="MainMenu" type="Control" unique_id=275894434]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1885430704]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.18, 0.22, 0.35, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=196223791]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=1783593069]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="CenterContainer/VBox" unique_id=1433758796]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 64
+text = "FOOD HEROES"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="CenterContainer/VBox" unique_id=1353446331]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 28
+text = "Go   •   Glow   •   Grow"
+horizontal_alignment = 1
+
+[node name="HighScore" type="Label" parent="CenterContainer/VBox" unique_id=599137993]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 22
+text = "High Score: 0"
+horizontal_alignment = 1
+
+[node name="PlayButton" type="Button" parent="CenterContainer/VBox" unique_id=1283937954]
+custom_minimum_size = Vector2(260, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Play"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBox" unique_id=1885641202]
+custom_minimum_size = Vector2(260, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Quit"
+
+[node name="HowTo" type="Label" parent="CenterContainer/VBox" unique_id=12672162]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+text = "Drag the correct food group onto the Hero to beat the Hunger Monsters!"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="CenterContainer/VBox/PlayButton" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/QuitButton" to="." method="_on_quit_pressed"]
