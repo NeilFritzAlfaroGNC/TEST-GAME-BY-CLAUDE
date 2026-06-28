@@ -1,11 +1,12 @@
 extends Node2D
 ## Game scene controller.
 ## Drives the level loop: spawn enemies, check dropped food, score, lives,
-## lesson popup after each level, then win or lose.
+## special attack effects (Go zap / Glow heal / Grow slam), lesson popup, win/lose.
 
 @export var enemy_scene: PackedScene
 
 @onready var hero: Area2D = $Hero
+@onready var cam: Camera2D = $Camera2D
 @onready var hint_label: Label = $HUD/HintLabel
 @onready var score_label: Label = $HUD/ScoreLabel
 @onready var lives_label: Label = $HUD/LivesLabel
@@ -21,6 +22,11 @@ var correct_group: String = "Go"
 var enemies_to_spawn: int = 0
 var game_active: bool = false
 
+# Screen-shake state (used by the Grow slam).
+var _shake_time: float = 0.0
+var _shake_dur: float = 0.0
+var _shake_strength: float = 0.0
+
 const SPAWN_INTERVAL := 2.2
 const POINTS_PER_ENEMY := 10
 
@@ -30,7 +36,17 @@ func _ready() -> void:
 	spawn_timer.wait_time = SPAWN_INTERVAL
 	spawn_timer.timeout.connect(_spawn_enemy)
 	lesson_root.visible = false
+	Audio.play_music("music")
 	_start_level()
+
+func _process(delta: float) -> void:
+	# Camera shake decay.
+	if _shake_time > 0.0:
+		_shake_time -= delta
+		var s := _shake_strength * (_shake_time / _shake_dur)
+		cam.offset = Vector2(randf_range(-s, s), randf_range(-s, s))
+	elif cam.offset != Vector2.ZERO:
+		cam.offset = Vector2.ZERO
 
 # === Level setup ===
 func _start_level() -> void:
@@ -65,23 +81,26 @@ func food_dropped_on_hero(food) -> void:
 	if not game_active:
 		return
 	if food.food_group == correct_group:
-		var defeated := defeat_closest_enemy()
-		if defeated:
+		var result := defeat_closest_enemy()
+		if result["hit"]:
 			GameData.score += POINTS_PER_ENEMY
 			hint_label.text = "Correct! %s is a %s food. Monster defeated!" % [food.label.text, correct_group]
+			_play_attack(correct_group, result["pos"])
 		else:
 			hint_label.text = "Correct! %s is a %s food. Wait for a monster!" % [food.label.text, correct_group]
+			Audio.play("correct")
 		_set_hint_color(Color(0.10, 0.55, 0.15))
 		_refresh_one_food(food)
 		_update_hud()
 	else:
 		hint_label.text = "Oops! %s is not a %s food. Try again!" % [food.label.text, correct_group]
 		_set_hint_color(Color(0.75, 0.10, 0.10))
+		Audio.play("wrong")
 
-func defeat_closest_enemy() -> bool:
+func defeat_closest_enemy() -> Dictionary:
 	var enemies := get_tree().get_nodes_in_group("enemies")
 	if enemies.is_empty():
-		return false
+		return {"hit": false, "pos": Vector2.ZERO}
 	var closest = null
 	var best: float = INF
 	for e in enemies:
@@ -90,9 +109,10 @@ func defeat_closest_enemy() -> bool:
 			best = d
 			closest = e
 	if closest != null:
+		var pos: Vector2 = closest.global_position
 		_despawn_enemy(closest)
-		return true
-	return false
+		return {"hit": true, "pos": pos}
+	return {"hit": false, "pos": Vector2.ZERO}
 
 # Called by Enemy.gd when it reaches the hero.
 func enemy_reached_hero(enemy) -> void:
@@ -101,6 +121,8 @@ func enemy_reached_hero(enemy) -> void:
 	GameData.lives -= 1
 	hint_label.text = "Oh no! A Hunger Monster got through!"
 	_set_hint_color(Color(0.75, 0.10, 0.10))
+	Audio.play("wrong")
+	_shake(6.0, 0.25)
 	if GameData.lives <= 0:
 		enemy.remove_from_group("enemies")
 		enemy.queue_free()
@@ -124,16 +146,97 @@ func _check_level_complete() -> void:
 	if enemies_to_spawn <= 0 and get_tree().get_nodes_in_group("enemies").is_empty():
 		_level_complete()
 
+# === Special attack effects (Phase 8) ===
+func _play_attack(group: String, target: Vector2) -> void:
+	match group:
+		"Go":
+			_effect_zap(hero.global_position, target)
+		"Glow":
+			_effect_heal(hero.global_position)
+		"Grow":
+			_effect_slam(target)
+		_:
+			_effect_zap(hero.global_position, target)
+
+# Go = ZAP: a jagged lightning bolt from the Hero to the enemy.
+func _effect_zap(from: Vector2, to: Vector2) -> void:
+	Audio.play("zap")
+	var line := Line2D.new()
+	line.width = 6.0
+	line.default_color = Color(1.0, 0.95, 0.30)
+	line.z_index = 50
+	add_child(line)
+	var pts := PackedVector2Array()
+	var segments := 8
+	for i in range(segments + 1):
+		var t := float(i) / float(segments)
+		var p := from.lerp(to, t)
+		if i != 0 and i != segments:
+			p += Vector2(randf_range(-18, 18), randf_range(-18, 18))
+		pts.append(p)
+	line.points = pts
+	var tw := create_tween()
+	tw.tween_interval(0.06)
+	tw.tween_property(line, "modulate:a", 0.0, 0.20)
+	tw.tween_callback(line.queue_free)
+
+# Glow = HEAL: a green pulse on the Hero plus an expanding ring.
+func _effect_heal(center: Vector2) -> void:
+	Audio.play("heal")
+	_spawn_ring(center, Color(0.30, 0.95, 0.45))
+	hero.modulate = Color(0.45, 1.0, 0.55)
+	var tw := create_tween()
+	tw.tween_property(hero, "modulate", Color(1, 1, 1, 1), 0.4)
+
+# Grow = SLAM: a heavy impact ring, screen shake, and a Hero lunge.
+func _effect_slam(target: Vector2) -> void:
+	Audio.play("slam")
+	_spawn_ring(target, Color(1.0, 0.55, 0.20))
+	_shake(9.0, 0.30)
+	var orig := hero.position
+	var dir := (target - hero.global_position).normalized()
+	var tw := create_tween()
+	tw.tween_property(hero, "position", orig + dir * 28.0, 0.06)
+	tw.tween_property(hero, "position", orig, 0.18)
+
+func _spawn_ring(center: Vector2, color: Color) -> void:
+	var ring := Line2D.new()
+	ring.width = 6.0
+	ring.default_color = color
+	ring.closed = true
+	ring.z_index = 40
+	ring.position = center
+	var pts := PackedVector2Array()
+	var n := 24
+	for i in range(n):
+		var a := TAU * float(i) / float(n)
+		pts.append(Vector2(cos(a), sin(a)) * 30.0)
+	ring.points = pts
+	add_child(ring)
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(ring, "scale", Vector2(3.0, 3.0), 0.4)
+	tw.tween_property(ring, "modulate:a", 0.0, 0.4)
+	tw.set_parallel(false)
+	tw.tween_callback(ring.queue_free)
+
+func _shake(strength: float, duration: float) -> void:
+	_shake_strength = strength
+	_shake_dur = duration
+	_shake_time = duration
+
 # === Lesson popup after each level ===
 func _level_complete() -> void:
 	game_active = false
 	spawn_timer.stop()
+	Audio.play("correct")
 	var lvl: Dictionary = GameData.LEVELS[GameData.current_level]
 	lesson_title.text = lvl["name"] + " complete!"
 	lesson_label.text = lvl["lesson"]
 	lesson_root.visible = true
 
 func _on_continue_pressed() -> void:
+	Audio.play("click")
 	lesson_root.visible = false
 	GameData.current_level += 1
 	if GameData.current_level >= GameData.LEVELS.size():
