@@ -8,8 +8,20 @@ func _ready() -> void:
 	title.add_theme_color_override("font_color", Color(0.3, 0.9, 0.4) if win else Color(0.95, 0.4, 0.4))
 	$CenterContainer/VBox/Score.text = "Final Score: %d" % GameData.score
 	$CenterContainer/VBox/HighScore.text = "High Score: %d" % GameData.high_score
+	_show_recent()
 	Audio.stop_music()
 	Audio.play("win" if win else "lose")
+
+func _show_recent() -> void:
+	var recent: Array = DB.get_recent_runs(5)
+	var label: Label = $CenterContainer/VBox/Recent
+	if recent.is_empty():
+		label.text = ""
+		return
+	var parts: Array = []
+	for r in recent:
+		parts.append(str(int(r["score"])))
+	label.text = "Recent scores: " + ", ".join(parts)
 
 func _on_play_again_pressed() -> void:
 	Audio.play("click")

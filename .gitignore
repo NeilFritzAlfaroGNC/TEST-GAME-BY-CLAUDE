@@ -25,3 +25,15 @@ mono_crash.*.json
 *_bak*.hipnc
 
 *.DS_Store
+
+# godot-sqlite GDExtension: keep only Windows + Android binaries (our export
+# targets). The iOS/macOS/Linux/web libs are large and unused here, and the
+# two iOS godot-cpp files exceed GitHub's 100 MB limit. Re-download bin.zip
+# from the godot-sqlite releases if another platform is needed later.
+addons/godot-sqlite/bin/*ios*
+addons/godot-sqlite/bin/*macos*
+addons/godot-sqlite/bin/*linux*
+addons/godot-sqlite/bin/*web*
+# Godot editor hot-reload temp copies of the native lib (transient)
+addons/godot-sqlite/bin/~*
+*.TMP

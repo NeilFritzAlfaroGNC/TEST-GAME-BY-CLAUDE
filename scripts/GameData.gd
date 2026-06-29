@@ -39,9 +39,8 @@ var score: int = 0
 var lives: int = 3
 var last_result: String = ""   # "win" or "lose", read by the Result screen
 
-# === Persistent state ===
+# === Persistent state (backed by the DB autoload: SQLite, else JSON) ===
 var high_score: int = 0
-const SAVE_PATH := "user://foodheroes_save.json"
 
 func _ready() -> void:
 	load_game()
@@ -70,24 +69,14 @@ func random_food(group: String) -> String:
 	var arr: Array = FOODS[group]
 	return arr[randi() % arr.size()]
 
-# === Offline save / load ===
+# === Offline save / load (delegated to the DB autoload) ===
 func save_game() -> void:
 	if score > high_score:
 		high_score = score
-	var data := {"high_score": high_score}
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if f != null:
-		f.store_string(JSON.stringify(data))
-		f.close()
+	var reached: int = LEVELS.size() if last_result == "win" else current_level + 1
+	reached = clampi(reached, 1, LEVELS.size())
+	DB.record_run(score, last_result, reached)
+	high_score = DB.get_high_score()
 
 func load_game() -> void:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return
-	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if f == null:
-		return
-	var text := f.get_as_text()
-	f.close()
-	var parsed: Variant = JSON.parse_string(text)
-	if parsed is Dictionary and parsed.has("high_score"):
-		high_score = int(parsed["high_score"])
+	high_score = DB.get_high_score()

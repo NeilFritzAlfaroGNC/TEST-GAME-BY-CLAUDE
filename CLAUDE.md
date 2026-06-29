@@ -39,9 +39,12 @@ python tools/generate_audio.py     # writes audio/*.wav
 
 ## Architecture (the big picture)
 
-**Two autoloads hold everything that must outlive a scene change** (registered in `project.godot`):
-- `GameData` (`scripts/GameData.gd`) — the food database (`FOODS` by group), `LEVELS` definitions, and the **live run state** (`current_level`, `score`, `lives`, `last_result`) plus offline save. Run state lives here, *not* in the game scene, precisely so it survives `change_scene_to_file`. Save is `user://foodheroes_save.json` (high score only) via `FileAccess` + JSON — deliberately replacing the reference's SQLite for zero-dependency portability.
+**Three autoloads hold everything that must outlive a scene change** (registered in `project.godot`, in this init order):
+- `DB` (`scripts/Database.gd`) — persistence layer. Primary backend is **SQLite** via the `godot-sqlite` GDExtension; if that native plugin isn't installed it **transparently falls back to JSON** (`user://foodheroes_save.json`). The `SQLite` class is reached by string (`ClassDB.instantiate("SQLite")`) on purpose, so the script parses/runs with or without the plugin. Exposes `record_run`, `get_high_score`, `get_recent_runs`. Must load **before** `GameData` (which calls it on `_ready`).
+- `GameData` (`scripts/GameData.gd`) — the food database (`FOODS` by group), `LEVELS` definitions, and the **live run state** (`current_level`, `score`, `lives`, `last_result`). Run state lives here, *not* in the game scene, precisely so it survives `change_scene_to_file`. `save_game`/`load_game` are thin delegates to `DB`.
 - `Audio` (`scripts/Audio.gd`) — one-shot SFX pool + looping music, all null-guarded so missing files never crash the game.
+
+**Enabling real SQLite:** drop the `godot-sqlite` addon into `addons/godot-sqlite/` (the `.gdextension` + the platform binary), re-open the project, and `DB.backend` becomes `"sqlite"` automatically — no code change. Until then it logs to JSON. The native binary is intentionally **not** committed.
 
 **Scene flow:** `MainMenu.tscn` → `Main.tscn` (gameplay) → `ResultScreen.tscn` → back. `ResultScreen` decides win vs. lose by reading `GameData.last_result`.
 

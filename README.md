@@ -51,11 +51,29 @@ scripts/
 | 3. Go-Glow-Grow data & logic | ✅ `GameData.FOODS` with real Filipino foods; level sets correct group |
 | 4. Levels & lesson popups | ✅ 3 levels, lives/lose, multiple enemies, lesson popup per level |
 | 6. Menus & UI | ✅ Main Menu, Win/Lose, score, lives, hint |
-| 7. SQLite save | ✅ Implemented offline with FileAccess + JSON (high score). Swap in the `godot-sqlite` plugin later if the study requires SQLite specifically. |
+| 7. SQLite save | ✅ `DB` autoload ([scripts/Database.gd](scripts/Database.gd)) connects to **SQLite** (via the `godot-sqlite` GDExtension) and logs each run + high score, with an automatic **JSON fallback** when the native plugin isn't installed. See "Enabling SQLite" below. |
 | 8. Special attack effects | ✅ Go = **zap** (lightning bolt), Glow = **heal** (green pulse + ring), Grow = **slam** (shockwave + screen shake + hero lunge) |
 | 5. Sound | ✅ Procedural SFX + looping music (correct / wrong / zap / heal / slam / click / win / lose / music) — generated, no downloads |
 | 5. Art (sprites) | ⬜ Next step — colored boxes still in place on purpose (art last) |
 | 9. Build & device testing | ⬜ Export Android `.apk` + Windows `.exe` |
+
+## Data — SQLite & offline save
+
+The `DB` autoload ([scripts/Database.gd](scripts/Database.gd)) is the persistence layer.
+It logs every finished run (`score`, `result`, `level_reached`, `played_at`) and the
+high score, and the Result screen shows your recent scores.
+
+- **With the SQLite plugin installed** → writes to `user://foodheroes.db` (tables `runs`, `meta`).
+- **Without it** → automatically falls back to `user://foodheroes_save.json`. Same API, no code change. `DB.backend` reports which is active.
+
+### Enabling real SQLite (optional)
+Godot 4 has no built-in SQLite — it needs the **godot-sqlite** GDExtension (a native plugin):
+
+1. Download `bin.zip` from https://github.com/2shady4u/godot-sqlite/releases (latest, e.g. `v4.7`).
+2. Copy the `addons/godot-sqlite/` folder from the zip into this project's root (so you have `D:\TEST\addons\godot-sqlite\`). At minimum keep `godot-sqlite.gdextension` and the binaries for your platform (e.g. `bin/libgdsqlite.windows.*.x86_64.dll`).
+3. Re-open the project in Godot. On the next run `DB.backend` becomes `"sqlite"` and it writes `foodheroes.db`.
+
+> The native binary is **not** committed to this repo on purpose (platform-specific, large). It's a drop-in — no code changes needed.
 
 ## Sound
 
