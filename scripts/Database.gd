@@ -42,6 +42,13 @@ func _ensure_schema() -> void:
 		"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 		"score INTEGER, result TEXT, level_reached INTEGER, played_at TEXT);"
 	)
+	# Per-(difficulty, level) progress: best score, best stars, completed flag.
+	_db.query(
+		"CREATE TABLE IF NOT EXISTS progress (" +
+		"difficulty TEXT, level INTEGER, best_score INTEGER DEFAULT 0, " +
+		"stars INTEGER DEFAULT 0, completed INTEGER DEFAULT 0, " +
+		"PRIMARY KEY (difficulty, level));"
+	)
 	_migrate_json_high_score()
 
 # One-time carry-over: if the SQLite DB has no high score yet but an old JSON
@@ -104,6 +111,59 @@ func get_recent_runs(limit: int = 5) -> Array:
 	var recent := all.duplicate()
 	recent.reverse()
 	return recent.slice(0, limit)
+
+# === Per-level progress (the campaign state) ===
+
+# Record the outcome of one level: logs the run, bumps the high score, and
+# upserts the best score / best stars / completed flag for (difficulty, level).
+func record_level_result(difficulty: String, level: int, score: int, stars: int, won: bool) -> void:
+	record_run(score, ("win" if won else "lose"), level)
+	var done := 1 if won else 0
+	if backend == "sqlite":
+		_db.query_with_bindings(
+			"INSERT INTO progress (difficulty, level, best_score, stars, completed) " +
+			"VALUES (?, ?, ?, ?, ?) " +
+			"ON CONFLICT(difficulty, level) DO UPDATE SET " +
+			"best_score = MAX(best_score, excluded.best_score), " +
+			"stars = MAX(stars, excluded.stars), " +
+			"completed = MAX(completed, excluded.completed);",
+			[difficulty, level, score, stars, done]
+		)
+	else:
+		var data := _json_load()
+		var prog: Dictionary = data.get("progress", {})
+		var dprog: Dictionary = prog.get(difficulty, {})
+		var key := str(level)
+		var cur: Dictionary = dprog.get(key, {"best_score": 0, "stars": 0, "completed": 0})
+		cur["best_score"] = maxi(int(cur.get("best_score", 0)), score)
+		cur["stars"] = maxi(int(cur.get("stars", 0)), stars)
+		cur["completed"] = maxi(int(cur.get("completed", 0)), done)
+		dprog[key] = cur
+		prog[difficulty] = dprog
+		data["progress"] = prog
+		_json_save(data)
+
+# Returns {best_score, stars, completed} for a level (zeros if never played).
+func get_level_progress(difficulty: String, level: int) -> Dictionary:
+	if backend == "sqlite":
+		_db.query_with_bindings(
+			"SELECT best_score, stars, completed FROM progress WHERE difficulty = ? AND level = ?;",
+			[difficulty, level]
+		)
+		var rows = _db.query_result
+		if rows is Array and rows.size() > 0:
+			var r = rows[0]
+			return {"best_score": int(r["best_score"]), "stars": int(r["stars"]), "completed": int(r["completed"])}
+		return {"best_score": 0, "stars": 0, "completed": 0}
+	var dprog: Dictionary = _json_load().get("progress", {}).get(difficulty, {})
+	var cur: Dictionary = dprog.get(str(level), {"best_score": 0, "stars": 0, "completed": 0})
+	return {"best_score": int(cur.get("best_score", 0)), "stars": int(cur.get("stars", 0)), "completed": int(cur.get("completed", 0))}
+
+# Level 1 is always open; later levels open once the previous one is completed.
+func is_level_unlocked(difficulty: String, level: int) -> bool:
+	if level <= 1:
+		return true
+	return get_level_progress(difficulty, level - 1)["completed"] > 0
 
 # === SQLite helpers ===
 func _meta_get_int(key: String, def: int) -> int:
