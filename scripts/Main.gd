@@ -99,6 +99,7 @@ func food_dropped_on_hero(food) -> void:
 		else:
 			hint_label.text = "Correct! %s is a %s food. Wait for a monster!" % [food.label.text, correct_group]
 			Audio.play("correct")
+		_show_nutrient_popup(GameData.food_nutrient(food.label.text), GameData.group_color(correct_group))
 		_set_hint_color(Color(0.10, 0.55, 0.15))
 		_refresh_one_food(food)
 		_update_hud()
@@ -234,6 +235,26 @@ func _shake(strength: float, duration: float) -> void:
 	_shake_strength = strength
 	_shake_dur = duration
 	_shake_time = duration
+
+# Floating "+nutrient" text that rises from the Hero and fades — a small visual
+# reward that also teaches what each correct food provides.
+func _show_nutrient_popup(text: String, color: Color) -> void:
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lbl.z_index = 60
+	lbl.add_theme_font_size_override("font_size", 28)
+	lbl.add_theme_color_override("font_color", color)
+	lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
+	lbl.add_theme_constant_override("outline_size", 5)
+	lbl.position = hero.position + Vector2(randf_range(-40, 0), -80)
+	add_child(lbl)
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(lbl, "position:y", lbl.position.y - 80.0, 0.9)
+	tw.tween_property(lbl, "modulate:a", 0.0, 0.9)
+	tw.set_parallel(false)
+	tw.tween_callback(lbl.queue_free)
 
 # === Lesson popup after each level ===
 func _level_complete() -> void:

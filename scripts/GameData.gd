@@ -10,6 +10,21 @@ const FOODS := {
 	"Grow": ["Isda", "Manok", "Itlog", "Gatas", "Munggo", "Tokwa", "Hipon", "Karne", "Keso", "Baboy"],
 }
 
+# The nutrient each food gives — shown as a floating "+..." when fed correctly.
+const FOOD_NUTRIENTS := {
+	# Go (energy)
+	"Kanin": "+Carbs", "Tinapay": "+Carbs", "Mais": "+Fiber", "Kamote": "+Vitamin A",
+	"Patatas": "+Carbs", "Pancit": "+Energy", "Oatmeal": "+Fiber", "Lugaw": "+Energy",
+	# Glow (protect)
+	"Malunggay": "+Iron", "Kangkong": "+Vitamin A", "Karot": "+Vitamin A", "Mangga": "+Vitamin C",
+	"Papaya": "+Vitamin C", "Kamatis": "+Vitamin C", "Kalabasa": "+Vitamin A", "Pechay": "+Calcium",
+	"Dalandan": "+Vitamin C", "Saging": "+Potassium",
+	# Grow (build)
+	"Isda": "+Protein", "Manok": "+Protein", "Itlog": "+Protein", "Gatas": "+Calcium",
+	"Munggo": "+Protein", "Tokwa": "+Protein", "Hipon": "+Protein", "Karne": "+Iron",
+	"Keso": "+Calcium", "Baboy": "+Protein",
+}
+
 # === Numbered levels (1-based). Each focuses on one food group. ===
 const LEVELS := [
 	{"name": "Energy Start", "correct_group": "Go", "enemies": 4,
@@ -112,3 +127,6 @@ func random_group() -> String:
 func random_food(group: String) -> String:
 	var arr: Array = FOODS[group]
 	return arr[randi() % arr.size()]
+
+func food_nutrient(food_name: String) -> String:
+	return FOOD_NUTRIENTS.get(food_name, "+Nutrients")

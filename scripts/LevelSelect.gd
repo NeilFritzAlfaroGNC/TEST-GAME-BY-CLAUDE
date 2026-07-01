@@ -66,6 +66,15 @@ func _build_grid() -> void:
 			btn.text = "Level %d\nLocked" % n
 			btn.disabled = true
 		grid.add_child(btn)
+	# One locked "coming soon" slot (shown for every difficulty) — reserved for
+	# a future content update. Always disabled.
+	var soon := Button.new()
+	soon.custom_minimum_size = Vector2(150, 96)
+	soon.add_theme_font_size_override("font_size", 20)
+	soon.text = "Level %d\nComing Soon" % (GameData.num_levels() + 1)
+	soon.disabled = true
+	soon.modulate = Color(0.72, 0.72, 0.9)
+	grid.add_child(soon)
 
 func _stars(s: int) -> String:
 	s = clampi(s, 0, 3)
