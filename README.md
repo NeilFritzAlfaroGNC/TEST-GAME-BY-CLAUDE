@@ -44,7 +44,7 @@ scenes/
   Enemy.tscn             Reusable Hunger Monster (spawned by Main)
   ResultScreen.tscn      Stars + score, Next / Retry / Level Select / Menu
 scripts/
-  Database.gd            Autoload (DB): SQLite (+ JSON fallback) — scores & progress
+  Database.gd            Autoload (DB): SQLite — scores & progress
   GameData.gd            Autoload: food database, levels, difficulties, run state
   Audio.gd               Autoload: SFX pool + looping music
   LevelSelect.gd         Builds the difficulty/level grid from DB progress
@@ -63,29 +63,23 @@ scripts/
 | 3. Go-Glow-Grow data & logic | ✅ `GameData.FOODS` with real Filipino foods; level sets correct group |
 | 4. Levels & lesson popups | ✅ 6 numbered levels, lives/lose, lesson popup per level |
 | 6. Menus & UI | ✅ Main Menu, **Level Select (numbered + Easy/Medium/Hard)**, results with stars, score, lives, hint |
-| 7. SQLite save | ✅ `DB` autoload ([scripts/Database.gd](scripts/Database.gd)) stores **all scores AND progress** in **SQLite** — high score, every run, and per-(difficulty, level) best score / stars / unlock state. Automatic **JSON fallback** if the native plugin is absent. See "Enabling SQLite" below. |
+| 7. SQLite save | ✅ `DB` autoload ([scripts/Database.gd](scripts/Database.gd)) stores **all scores AND progress** in **SQLite** — high score, every run, and per-(difficulty, level) best score / stars / unlock state. |
 | 8. Special attack effects | ✅ Go = **zap** (lightning bolt), Glow = **heal** (green pulse + ring), Grow = **slam** (shockwave + screen shake + hero lunge) |
 | 5. Sound | ✅ Procedural SFX + looping music (correct / wrong / zap / heal / slam / click / win / lose / music) — generated, no downloads |
 | 5. Art (sprites) | ⬜ Next step — colored boxes still in place on purpose (art last) |
 | 9. Build & device testing | ⬜ Export Android `.apk` + Windows `.exe` |
 
-## Data — SQLite & offline save
+## Data — SQLite save
 
 The `DB` autoload ([scripts/Database.gd](scripts/Database.gd)) is the persistence layer.
 It logs every finished run (`score`, `result`, `level_reached`, `played_at`) and the
 high score, and the Result screen shows your recent scores.
 
-- **With the SQLite plugin installed** → writes to `user://foodheroes.db` (tables `runs`, `meta`).
-- **Without it** → automatically falls back to `user://foodheroes_save.json`. Same API, no code change. `DB.backend` reports which is active.
-
-### Enabling real SQLite (optional)
-Godot 4 has no built-in SQLite — it needs the **godot-sqlite** GDExtension (a native plugin):
-
-1. Download `bin.zip` from https://github.com/2shady4u/godot-sqlite/releases (latest, e.g. `v4.7`).
-2. Copy the `addons/godot-sqlite/` folder from the zip into this project's root (so you have `D:\TEST\addons\godot-sqlite\`). At minimum keep `godot-sqlite.gdextension` and the binaries for your platform (e.g. `bin/libgdsqlite.windows.*.x86_64.dll`).
-3. Re-open the project in Godot. On the next run `DB.backend` becomes `"sqlite"` and it writes `foodheroes.db`.
-
-> The native binary is **not** committed to this repo on purpose (platform-specific, large). It's a drop-in — no code changes needed.
+Godot 4 has no built-in SQLite, so persistence uses the **godot-sqlite** GDExtension
+(a native plugin, committed in `addons/godot-sqlite/` for Windows + Android). On
+`_ready`, `DB` opens `user://foodheroes.db` (tables `runs`, `meta`, `progress`).
+If the extension is ever removed, `DB._open()` fails loudly via `assert` rather than
+silently falling back — the game requires SQLite.
 
 ## Sound
 
@@ -109,8 +103,8 @@ the level's group (built procedurally in [scripts/Main.gd](scripts/Main.gd), no 
   show a real food **name** (e.g. *Isda*, *Kanin*, *Mangga*). Names are randomized
   each round from `GameData.FOODS`, and the game guarantees at least one correct
   food is always on screen so a level is always solvable.
-- **Save** uses Godot's built-in `FileAccess` + `JSON` to `user://foodheroes_save.json`
-  — fully offline and needs no extra plugin (the reference's SQLite goal, made portable).
+- **Save** uses the `godot-sqlite` GDExtension to write `user://foodheroes.db`
+  — fully offline, matching the reference's SQLite goal directly.
 - The `Enemy.tscn` is already wired into `Main`'s **Enemy Scene** slot in the
   inspector, so no manual drag step is needed.
 
