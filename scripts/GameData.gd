@@ -63,7 +63,7 @@ const BOSS_WAVE_SIZE := 3
 # The balanced meal the player builds to defeat the boss: one food from each
 # group. Groups needed = these three; also drives the closing lesson.
 const BOSS_MEAL_GROUPS := ["Go", "Grow", "Glow"]
-const BOSS_LESSON := "A balanced meal mixes all three groups in one dish: energy-giving GO carbs, body-building GROW protein, and vitamin-rich GLOW fruits & vegetables. A quick Filipino favorite is TUNA FRIED RICE — rice (Go) + tuna and egg (Grow) + carrots, peas, and spring onion (Glow). Eat a mix like this every day to stay strong and healthy!"
+const BOSS_LESSON := "A balanced meal mixes all three groups in one dish: energy-giving GO carbs, body-building GROW protein, and vitamin-rich GLOW fruits & vegetables. A well-loved Filipino example is SINIGANG served with rice — rice (Go) + pork or shrimp (Grow) + vegetables like water spinach, radish, and string beans (Glow). Eat a mix like this every day to grow strong and stay healthy!"
 
 # === Runtime state for the current level attempt ===
 var current_difficulty: String = "Easy"

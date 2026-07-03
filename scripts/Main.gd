@@ -148,15 +148,18 @@ func food_dropped_on_hero(food) -> void:
 		_set_hint_color(Color(0.75, 0.10, 0.10))
 		Audio.play("wrong")
 		return
+	# Cache the fed food's name now: defeating the last enemy can start the next
+	# wave (deferred), which re-rolls every food box.
+	var fed_name: String = food.label.text
 	var result := defeat_closest_enemy()
 	if result["hit"]:
 		GameData.score += POINTS_PER_ENEMY * _score_mult
-		hint_label.text = "Correct! %s is a %s food. Monster defeated!" % [food.label.text, correct_group]
+		hint_label.text = "Correct! %s is a %s food. Monster defeated!" % [fed_name, correct_group]
 		_play_attack(correct_group, result["pos"])
 	else:
-		hint_label.text = "Correct! %s is a %s food. Wait for a monster!" % [food.label.text, correct_group]
+		hint_label.text = "Correct! %s is a %s food. Wait for a monster!" % [fed_name, correct_group]
 		Audio.play("correct")
-	_show_nutrient_popup(GameData.food_nutrient(food.label.text), GameData.group_color(correct_group))
+	_show_nutrient_popup(GameData.food_nutrient(fed_name), GameData.group_color(correct_group))
 	_set_hint_color(Color(0.10, 0.55, 0.15))
 	_refresh_one_food(food)
 	_update_hud()
@@ -207,7 +210,9 @@ func _despawn_enemy(enemy) -> void:
 	if enemy.is_in_group("enemies"):
 		enemy.remove_from_group("enemies")
 	enemy.queue_free()
-	_check_level_complete()
+	# Deferred so the caller (e.g. food_dropped_on_hero) finishes its own
+	# popup/refresh before a wave transition re-rolls every food box.
+	_check_level_complete.call_deferred()
 
 func _check_level_complete() -> void:
 	if not game_active:
