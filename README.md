@@ -100,7 +100,7 @@ the level's group (built procedurally in [scripts/Main.gd](scripts/Main.gd), no 
 ## Design notes / choices made
 
 - **Foods are color-coded** by group (Go = yellow, Glow = green, Grow = red) and
-  show a real food **name** (e.g. *Isda*, *Kanin*, *Mangga*). Names are randomized
+  show a real food **name** (e.g. *Fish*, *Rice*, *Mango*). Names are randomized
   each round from `GameData.FOODS`, and the game guarantees at least one correct
   food is always on screen so a level is always solvable.
 - **Save** uses the `godot-sqlite` GDExtension to write `user://foodheroes.db`

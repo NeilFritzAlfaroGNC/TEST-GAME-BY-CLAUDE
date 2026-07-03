@@ -3,42 +3,42 @@ extends Node
 ## Food database, numbered level + difficulty definitions, the current run's
 ## live state, and a thin bridge to the DB autoload (SQLite-backed progress).
 
-# === Food database: real Filipino foods grouped Go / Glow / Grow ===
+# === Food database: foods grouped Go / Glow / Grow (English names) ===
 const FOODS := {
-	"Go": ["Kanin", "Tinapay", "Mais", "Kamote", "Patatas", "Pancit", "Oatmeal", "Lugaw"],
-	"Glow": ["Malunggay", "Kangkong", "Karot", "Mangga", "Papaya", "Kamatis", "Kalabasa", "Pechay", "Dalandan", "Saging"],
-	"Grow": ["Isda", "Manok", "Itlog", "Gatas", "Munggo", "Tokwa", "Hipon", "Karne", "Keso", "Baboy"],
+	"Go": ["Rice", "Bread", "Corn", "Sweet Potato", "Potato", "Noodles", "Oatmeal", "Porridge"],
+	"Glow": ["Moringa", "Water Spinach", "Carrot", "Mango", "Papaya", "Tomato", "Squash", "Bok Choy", "Orange", "Banana"],
+	"Grow": ["Fish", "Chicken", "Egg", "Milk", "Mung Beans", "Tofu", "Shrimp", "Beef", "Cheese", "Pork"],
 }
 
 # The nutrient each food gives — shown as a floating "+..." when fed correctly.
 const FOOD_NUTRIENTS := {
 	# Go (energy)
-	"Kanin": "+Carbs", "Tinapay": "+Carbs", "Mais": "+Fiber", "Kamote": "+Vitamin A",
-	"Patatas": "+Carbs", "Pancit": "+Energy", "Oatmeal": "+Fiber", "Lugaw": "+Energy",
+	"Rice": "+Carbs", "Bread": "+Carbs", "Corn": "+Fiber", "Sweet Potato": "+Vitamin A",
+	"Potato": "+Carbs", "Noodles": "+Energy", "Oatmeal": "+Fiber", "Porridge": "+Energy",
 	# Glow (protect)
-	"Malunggay": "+Iron", "Kangkong": "+Vitamin A", "Karot": "+Vitamin A", "Mangga": "+Vitamin C",
-	"Papaya": "+Vitamin C", "Kamatis": "+Vitamin C", "Kalabasa": "+Vitamin A", "Pechay": "+Calcium",
-	"Dalandan": "+Vitamin C", "Saging": "+Potassium",
+	"Moringa": "+Iron", "Water Spinach": "+Vitamin A", "Carrot": "+Vitamin A", "Mango": "+Vitamin C",
+	"Papaya": "+Vitamin C", "Tomato": "+Vitamin C", "Squash": "+Vitamin A", "Bok Choy": "+Calcium",
+	"Orange": "+Vitamin C", "Banana": "+Potassium",
 	# Grow (build)
-	"Isda": "+Protein", "Manok": "+Protein", "Itlog": "+Protein", "Gatas": "+Calcium",
-	"Munggo": "+Protein", "Tokwa": "+Protein", "Hipon": "+Protein", "Karne": "+Iron",
-	"Keso": "+Calcium", "Baboy": "+Protein",
+	"Fish": "+Protein", "Chicken": "+Protein", "Egg": "+Protein", "Milk": "+Calcium",
+	"Mung Beans": "+Protein", "Tofu": "+Protein", "Shrimp": "+Protein", "Beef": "+Iron",
+	"Cheese": "+Calcium", "Pork": "+Protein",
 }
 
 # === Numbered levels (1-based). Each focuses on one food group. ===
 const LEVELS := [
 	{"name": "Energy Start", "correct_group": "Go", "enemies": 4,
-	 "lesson": "GO foods give you ENERGY to run, play, and study! Rice (kanin), bread (tinapay), corn (mais), and kamote are Go foods."},
+	 "lesson": "GO foods give you ENERGY to run, play, and study! Rice, bread, corn, and sweet potato are Go foods."},
 	{"name": "Veggie Patrol", "correct_group": "Glow", "enemies": 4,
-	 "lesson": "GLOW foods protect you from getting sick! Vegetables like malunggay, kangkong, and pechay are Glow foods."},
+	 "lesson": "GLOW foods protect you from getting sick! Vegetables like moringa, water spinach, and bok choy are Glow foods."},
 	{"name": "Muscle Up", "correct_group": "Grow", "enemies": 5,
-	 "lesson": "GROW foods build strong muscles and bones! Fish (isda), egg (itlog), milk (gatas), and beans (munggo) are Grow foods."},
+	 "lesson": "GROW foods build strong muscles and bones! Fish, egg, milk, and beans are Grow foods."},
 	{"name": "Power Snack", "correct_group": "Go", "enemies": 5,
-	 "lesson": "Go foods are your fuel! Pancit, oatmeal, and lugaw also give you energy to keep going."},
+	 "lesson": "Go foods are your fuel! Noodles, oatmeal, and porridge also give you energy to keep going."},
 	{"name": "Fruit Shield", "correct_group": "Glow", "enemies": 6,
-	 "lesson": "Fruits are Glow foods too! Mangga, papaya, and dalandan give vitamins that keep you healthy."},
+	 "lesson": "Fruits are Glow foods too! Mango, papaya, and orange give vitamins that keep you healthy."},
 	{"name": "Strong Finish", "correct_group": "Grow", "enemies": 6,
-	 "lesson": "Grow foods help you grow tall and strong! Manok, hipon, tokwa, and keso build your body."},
+	 "lesson": "Grow foods help you grow tall and strong! Chicken, shrimp, tofu, and cheese build your body."},
 ]
 
 # === Difficulty modifiers ===
