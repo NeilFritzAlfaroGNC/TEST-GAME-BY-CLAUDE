@@ -29,6 +29,11 @@ var _shake_strength: float = 0.0
 
 const SPAWN_INTERVAL := 2.2
 const POINTS_PER_ENEMY := 10
+const BASE_ENEMY_SPEED := 70.0
+
+# Set from the chosen difficulty in _start_level.
+var _enemy_speed: float = BASE_ENEMY_SPEED
+var _score_mult: int = 1
 
 func _ready() -> void:
 	# Clicking/dragging Area2D foods needs physics picking on the root viewport.
@@ -50,9 +55,13 @@ func _process(delta: float) -> void:
 
 # === Level setup ===
 func _start_level() -> void:
-	var lvl: Dictionary = GameData.LEVELS[GameData.current_level]
+	var lvl: Dictionary = GameData.current_level_data()
+	var diff: Dictionary = GameData.difficulty_data()
 	correct_group = lvl["correct_group"]
-	enemies_to_spawn = lvl["enemies"]
+	enemies_to_spawn = int(lvl["enemies"]) + int(diff["enemy_bonus"])
+	_enemy_speed = BASE_ENEMY_SPEED * float(diff["speed_mult"])
+	_score_mult = int(diff["score_mult"])
+	spawn_timer.wait_time = SPAWN_INTERVAL * float(diff["spawn_mult"])
 	# Clear any leftover enemies from a previous level.
 	for e in get_tree().get_nodes_in_group("enemies"):
 		e.remove_from_group("enemies")
@@ -73,6 +82,7 @@ func _spawn_enemy() -> void:
 	var enemy = enemy_scene.instantiate()
 	add_child(enemy)
 	enemy.add_to_group("enemies")
+	enemy.speed = _enemy_speed
 	enemy.global_position = Vector2(120, randf_range(180, 470))
 
 # === The teaching moment: right vs. wrong food (the IF/ELSE) ===
@@ -83,12 +93,13 @@ func food_dropped_on_hero(food) -> void:
 	if food.food_group == correct_group:
 		var result := defeat_closest_enemy()
 		if result["hit"]:
-			GameData.score += POINTS_PER_ENEMY
+			GameData.score += POINTS_PER_ENEMY * _score_mult
 			hint_label.text = "Correct! %s is a %s food. Monster defeated!" % [food.label.text, correct_group]
 			_play_attack(correct_group, result["pos"])
 		else:
 			hint_label.text = "Correct! %s is a %s food. Wait for a monster!" % [food.label.text, correct_group]
 			Audio.play("correct")
+		_show_nutrient_popup(GameData.food_nutrient(food.label.text), GameData.group_color(correct_group))
 		_set_hint_color(Color(0.10, 0.55, 0.15))
 		_refresh_one_food(food)
 		_update_hud()
@@ -225,32 +236,46 @@ func _shake(strength: float, duration: float) -> void:
 	_shake_dur = duration
 	_shake_time = duration
 
+# Floating "+nutrient" text that rises from the Hero and fades — a small visual
+# reward that also teaches what each correct food provides.
+func _show_nutrient_popup(text: String, color: Color) -> void:
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lbl.z_index = 60
+	lbl.add_theme_font_size_override("font_size", 28)
+	lbl.add_theme_color_override("font_color", color)
+	lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
+	lbl.add_theme_constant_override("outline_size", 5)
+	lbl.position = hero.position + Vector2(randf_range(-40, 0), -80)
+	add_child(lbl)
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(lbl, "position:y", lbl.position.y - 80.0, 0.9)
+	tw.tween_property(lbl, "modulate:a", 0.0, 0.9)
+	tw.set_parallel(false)
+	tw.tween_callback(lbl.queue_free)
+
 # === Lesson popup after each level ===
 func _level_complete() -> void:
 	game_active = false
 	spawn_timer.stop()
 	Audio.play("correct")
-	var lvl: Dictionary = GameData.LEVELS[GameData.current_level]
-	lesson_title.text = lvl["name"] + " complete!"
+	var lvl: Dictionary = GameData.current_level_data()
+	lesson_title.text = "Level %d Complete!" % GameData.current_level
 	lesson_label.text = lvl["lesson"]
 	lesson_root.visible = true
 
 func _on_continue_pressed() -> void:
 	Audio.play("click")
 	lesson_root.visible = false
-	GameData.current_level += 1
-	if GameData.current_level >= GameData.LEVELS.size():
-		GameData.last_result = "win"
-		GameData.save_game()
-		get_tree().change_scene_to_file("res://scenes/ResultScreen.tscn")
-	else:
-		_start_level()
+	GameData.record_result(true)
+	get_tree().change_scene_to_file("res://scenes/ResultScreen.tscn")
 
 func _game_over() -> void:
 	game_active = false
 	spawn_timer.stop()
-	GameData.last_result = "lose"
-	GameData.save_game()
+	GameData.record_result(false)
 	get_tree().change_scene_to_file("res://scenes/ResultScreen.tscn")
 
 # === Food helpers (keep the level solvable) ===
@@ -277,7 +302,7 @@ func _refresh_one_food(food) -> void:
 func _update_hud() -> void:
 	score_label.text = "Score: %d" % GameData.score
 	lives_label.text = "Lives: %d" % GameData.lives
-	level_label.text = GameData.LEVELS[GameData.current_level]["name"]
+	level_label.text = "Level %d: %s  [%s]" % [GameData.current_level, GameData.current_level_data()["name"], GameData.current_difficulty]
 	target_label.text = "Feed the Hero  %s  foods!" % correct_group
 	target_label.add_theme_color_override("font_color", GameData.group_color(correct_group))
 

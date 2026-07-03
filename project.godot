@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+DB="*res://scripts/Database.gd"
 GameData="*res://scripts/GameData.gd"
 Audio="*res://scripts/Audio.gd"
 

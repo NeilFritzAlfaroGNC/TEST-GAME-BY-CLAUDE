@@ -1,8 +1,7 @@
 extends Node
 ## Autoload singleton ("GameData").
-## Holds the food database, level definitions, the current run's state,
-## and offline local save/load (replaces the planned SQLite with built-in
-## FileAccess + JSON so the project runs with no extra plugins).
+## Food database, numbered level + difficulty definitions, the current run's
+## live state, and a thin bridge to the DB autoload (SQLite-backed progress).
 
 # === Food database: real Filipino foods grouped Go / Glow / Grow ===
 const FOODS := {
@@ -11,47 +10,106 @@ const FOODS := {
 	"Grow": ["Isda", "Manok", "Itlog", "Gatas", "Munggo", "Tokwa", "Hipon", "Karne", "Keso", "Baboy"],
 }
 
-# === Levels: each level asks for one food group and spawns some enemies ===
+# The nutrient each food gives — shown as a floating "+..." when fed correctly.
+const FOOD_NUTRIENTS := {
+	# Go (energy)
+	"Kanin": "+Carbs", "Tinapay": "+Carbs", "Mais": "+Fiber", "Kamote": "+Vitamin A",
+	"Patatas": "+Carbs", "Pancit": "+Energy", "Oatmeal": "+Fiber", "Lugaw": "+Energy",
+	# Glow (protect)
+	"Malunggay": "+Iron", "Kangkong": "+Vitamin A", "Karot": "+Vitamin A", "Mangga": "+Vitamin C",
+	"Papaya": "+Vitamin C", "Kamatis": "+Vitamin C", "Kalabasa": "+Vitamin A", "Pechay": "+Calcium",
+	"Dalandan": "+Vitamin C", "Saging": "+Potassium",
+	# Grow (build)
+	"Isda": "+Protein", "Manok": "+Protein", "Itlog": "+Protein", "Gatas": "+Calcium",
+	"Munggo": "+Protein", "Tokwa": "+Protein", "Hipon": "+Protein", "Karne": "+Iron",
+	"Keso": "+Calcium", "Baboy": "+Protein",
+}
+
+# === Numbered levels (1-based). Each focuses on one food group. ===
 const LEVELS := [
-	{
-		"name": "Level 1: Energy Boost",
-		"correct_group": "Go",
-		"enemies": 4,
-		"lesson": "GO foods give you ENERGY to run, play, and study! Rice (kanin), bread (tinapay), corn (mais), and kamote are Go foods.",
-	},
-	{
-		"name": "Level 2: Grow Strong",
-		"correct_group": "Grow",
-		"enemies": 5,
-		"lesson": "GROW foods build strong muscles and bones! Fish (isda), egg (itlog), milk (gatas), and beans (munggo) are Grow foods.",
-	},
-	{
-		"name": "Level 3: Glow & Protect",
-		"correct_group": "Glow",
-		"enemies": 6,
-		"lesson": "GLOW foods protect you from getting sick! Vegetables and fruits like malunggay, kangkong, and mangga are Glow foods.",
-	},
+	{"name": "Energy Start", "correct_group": "Go", "enemies": 4,
+	 "lesson": "GO foods give you ENERGY to run, play, and study! Rice (kanin), bread (tinapay), corn (mais), and kamote are Go foods."},
+	{"name": "Veggie Patrol", "correct_group": "Glow", "enemies": 4,
+	 "lesson": "GLOW foods protect you from getting sick! Vegetables like malunggay, kangkong, and pechay are Glow foods."},
+	{"name": "Muscle Up", "correct_group": "Grow", "enemies": 5,
+	 "lesson": "GROW foods build strong muscles and bones! Fish (isda), egg (itlog), milk (gatas), and beans (munggo) are Grow foods."},
+	{"name": "Power Snack", "correct_group": "Go", "enemies": 5,
+	 "lesson": "Go foods are your fuel! Pancit, oatmeal, and lugaw also give you energy to keep going."},
+	{"name": "Fruit Shield", "correct_group": "Glow", "enemies": 6,
+	 "lesson": "Fruits are Glow foods too! Mangga, papaya, and dalandan give vitamins that keep you healthy."},
+	{"name": "Strong Finish", "correct_group": "Grow", "enemies": 6,
+	 "lesson": "Grow foods help you grow tall and strong! Manok, hipon, tokwa, and keso build your body."},
 ]
 
-# === Runtime state for the current run ===
-var current_level: int = 0
+# === Difficulty modifiers ===
+# lives: starting lives. speed_mult: enemy speed. spawn_mult: time between
+# spawns (>1 = slower). enemy_bonus: extra enemies. score_mult: points multiplier.
+const DIFFICULTIES := {
+	"Easy":   {"lives": 5, "speed_mult": 0.70, "spawn_mult": 1.30, "enemy_bonus": 0, "score_mult": 1},
+	"Medium": {"lives": 3, "speed_mult": 1.00, "spawn_mult": 1.00, "enemy_bonus": 1, "score_mult": 2},
+	"Hard":   {"lives": 2, "speed_mult": 1.40, "spawn_mult": 0.70, "enemy_bonus": 2, "score_mult": 3},
+}
+const DIFFICULTY_ORDER := ["Easy", "Medium", "Hard"]
+
+# === Runtime state for the current level attempt ===
+var current_difficulty: String = "Easy"
+var current_level: int = 1          # 1-based level number
+var starting_lives: int = 3
 var score: int = 0
 var lives: int = 3
-var last_result: String = ""   # "win" or "lose", read by the Result screen
+var last_result: String = ""        # "win" or "lose", read by the Result screen
+var last_stars: int = 0
 
-# === Persistent state ===
+# === Cached persistent value ===
 var high_score: int = 0
-const SAVE_PATH := "user://foodheroes_save.json"
 
 func _ready() -> void:
-	load_game()
+	high_score = DB.get_high_score()
 
-func reset_run() -> void:
-	current_level = 0
+# === Level / difficulty lookups ===
+func num_levels() -> int:
+	return LEVELS.size()
+
+func level_data(number: int) -> Dictionary:
+	return LEVELS[clampi(number - 1, 0, LEVELS.size() - 1)]
+
+func current_level_data() -> Dictionary:
+	return level_data(current_level)
+
+func difficulty_data() -> Dictionary:
+	return DIFFICULTIES[current_difficulty]
+
+func has_next_level() -> bool:
+	return current_level < LEVELS.size()
+
+# Begin a chosen level at a chosen difficulty (resets the run state).
+func start_level(difficulty: String, number: int) -> void:
+	current_difficulty = difficulty
+	current_level = number
+	starting_lives = int(DIFFICULTIES[difficulty]["lives"])
+	lives = starting_lives
 	score = 0
-	lives = 3
 	last_result = ""
+	last_stars = 0
 
+# Save the outcome of the current level into the DB (scores + progress).
+func record_result(won: bool) -> void:
+	last_result = "win" if won else "lose"
+	last_stars = _compute_stars(won)
+	DB.record_level_result(current_difficulty, current_level, score, last_stars, won)
+	high_score = DB.get_high_score()
+
+func _compute_stars(won: bool) -> int:
+	if not won:
+		return 0
+	var lost := starting_lives - lives
+	if lost <= 0:
+		return 3
+	if lives * 2 >= starting_lives:
+		return 2
+	return 1
+
+# === Food helpers ===
 func group_color(group: String) -> Color:
 	match group:
 		"Go":
@@ -70,24 +128,5 @@ func random_food(group: String) -> String:
 	var arr: Array = FOODS[group]
 	return arr[randi() % arr.size()]
 
-# === Offline save / load ===
-func save_game() -> void:
-	if score > high_score:
-		high_score = score
-	var data := {"high_score": high_score}
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if f != null:
-		f.store_string(JSON.stringify(data))
-		f.close()
-
-func load_game() -> void:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return
-	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if f == null:
-		return
-	var text := f.get_as_text()
-	f.close()
-	var parsed: Variant = JSON.parse_string(text)
-	if parsed is Dictionary and parsed.has("high_score"):
-		high_score = int(parsed["high_score"])
+func food_nutrient(food_name: String) -> String:
+	return FOOD_NUTRIENTS.get(food_name, "+Nutrients")
