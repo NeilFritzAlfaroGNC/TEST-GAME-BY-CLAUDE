@@ -52,13 +52,18 @@ const DIFFICULTIES := {
 const DIFFICULTY_ORDER := ["Easy", "Medium", "Hard"]
 
 # === Boss fights ===
-# Every Nth level is a boss level: clear BOSS_WAVES waves of normal monsters
-# first, then a boss with BOSS_MAX_HP that only takes damage from the correct
-# ("right diet") food. wave size scales with the difficulty's enemy_bonus.
+# Every Nth level is a boss level: clear BOSS_WAVES waves first (each wave targets
+# a different food group — see Main._build_wave_groups), then a boss you beat by
+# feeding a balanced meal (one food from every group in BOSS_MEAL_GROUPS). Wave
+# size scales with the difficulty's enemy_bonus.
 const BOSS_EVERY := 5
-const BOSS_MAX_HP := 3
 const BOSS_WAVES := 3
 const BOSS_WAVE_SIZE := 3
+
+# The balanced meal the player builds to defeat the boss: one food from each
+# group. Groups needed = these three; also drives the closing lesson.
+const BOSS_MEAL_GROUPS := ["Go", "Grow", "Glow"]
+const BOSS_LESSON := "A balanced meal mixes all three groups in one dish: energy-giving GO carbs, body-building GROW protein, and vitamin-rich GLOW fruits & vegetables. A quick Filipino favorite is TUNA FRIED RICE — rice (Go) + tuna and egg (Grow) + carrots, peas, and spring onion (Glow). Eat a mix like this every day to stay strong and healthy!"
 
 # === Runtime state for the current level attempt ===
 var current_difficulty: String = "Easy"
