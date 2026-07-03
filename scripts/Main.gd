@@ -22,6 +22,17 @@ var correct_group: String = "Go"
 var enemies_to_spawn: int = 0
 var game_active: bool = false
 
+# Boss/wave state (only used on boss levels — every 5th level).
+var _boss_level: bool = false
+var _wave: int = 0
+var _total_waves: int = 0
+var _wave_size: int = 0
+var boss = null                 # the boss enemy instance (untyped, like other cross-node refs)
+var _boss_hp: int = 0
+var _boss_active: bool = false
+
+const BOSS_SPAWN_POS := Vector2(120, 320)
+
 # Screen-shake state (used by the Grow slam).
 var _shake_time: float = 0.0
 var _shake_dur: float = 0.0
@@ -58,7 +69,6 @@ func _start_level() -> void:
 	var lvl: Dictionary = GameData.current_level_data()
 	var diff: Dictionary = GameData.difficulty_data()
 	correct_group = lvl["correct_group"]
-	enemies_to_spawn = int(lvl["enemies"]) + int(diff["enemy_bonus"])
 	_enemy_speed = BASE_ENEMY_SPEED * float(diff["speed_mult"])
 	_score_mult = int(diff["score_mult"])
 	spawn_timer.wait_time = SPAWN_INTERVAL * float(diff["spawn_mult"])
@@ -66,13 +76,36 @@ func _start_level() -> void:
 	for e in get_tree().get_nodes_in_group("enemies"):
 		e.remove_from_group("enemies")
 		e.queue_free()
+	_clear_boss()
 	_refresh_all_foods()
-	_update_hud()
-	hint_label.text = "Drag a %s food onto the Hero!" % correct_group
-	_set_hint_color(Color(0.12, 0.12, 0.12))
 	game_active = true
+	_boss_level = GameData.is_boss_level(GameData.current_level)
+	if _boss_level:
+		# Boss level: fight through waves, then the boss.
+		_boss_active = false
+		_boss_hp = GameData.BOSS_MAX_HP
+		_total_waves = GameData.BOSS_WAVES
+		_wave_size = GameData.BOSS_WAVE_SIZE + int(diff["enemy_bonus"])
+		_wave = 0
+		_start_wave()
+	else:
+		# Normal level: one flat batch of monsters.
+		enemies_to_spawn = int(lvl["enemies"]) + int(diff["enemy_bonus"])
+		hint_label.text = "Drag a %s food onto the Hero!" % correct_group
+		_set_hint_color(Color(0.12, 0.12, 0.12))
+		spawn_timer.start()
+		_spawn_enemy()   # first enemy right away
+	_update_hud()
+
+# Start the next wave of a boss level.
+func _start_wave() -> void:
+	_wave += 1
+	enemies_to_spawn = _wave_size
+	hint_label.text = "Wave %d of %d — feed %s foods to clear the monsters!" % [_wave, _total_waves, correct_group]
+	_set_hint_color(Color(0.12, 0.12, 0.12))
 	spawn_timer.start()
 	_spawn_enemy()   # first enemy right away
+	_update_hud()
 
 # === Enemy spawning (the WHILE loop) ===
 func _spawn_enemy() -> void:
@@ -90,23 +123,28 @@ func _spawn_enemy() -> void:
 func food_dropped_on_hero(food) -> void:
 	if not game_active:
 		return
-	if food.food_group == correct_group:
-		var result := defeat_closest_enemy()
-		if result["hit"]:
-			GameData.score += POINTS_PER_ENEMY * _score_mult
-			hint_label.text = "Correct! %s is a %s food. Monster defeated!" % [food.label.text, correct_group]
-			_play_attack(correct_group, result["pos"])
-		else:
-			hint_label.text = "Correct! %s is a %s food. Wait for a monster!" % [food.label.text, correct_group]
-			Audio.play("correct")
-		_show_nutrient_popup(GameData.food_nutrient(food.label.text), GameData.group_color(correct_group))
-		_set_hint_color(Color(0.10, 0.55, 0.15))
-		_refresh_one_food(food)
-		_update_hud()
-	else:
+	# Wrong food never helps — and never damages the boss.
+	if food.food_group != correct_group:
 		hint_label.text = "Oops! %s is not a %s food. Try again!" % [food.label.text, correct_group]
 		_set_hint_color(Color(0.75, 0.10, 0.10))
 		Audio.play("wrong")
+		return
+	# Right food during a boss fight damages the boss instead of a monster.
+	if _boss_active and is_instance_valid(boss):
+		_damage_boss(food)
+		return
+	var result := defeat_closest_enemy()
+	if result["hit"]:
+		GameData.score += POINTS_PER_ENEMY * _score_mult
+		hint_label.text = "Correct! %s is a %s food. Monster defeated!" % [food.label.text, correct_group]
+		_play_attack(correct_group, result["pos"])
+	else:
+		hint_label.text = "Correct! %s is a %s food. Wait for a monster!" % [food.label.text, correct_group]
+		Audio.play("correct")
+	_show_nutrient_popup(GameData.food_nutrient(food.label.text), GameData.group_color(correct_group))
+	_set_hint_color(Color(0.10, 0.55, 0.15))
+	_refresh_one_food(food)
+	_update_hud()
 
 func defeat_closest_enemy() -> Dictionary:
 	var enemies := get_tree().get_nodes_in_group("enemies")
@@ -127,7 +165,12 @@ func defeat_closest_enemy() -> Dictionary:
 
 # Called by Enemy.gd when it reaches the hero.
 func enemy_reached_hero(enemy) -> void:
-	if not game_active or not enemy.is_in_group("enemies"):
+	if not game_active:
+		return
+	if enemy.is_in_group("boss"):
+		_boss_reached_hero(enemy)
+		return
+	if not enemy.is_in_group("enemies"):
 		return
 	GameData.lives -= 1
 	hint_label.text = "Oh no! A Hunger Monster got through!"
@@ -154,8 +197,93 @@ func _despawn_enemy(enemy) -> void:
 func _check_level_complete() -> void:
 	if not game_active:
 		return
-	if enemies_to_spawn <= 0 and get_tree().get_nodes_in_group("enemies").is_empty():
+	# Still monsters left to spawn or fight in the current batch.
+	if enemies_to_spawn > 0 or not get_tree().get_nodes_in_group("enemies").is_empty():
+		return
+	if _boss_level and not _boss_active:
+		# A wave just cleared: start the next one, or unleash the boss.
+		if _wave < _total_waves:
+			_start_wave()
+		else:
+			_spawn_boss()
+		return
+	if not _boss_level:
 		_level_complete()
+
+# === Boss fight ===
+# Spawn the boss after the last wave. It reuses the Enemy scene but is bigger,
+# slower, colored to the level's group, and lives in the "boss" group so it is
+# never treated as a normal one-hit monster.
+func _spawn_boss() -> void:
+	_boss_active = true
+	spawn_timer.stop()
+	boss = enemy_scene.instantiate()
+	add_child(boss)
+	boss.add_to_group("boss")
+	boss.speed = _enemy_speed * 0.5
+	boss.scale = Vector2(2.2, 2.2)
+	boss.global_position = BOSS_SPAWN_POS
+	var rect = boss.get_node_or_null("ColorRect")
+	if rect != null:
+		rect.color = GameData.group_color(correct_group).darkened(0.15)
+	var lbl = boss.get_node_or_null("Label")
+	if lbl != null:
+		lbl.text = "BOSS"
+	Audio.play("slam")
+	_shake(9.0, 0.4)
+	hint_label.text = "BOSS FIGHT! Only %s foods can hurt it — HP %d!" % [correct_group, _boss_hp]
+	_set_hint_color(Color(0.75, 0.10, 0.10))
+	_update_hud()
+
+# The right food hit the boss.
+func _damage_boss(food) -> void:
+	_boss_hp -= 1
+	GameData.score += POINTS_PER_ENEMY * _score_mult
+	_play_attack(correct_group, boss.global_position)
+	_show_nutrient_popup(GameData.food_nutrient(food.label.text), GameData.group_color(correct_group))
+	_refresh_one_food(food)
+	if _boss_hp <= 0:
+		_boss_active = false
+		_clear_boss()
+		hint_label.text = "BOSS DEFEATED! You saved the day!"
+		_set_hint_color(Color(0.10, 0.55, 0.15))
+		_update_hud()
+		_level_complete()
+		return
+	# Boss survived — flash it white to show the hit landed.
+	var rect = boss.get_node_or_null("ColorRect")
+	if rect != null:
+		var base: Color = rect.color
+		rect.color = Color(1, 1, 1)
+		var tw := create_tween()
+		tw.tween_property(rect, "color", base, 0.25)
+	hint_label.text = "Direct hit! BOSS HP %d — keep feeding %s foods!" % [_boss_hp, correct_group]
+	_set_hint_color(Color(0.85, 0.45, 0.10))
+	_update_hud()
+
+# The boss reached the hero: costs a life, then it is knocked back to keep fighting.
+func _boss_reached_hero(b) -> void:
+	GameData.lives -= 1
+	hint_label.text = "The BOSS struck the Hero!"
+	_set_hint_color(Color(0.75, 0.10, 0.10))
+	Audio.play("wrong")
+	_shake(9.0, 0.3)
+	if GameData.lives <= 0:
+		_boss_active = false
+		_clear_boss()
+		_update_hud()
+		_game_over()
+		return
+	if is_instance_valid(b):
+		b.global_position = BOSS_SPAWN_POS
+		b.reached = false
+	_update_hud()
+
+func _clear_boss() -> void:
+	if is_instance_valid(boss):
+		boss.remove_from_group("boss")
+		boss.queue_free()
+	boss = null
 
 # === Special attack effects (Phase 8) ===
 func _play_attack(group: String, target: Vector2) -> void:
@@ -262,7 +390,10 @@ func _level_complete() -> void:
 	spawn_timer.stop()
 	Audio.play("correct")
 	var lvl: Dictionary = GameData.current_level_data()
-	lesson_title.text = "Level %d Complete!" % GameData.current_level
+	if _boss_level:
+		lesson_title.text = "Boss Level %d Cleared!" % GameData.current_level
+	else:
+		lesson_title.text = "Level %d Complete!" % GameData.current_level
 	lesson_label.text = lvl["lesson"]
 	lesson_root.visible = true
 
@@ -303,7 +434,12 @@ func _update_hud() -> void:
 	score_label.text = "Score: %d" % GameData.score
 	lives_label.text = "Lives: %d" % GameData.lives
 	level_label.text = "Level %d: %s  [%s]" % [GameData.current_level, GameData.current_level_data()["name"], GameData.current_difficulty]
-	target_label.text = "Feed the Hero  %s  foods!" % correct_group
+	if _boss_active:
+		target_label.text = "BOSS  HP %d   Feed  %s  foods!" % [_boss_hp, correct_group]
+	elif _boss_level:
+		target_label.text = "Wave %d/%d   Feed  %s  foods!" % [_wave, _total_waves, correct_group]
+	else:
+		target_label.text = "Feed the Hero  %s  foods!" % correct_group
 	target_label.add_theme_color_override("font_color", GameData.group_color(correct_group))
 
 func _set_hint_color(c: Color) -> void:

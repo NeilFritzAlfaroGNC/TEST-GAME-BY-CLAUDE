@@ -51,6 +51,15 @@ const DIFFICULTIES := {
 }
 const DIFFICULTY_ORDER := ["Easy", "Medium", "Hard"]
 
+# === Boss fights ===
+# Every Nth level is a boss level: clear BOSS_WAVES waves of normal monsters
+# first, then a boss with BOSS_MAX_HP that only takes damage from the correct
+# ("right diet") food. wave size scales with the difficulty's enemy_bonus.
+const BOSS_EVERY := 5
+const BOSS_MAX_HP := 3
+const BOSS_WAVES := 3
+const BOSS_WAVE_SIZE := 3
+
 # === Runtime state for the current level attempt ===
 var current_difficulty: String = "Easy"
 var current_level: int = 1          # 1-based level number
@@ -69,6 +78,10 @@ func _ready() -> void:
 # === Level / difficulty lookups ===
 func num_levels() -> int:
 	return LEVELS.size()
+
+# Every BOSS_EVERY-th level (5, 10, ...) is a boss fight.
+func is_boss_level(number: int) -> bool:
+	return number % BOSS_EVERY == 0
 
 func level_data(number: int) -> Dictionary:
 	return LEVELS[clampi(number - 1, 0, LEVELS.size() - 1)]
