@@ -1,22 +1,29 @@
 extends Area2D
-## A draggable food box. Its Go/Glow/Grow group + name are assigned by Main.
-## Drag it onto the Hero to feed him.
+## A conveyor-belt food. Main spawns these on the left; they ride the belt to
+## the right. Drag one onto the Hero to feed him. If it isn't grabbed within
+## LIFETIME seconds it blinks and then disappears (it wasn't touched/used).
+
+const LIFETIME := 5.0        # max seconds a food stays on the belt if untouched
+const BLINK_AT := 3.5        # start blinking this many seconds in (warns it's leaving)
+const BELT_SPEED := 130.0    # left -> right belt speed (px/s)
+const BELT_Y := 600.0        # belt lane the food rides on
+const SPAWN_X := -90.0       # just off the left edge
 
 @export var food_group: String = "Go"
 
 var dragging: bool = false
-var start_position: Vector2
+var age: float = 0.0            # only advances while on the belt (paused while held)
+var target_x: float = SPAWN_X   # stack slot assigned by Main; the food slides toward it
 
 @onready var rect: ColorRect = $ColorRect
 @onready var label: Label = $Label
 
 func _ready() -> void:
-	start_position = global_position
 	input_pickable = true
 	input_event.connect(_on_input_event)
+	position = Vector2(SPAWN_X, BELT_Y)
 
-# Called by Main to give this food a group ("Go"/"Glow"/"Grow") and a random
-# real food name from that group, plus the matching color.
+# Assign this food a group ("Go"/"Glow"/"Grow"), a random real name, and color.
 func set_food(group: String) -> void:
 	food_group = group
 	label.text = GameData.random_food(group)
@@ -25,22 +32,47 @@ func set_food(group: String) -> void:
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		dragging = true
-		z_index = 1   # draw on top of the other foods while dragging
+		z_index = 10          # draw above other foods while dragging
+		modulate.a = 1.0      # cancel any mid-blink transparency
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if dragging:
-		# Follow the mouse (or finger, on Android) while held.
+		# Follow the mouse (or finger on Android). Age is paused while held.
 		global_position = get_global_mouse_position()
 		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			drop()
+			_drop()
+		return
+	# Ride the belt.
+	age += delta
+	# Slide toward the stack slot Main assigned; stop once we reach it so foods
+	# pile up instead of running off the right of the screen.
+	var step := BELT_SPEED * delta
+	if position.x < target_x:
+		position.x = min(position.x + step, target_x)
+	elif position.x > target_x:
+		position.x = max(position.x - step, target_x)
+	if age >= LIFETIME:
+		queue_free()
+		return
+	# Blink during the final stretch so the player knows it's about to vanish.
+	if age >= BLINK_AT:
+		modulate.a = 1.0 if (int(age * 8.0) % 2 == 0) else 0.25
+	else:
+		modulate.a = 1.0
 
-func drop() -> void:
+func _drop() -> void:
 	dragging = false
 	z_index = 0
+	modulate.a = 1.0
 	var main = get_tree().current_scene
-	var hero: Area2D = main.get_node("Hero")
-	# If the food is touching the hero, tell the game.
-	if overlaps_area(hero):
-		main.food_dropped_on_hero(self)
-	# Snap back to where it started.
-	global_position = start_position
+	if main == null:
+		queue_free()
+		return
+	var hero = main.get_node_or_null("Hero")
+	# If dropped on the Hero and it was actually used, it's consumed (removed).
+	if hero != null and overlaps_area(hero):
+		if main.food_dropped_on_hero(self):
+			queue_free()
+			return
+	# Otherwise it goes back onto the belt and keeps riding.
+	position.y = BELT_Y

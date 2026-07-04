@@ -29,11 +29,9 @@ func _open() -> void:
 
 func _ensure_schema() -> void:
 	_db.query("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);")
-	_db.query(
-		"CREATE TABLE IF NOT EXISTS runs (" +
-		"id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-		"score INTEGER, result TEXT, level_reached INTEGER, played_at TEXT);"
-	)
+	# The per-run history (recent scores) has been removed entirely — drop it
+	# from any existing database as well.
+	_db.query("DROP TABLE IF EXISTS runs;")
 	# Per-(difficulty, level) progress: best score, best stars, completed flag.
 	_db.query(
 		"CREATE TABLE IF NOT EXISTS progress (" +
@@ -44,13 +42,10 @@ func _ensure_schema() -> void:
 
 # === Public API ===
 
-# Record one finished run and bump the high score.
-func record_run(score: int, result: String, level_reached: int) -> void:
-	var stamp := Time.get_datetime_string_from_system()
-	_db.query_with_bindings(
-		"INSERT INTO runs (score, result, level_reached, played_at) VALUES (?, ?, ?, ?);",
-		[score, result, level_reached, stamp]
-	)
+func get_high_score() -> int:
+	return _meta_get_int("high_score", 0)
+
+func _set_high_score(score: int) -> void:
 	var hs: int = maxi(score, _meta_get_int("high_score", 0))
 	_db.query_with_bindings(
 		"INSERT INTO meta (key, value) VALUES ('high_score', ?) " +
@@ -58,24 +53,12 @@ func record_run(score: int, result: String, level_reached: int) -> void:
 		[str(hs)]
 	)
 
-func get_high_score() -> int:
-	return _meta_get_int("high_score", 0)
-
-# Most recent runs first. Each entry: {score, result, level_reached, played_at}.
-func get_recent_runs(limit: int = 5) -> Array:
-	_db.query_with_bindings(
-		"SELECT score, result, level_reached, played_at FROM runs ORDER BY id DESC LIMIT ?;",
-		[limit]
-	)
-	var rows = _db.query_result
-	return rows.duplicate() if rows is Array else []
-
 # === Per-level progress (the campaign state) ===
 
-# Record the outcome of one level: logs the run, bumps the high score, and
-# upserts the best score / best stars / completed flag for (difficulty, level).
+# Record the outcome of one level: bumps the high score and upserts the best
+# score / best stars / completed flag for (difficulty, level).
 func record_level_result(difficulty: String, level: int, score: int, stars: int, won: bool) -> void:
-	record_run(score, ("win" if won else "lose"), level)
+	_set_high_score(score)
 	var done := 1 if won else 0
 	_db.query_with_bindings(
 		"INSERT INTO progress (difficulty, level, best_score, stars, completed) " +
