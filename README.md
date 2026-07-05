@@ -16,6 +16,8 @@ the development reference.
 
 ## How to play
 
+- **First time playing?** Pressing **Play** launches a guided **Tutorial**: four short intro pages, then one easy practice round (3 extra-slow monsters, Go foods, 5 lives). Finish it once and Play goes straight to the Level Select from then on. You can replay it any time from **How to Play**.
+- The menu's **How to Play** button opens an instructions screen (food groups, belt, bosses, pause) with a **Play Tutorial** button.
 - From the menu, **Play** opens the **Level Select**: pick a **difficulty** (Easy / Medium / Hard) and a numbered **level**. Boss levels are badged **"BOSS n"** with a purple tint. (The grid also shows a locked **"Coming Soon"** slot reserved for future levels.)
 - The menu's **Sound** button mutes/unmutes everything — the setting is remembered between runs.
 - Each level asks you to feed the Hero one food group (e.g. *"Feed the Hero **Go** foods!"*).
@@ -47,6 +49,7 @@ icon.svg                 Old default Godot icon (no longer referenced)
 TEST GAME BY CLAUDE.approj   Anchorpoint (asset-management tool) project config
 scenes/
   MainMenu.tscn          Title screen (main scene)
+  HowToPlay.tscn         Instructions screen + Play Tutorial button
   LevelSelect.tscn       Difficulty selector + numbered level grid
   Main.tscn              The game: Hero, food belt, HUD, Timer, lesson popup
   Enemy.tscn             Reusable Hunger Monster (spawned by Main)
@@ -63,7 +66,8 @@ scripts/
   PauseMenu.gd           Pause overlay (Esc / Pause button): Resume, Retry, quit out
   Food.gd                Conveyor-belt food: rides left→right, expires after 5s
   Enemy.gd               Walks toward the Hero
-  MainMenu.gd            Menu buttons (incl. the persisted Sound toggle)
+  MainMenu.gd            Menu buttons (Sound toggle, How to Play, first-run tutorial routing)
+  HowToPlay.gd           Instructions screen buttons
   ResultScreen.gd        Stars, best score, navigation buttons
 tools/
   generate_audio.py      Regenerates every .wav (pure Python stdlib)

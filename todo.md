@@ -93,8 +93,11 @@ existing feature.
 	  level 10; replace the "Coming Soon" tile with the real thing. Ideas:
 	  mixed-group levels ("feed Go OR Grow"), a speed round, a "no wrong
 	  answers allowed" perfect round.
-- [ ] **Tutorial level 0**: guided first drag with arrows and slowed enemies,
-	  teaching the three groups before level 1.
+- [x] **Tutorial level + How to Play screen** — first-ever Play launches a
+	  guided tutorial (4 intro pages via the lesson popup, then 3 extra-slow
+	  GO monsters, 5 lives; nothing recorded; completion sets the persisted
+	  `tutorial_done` flag). New `HowToPlay.tscn` from the menu explains the
+	  rules and can replay the tutorial any time.
 - [ ] **Language toggle (English ⇄ Filipino)** for food names — the git history
 	  shows names were translated *to* English; a toggle keeps both audiences
 	  (`FOODS` keyed once, display names per locale).

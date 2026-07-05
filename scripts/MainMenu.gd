@@ -8,7 +8,17 @@ func _ready() -> void:
 
 func _on_play_pressed() -> void:
 	Audio.play("click")
+	# First time ever pressing Play: run the guided tutorial instead of the
+	# level select. Completing it sets "tutorial_done" (see Main.gd).
+	if DB.get_setting_int("tutorial_done", 0) == 0:
+		GameData.start_tutorial()
+		get_tree().change_scene_to_file("res://scenes/Main.tscn")
+		return
 	get_tree().change_scene_to_file("res://scenes/LevelSelect.tscn")
+
+func _on_howto_pressed() -> void:
+	Audio.play("click")
+	get_tree().change_scene_to_file("res://scenes/HowToPlay.tscn")
 
 func _on_sound_pressed() -> void:
 	Audio.toggle_muted()

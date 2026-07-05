@@ -84,6 +84,13 @@ func _test_gamedata() -> void:
 	_check(gd.stars_text(0) == "---" and gd.stars_text(2) == "**-", "stars_text formats")
 	_check(gd.stars_text(99) == "***" and gd.stars_text(-5) == "---", "stars_text clamps")
 
+	# Tutorial state transitions (pure — no DB involved).
+	gd.start_tutorial()
+	_check(gd.tutorial_mode and gd.lives == 5 and gd.score == 0 and gd.current_difficulty == "Easy",
+		"start_tutorial primes a fresh guided run")
+	gd.start_level("Medium", 2)
+	_check(not gd.tutorial_mode, "start_level clears tutorial_mode")
+
 	gd.free()
 
 # === Database: real SQLite roundtrip against a throwaway file ===

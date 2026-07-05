@@ -13,20 +13,24 @@ if (-not (Test-Path $godot)) {
     exit 1
 }
 
-Write-Host "== 1/4 Import =="
+Write-Host "== 1/5 Import =="
 & $godot --headless --path $proj --import *> $null
 
-Write-Host "== 2/4 Logic smoke test =="
+Write-Host "== 2/5 Logic smoke test =="
 $out = (& $godot --headless --path $proj -s res://tools/smoke_test.gd 2>&1 | Out-String)
 Write-Host $out
 if ($LASTEXITCODE -ne 0 -or $out -notmatch "ALL PASS") { $failed = $true }
 
-Write-Host "== 3/4 Headless run: Main.tscn =="
+Write-Host "== 3/5 Headless run: Main.tscn =="
 $out = (& $godot --headless --path $proj res://scenes/Main.tscn --quit-after 150 2>&1 | Out-String)
 if ($out -match $failPattern) { Write-Host $out; $failed = $true } else { Write-Host "   clean" }
 
-Write-Host "== 4/4 Headless run: MainMenu.tscn =="
+Write-Host "== 4/5 Headless run: MainMenu.tscn =="
 $out = (& $godot --headless --path $proj res://scenes/MainMenu.tscn --quit-after 60 2>&1 | Out-String)
+if ($out -match $failPattern) { Write-Host $out; $failed = $true } else { Write-Host "   clean" }
+
+Write-Host "== 5/5 Headless run: HowToPlay.tscn =="
+$out = (& $godot --headless --path $proj res://scenes/HowToPlay.tscn --quit-after 60 2>&1 | Out-String)
 if ($out -match $failPattern) { Write-Host $out; $failed = $true } else { Write-Host "   clean" }
 
 if ($failed) {

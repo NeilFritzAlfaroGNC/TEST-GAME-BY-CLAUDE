@@ -1,0 +1,88 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/HowToPlay.gd" id="1_htp"]
+
+[node name="HowToPlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_htp")
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.18, 0.22, 0.35, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 44
+horizontal_alignment = 1
+text = "HOW TO PLAY"
+
+[node name="GroupsRow" type="HBoxContainer" parent="Center/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="GoLabel" type="Label" parent="Center/VBox/GroupsRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.78, 0.12, 1)
+theme_override_font_sizes/font_size = 24
+text = "GO = Energy"
+
+[node name="GlowLabel" type="Label" parent="Center/VBox/GroupsRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.72, 0.34, 1)
+theme_override_font_sizes/font_size = 24
+text = "GLOW = Protect"
+
+[node name="GrowLabel" type="Label" parent="Center/VBox/GroupsRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.32, 0.28, 1)
+theme_override_font_sizes/font_size = 24
+text = "GROW = Build"
+
+[node name="Body" type="Label" parent="Center/VBox"]
+custom_minimum_size = Vector2(820, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.93, 0.97, 1)
+theme_override_font_sizes/font_size = 21
+autowrap_mode = 2
+text = "1. Hunger Monsters march in from the left toward the Hero.
+2. Foods ride the conveyor belt at the bottom — grab one before it blinks away!
+3. DRAG a food of the level's group onto the Hero to defeat the closest monster.
+4. A wrong food simply rides back onto the belt — no harm done, try again.
+5. A monster that reaches the Hero costs a life. Lose all lives and it's game over.
+6. Every 5th level is a BOSS: clear 3 waves, then feed one Go + one Grow + one Glow food to build a balanced meal!
+7. Esc or the Pause button pauses the game at any time."
+
+[node name="ButtonRow" type="HBoxContainer" parent="Center/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TutorialButton" type="Button" parent="Center/VBox/ButtonRow"]
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Play Tutorial"
+
+[node name="BackButton" type="Button" parent="Center/VBox/ButtonRow"]
+custom_minimum_size = Vector2(150, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Back"
+
+[connection signal="pressed" from="Center/VBox/ButtonRow/TutorialButton" to="." method="_on_tutorial_pressed"]
+[connection signal="pressed" from="Center/VBox/ButtonRow/BackButton" to="." method="_on_back_pressed"]

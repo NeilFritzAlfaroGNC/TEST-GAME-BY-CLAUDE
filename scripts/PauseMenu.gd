@@ -68,5 +68,8 @@ func _on_menu_pressed() -> void:
 func _leave(scene_path: String, restart: bool) -> void:
 	get_tree().paused = false
 	if restart:
-		GameData.start_level(GameData.current_difficulty, GameData.current_level)
+		if GameData.tutorial_mode:
+			GameData.start_tutorial()   # retrying the tutorial stays a tutorial
+		else:
+			GameData.start_level(GameData.current_difficulty, GameData.current_level)
 	get_tree().change_scene_to_file(scene_path)
