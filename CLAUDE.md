@@ -28,6 +28,8 @@ When checking a headless run, filter for **real** failures and ignore noise:
 
 Known benign noise: a `--quit-after` run logs `resource still in use: music.wav` / "ObjectDB instances leaked at exit". This is only the audio autoload being force-killed mid-playback; it does **not** happen on a normal window close and is not a real leak.
 
+Do **not** launch `--headless --editor`: `--quit-after` does not quit the *editor*, so the process stays alive in the background holding the `godot-sqlite` DLL — subsequent `--import` runs then fail with `Error copying library` / `GDExtension dynamic library not found`. If imports suddenly fail that way, kill the stray Godot process. A force-killed instance also leaves `~libgdsqlite…TMP` copies in `addons/godot-sqlite/bin/`; they are the extension's copy-on-load leftovers, already gitignored (`*.TMP`), and safe to delete. (Editor-only chores like re-saving scenes for uid headers must be done in the editor UI.)
+
 Headless cannot simulate mouse drag — to verify gameplay feel (drag, zap/heal/slam, sound) open the project and press **F5**.
 
 ## Regenerating audio

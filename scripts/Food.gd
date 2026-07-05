@@ -60,6 +60,17 @@ func _process(delta: float) -> void:
 	else:
 		modulate.a = 1.0
 
+# Return a held food to the belt WITHOUT the drop check (used when the game
+# pauses mid-drag: a mouse release during the pause would otherwise complete
+# the drop — and could feed the Hero — the moment the game resumes).
+func cancel_drag() -> void:
+	if not dragging:
+		return
+	dragging = false
+	z_index = 0
+	modulate.a = 1.0
+	position.y = BELT_Y
+
 func _drop() -> void:
 	dragging = false
 	z_index = 0

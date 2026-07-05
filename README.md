@@ -39,7 +39,8 @@ the development reference.
 
 ```
 project.godot            Project settings + the three autoloads (DB, GameData, Audio)
-icon.svg                 App icon
+Icon Game.png            App icon (the project icon set in project.godot)
+icon.svg                 Old default Godot icon (no longer referenced)
 TEST GAME BY CLAUDE.approj   Anchorpoint (asset-management tool) project config
 scenes/
   MainMenu.tscn          Title screen (main scene)

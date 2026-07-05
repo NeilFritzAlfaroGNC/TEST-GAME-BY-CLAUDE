@@ -29,6 +29,11 @@ func _pause() -> void:
 	var main = get_tree().current_scene
 	if main == null or not main.game_active:
 		return
+	# Return any held food to the belt first: a mouse release during the pause
+	# would otherwise complete the drop (and could feed the Hero) on resume.
+	for f in main.foods_container.get_children():
+		if is_instance_valid(f) and f.dragging:
+			f.cancel_drag()
 	Audio.play("click")
 	get_tree().paused = true
 	visible = true

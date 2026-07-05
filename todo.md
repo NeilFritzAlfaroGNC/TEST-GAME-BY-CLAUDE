@@ -21,13 +21,32 @@ existing feature.
 - [x] **Sync README.md**: boss levels/waves/balanced meal, nutrient popups,
       Coming Soon tile, pause menu, fixed "Next steps", corrected the autoload
       description, `.approj` noted. (CLAUDE.md DB/pause sections synced too.)
-- [x] Deleted the two `~libgdsqlite…TMP` leftovers in
-      `addons/godot-sqlite/bin/`.
+- [x] Deleted the `~libgdsqlite…TMP` leftovers in `addons/godot-sqlite/bin/`.
+      **Learned since**: these regenerate whenever a Godot instance is
+      force-killed — they're godot-sqlite's copy-on-load leftovers, already
+      gitignored via `*.TMP`, and always safe to delete (see the new
+      headless-editor warning in CLAUDE.md).
 - [ ] Re-save all scenes in the editor once so every `.tscn` gets its
       `uid`/`unique_id` fields (only `MainMenu.tscn` has them now).
-      **Needs a manual pass**: a headless `--editor` launch was tried and only
-      generates `.uid` sidecars for new scripts — scenes only gain uid headers
-      when each is opened and saved in the editor UI.
+      **Needs a manual pass in the editor UI** — a headless `--editor` launch
+      doesn't do it AND leaves a zombie process that locks the sqlite DLL
+      (documented in CLAUDE.md; don't retry that route).
+
+## Round 2 fixes (post-review re-read — done)
+
+- [x] **Pause-while-dragging exploit/glitch**: pausing mid-drag then releasing
+      the mouse used to complete the drop on resume (could silently feed the
+      Hero). `Food.cancel_drag()` now returns any held food to the belt the
+      moment the game pauses (`PauseMenu._pause`).
+- [x] **`_needed_groups()` aliasing hazard**: during a boss it returned the
+      live `_meal_needed` array by reference; now returns a duplicate so no
+      future caller can corrupt the boss meal state.
+- [x] **Game icon**: `Icon Game.png` committed and set as the project icon in
+      `project.godot`; README structure list updated (`icon.svg` is now the
+      unused old default).
+- [x] **CLAUDE.md**: documented the headless `--editor` zombie-process trap
+      and the regenerating `~*.TMP` files so future sessions don't rediscover
+      them the hard way.
 
 ## Recommended improvements (quality / maintainability)
 
@@ -56,6 +75,14 @@ existing feature.
       `_choose_spawn_group`.
 - [ ] Centralize screen-geometry constants (1152×648-coupled numbers scattered
       across `Main.gd` and `Food.gd`).
+- [ ] **Android back button** should open/close the pause menu: handle
+      `NOTIFICATION_WM_GO_BACK_REQUEST` in `PauseMenu.gd` (Esc/`ui_cancel`
+      already works on desktop).
+- [ ] **Export presets with the new icon**: Windows `.exe` icon needs an `.ico`
+      + rcedit configured in the export preset; Android needs the adaptive
+      icon set. (`Icon Game.png` only covers the editor/project icon today.)
+- [ ] Delete `icon.svg` (+ its `.import`/`.uid`) if the old default icon is
+      truly not wanted anywhere anymore — nothing references it now.
 
 ## Possible features (future content — none started)
 

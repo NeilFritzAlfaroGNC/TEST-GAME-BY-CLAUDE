@@ -500,7 +500,7 @@ func _game_over() -> void:
 # the boss) every group still missing from the balanced meal.
 func _needed_groups() -> Array:
 	if _boss_active:
-		return _meal_needed
+		return _meal_needed.duplicate()   # copy — callers must never alias the live meal state
 	return [correct_group]
 
 func _belt_has_group(g: String) -> bool:
