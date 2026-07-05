@@ -11,10 +11,13 @@ the development reference.
 3. Press **F5** (Play). The main scene is the Main Menu.
 
 > Already validated headlessly on Godot 4.6.3 — all scenes load and run with no errors.
+> Developers: `powershell -ExecutionPolicy Bypass -File tools\test.ps1` runs the full
+> check (import + logic smoke tests + headless scene runs) with a PASS/FAIL summary.
 
 ## How to play
 
-- From the menu, **Play** opens the **Level Select**: pick a **difficulty** (Easy / Medium / Hard) and a numbered **level**. (The grid also shows a locked **"Coming Soon"** slot reserved for future levels.)
+- From the menu, **Play** opens the **Level Select**: pick a **difficulty** (Easy / Medium / Hard) and a numbered **level**. Boss levels are badged **"BOSS n"** with a purple tint. (The grid also shows a locked **"Coming Soon"** slot reserved for future levels.)
+- The menu's **Sound** button mutes/unmutes everything — the setting is remembered between runs.
 - Each level asks you to feed the Hero one food group (e.g. *"Feed the Hero **Go** foods!"*).
 - **Hunger Monsters** walk in from the left toward the Hero.
 - Foods ride a **conveyor belt** along the bottom, sliding in from the left. Grab one before it **blinks and disappears** (each food lasts ~5s if untouched). New foods keep spawning at random.
@@ -54,12 +57,18 @@ scripts/
   GameData.gd            Autoload: food database, levels, difficulties, run state
   Audio.gd               Autoload: SFX pool + looping music
   LevelSelect.gd         Builds the difficulty/level grid from DB progress
-  Main.gd                One-level loop, waves/boss, food-belt spawning, scoring, win/lose
+  Main.gd                One-level controller: waves/boss state machine, scoring, HUD
+  BeltManager.gd         Conveyor belt: spawning, stacking layout, solvability guarantee
+  FxManager.gd           Procedural effects: zap/heal/slam, screen shake, nutrient popups
   PauseMenu.gd           Pause overlay (Esc / Pause button): Resume, Retry, quit out
   Food.gd                Conveyor-belt food: rides left→right, expires after 5s
   Enemy.gd               Walks toward the Hero
-  MainMenu.gd            Menu buttons
+  MainMenu.gd            Menu buttons (incl. the persisted Sound toggle)
   ResultScreen.gd        Stars, best score, navigation buttons
+tools/
+  generate_audio.py      Regenerates every .wav (pure Python stdlib)
+  smoke_test.gd          Headless logic tests (star math, DB layer, data integrity)
+  test.ps1               One-command validation: import + smoke test + scene runs
 ```
 
 ## How this maps to the development reference
@@ -110,9 +119,9 @@ the level's group (built procedurally in [scripts/Main.gd](scripts/Main.gd), no 
 
 - **Foods are color-coded** by group (Go = yellow, Glow = green, Grow = red) and
   show a real food **name** (e.g. *Fish*, *Rice*, *Mango*). Names are randomized
-  each round from `GameData.FOODS`, and the belt always re-spawns any **needed**
-  food group that's missing (on the next spawn tick, within about a second), so a
-  level or boss fight can never become unwinnable.
+  each round from `GameData.FOODS`, and the belt **instantly** re-spawns any
+  **needed** food group the moment it goes missing, so at least one usable food
+  is always on screen and a level or boss fight can never become unwinnable.
 - **Save** uses the `godot-sqlite` GDExtension to write `user://foodheroes.db`
   — fully offline, matching the reference's SQLite goal directly.
 - The `Enemy.tscn` is already wired into `Main`'s **Enemy Scene** slot in the

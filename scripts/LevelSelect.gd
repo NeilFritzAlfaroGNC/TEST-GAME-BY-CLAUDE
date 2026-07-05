@@ -59,12 +59,16 @@ func _build_grid() -> void:
 		var btn := Button.new()
 		btn.custom_minimum_size = Vector2(150, 96)
 		btn.add_theme_font_size_override("font_size", 22)
+		# Boss levels get a badge so the player knows a boss fight is coming.
+		var title := ("BOSS %d" % n) if GameData.is_boss_level(n) else ("Level %d" % n)
 		if unlocked:
-			btn.text = "Level %d\n%s" % [n, _stars(int(prog["stars"]))]
+			btn.text = "%s\n%s" % [title, GameData.stars_text(int(prog["stars"]))]
 			btn.pressed.connect(_on_level_pressed.bind(n))
 		else:
-			btn.text = "Level %d\nLocked" % n
+			btn.text = "%s\nLocked" % title
 			btn.disabled = true
+		if GameData.is_boss_level(n):
+			btn.modulate = Color(0.95, 0.75, 1.0)   # light purple = boss tile
 		grid.add_child(btn)
 	# One locked "coming soon" slot (shown for every difficulty) — reserved for
 	# a future content update. Always disabled.
@@ -75,10 +79,6 @@ func _build_grid() -> void:
 	soon.disabled = true
 	soon.modulate = Color(0.72, 0.72, 0.9)
 	grid.add_child(soon)
-
-func _stars(s: int) -> String:
-	s = clampi(s, 0, 3)
-	return "*".repeat(s) + "-".repeat(3 - s)
 
 func _on_level_pressed(n: int) -> void:
 	Audio.play("click")

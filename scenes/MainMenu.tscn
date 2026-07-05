@@ -54,6 +54,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Play"
 
+[node name="SoundButton" type="Button" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(260, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Sound: ON"
+
 [node name="QuitButton" type="Button" parent="CenterContainer/VBox" unique_id=1885641202]
 custom_minimum_size = Vector2(260, 60)
 layout_mode = 2
@@ -68,4 +74,5 @@ text = "Drag the correct food group onto the Hero to beat the Hunger Monsters!"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="CenterContainer/VBox/PlayButton" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/SoundButton" to="." method="_on_sound_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/QuitButton" to="." method="_on_quit_pressed"]

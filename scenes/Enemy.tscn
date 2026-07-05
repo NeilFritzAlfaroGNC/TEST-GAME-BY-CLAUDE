@@ -1,31 +1,30 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://cm47b8fy54imj"]
 
-[ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://bqt841rxe11dj" path="res://scripts/Enemy.gd" id="1_enemy"]
 
 [sub_resource type="RectangleShape2D" id="EnemyShape"]
 size = Vector2(80, 80)
 
-[node name="Enemy" type="Area2D"]
+[node name="Enemy" type="Area2D" unique_id=1812204254]
 script = ExtResource("1_enemy")
 
-[node name="ColorRect" type="ColorRect" parent="."]
-mouse_filter = 2
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1302693924]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
 color = Color(0.65, 0.18, 0.3, 1)
 
-[node name="Label" type="Label" parent="."]
-mouse_filter = 2
+[node name="Label" type="Label" parent="." unique_id=1412809564]
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Monster"
 horizontal_alignment = 1
 vertical_alignment = 1
-text = "Monster"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1315079765]
 shape = SubResource("EnemyShape")
