@@ -6,8 +6,8 @@ extends Area2D
 const LIFETIME := 5.0        # max seconds a food stays on the belt if untouched
 const BLINK_AT := 3.5        # start blinking this many seconds in (warns it's leaving)
 const BELT_SPEED := 130.0    # left -> right belt speed (px/s)
-const BELT_Y := 600.0        # belt lane the food rides on
 const SPAWN_X := -90.0       # just off the left edge
+# The belt lane Y comes from the shared layout consts: GameData.BELT_Y.
 
 @export var food_group: String = "Go"
 
@@ -21,7 +21,7 @@ var target_x: float = SPAWN_X   # stack slot assigned by Main; the food slides t
 func _ready() -> void:
 	input_pickable = true
 	input_event.connect(_on_input_event)
-	position = Vector2(SPAWN_X, BELT_Y)
+	position = Vector2(SPAWN_X, GameData.BELT_Y)
 
 # Assign this food a group ("Go"/"Glow"/"Grow"), a random real name, and color.
 func set_food(group: String) -> void:
@@ -60,6 +60,17 @@ func _process(delta: float) -> void:
 	else:
 		modulate.a = 1.0
 
+# Return a held food to the belt WITHOUT the drop check (used when the game
+# pauses mid-drag: a mouse release during the pause would otherwise complete
+# the drop — and could feed the Hero — the moment the game resumes).
+func cancel_drag() -> void:
+	if not dragging:
+		return
+	dragging = false
+	z_index = 0
+	modulate.a = 1.0
+	position.y = GameData.BELT_Y
+
 func _drop() -> void:
 	dragging = false
 	z_index = 0
@@ -75,4 +86,4 @@ func _drop() -> void:
 			queue_free()
 			return
 	# Otherwise it goes back onto the belt and keeps riding.
-	position.y = BELT_Y
+	position.y = GameData.BELT_Y

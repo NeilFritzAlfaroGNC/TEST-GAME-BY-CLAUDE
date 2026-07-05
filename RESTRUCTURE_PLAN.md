@@ -101,15 +101,15 @@ The big picture in CLAUDE.md is accurate. Verified end-to-end:
 ### 1.4 Fragile or edge-broken flows
 
 10. **No null/failure guards anywhere in `Database.gd`'s public API.** If
-    `_open()` ever fails in release (see #1), every later call
-    (`get_high_score` from `GameData._ready`, `get_level_progress` from
-    LevelSelect…) is a null-instance crash. Query success is never checked
-    either (`query_with_bindings` return values ignored).
+	`_open()` ever fails in release (see #1), every later call
+	(`get_high_score` from `GameData._ready`, `get_level_progress` from
+	LevelSelect…) is a null-instance crash. Query success is never checked
+	either (`query_with_bindings` return values ignored).
 11. **Boss-invalid fallthrough** (`Main.food_dropped_on_hero:170`): the boss
-    branch requires `_boss_active and is_instance_valid(boss)`. If the boss
-    instance were ever invalid while `_boss_active` is still true, feeding
-    falls through to the *normal* check against `correct_group` — which is the
-    already-finished last wave's group. Currently unreachable through normal
+	branch requires `_boss_active and is_instance_valid(boss)`. If the boss
+	instance were ever invalid while `_boss_active` is still true, feeding
+	falls through to the *normal* check against `correct_group` — which is the
+	already-finished last wave's group. Currently unreachable through normal
     play (boss is only freed via `_clear_boss`, which flips the flag), but the
     state pair is unguarded and one future edit away from a confusing bug.
 12. **Tween stacking can permanently drift the Hero.** `_effect_slam` captures
@@ -117,13 +117,13 @@ The big picture in CLAUDE.md is accurate. Verified end-to-end:
     lunge overlapping anything that moves the hero) fired mid-lunge captures a
     displaced `orig`, and the hero never returns to (920, 320). Two correct
     Grow feeds in quick succession is achievable. Same pattern, lower stakes,
-    in `_effect_heal`'s modulate tween.
+	in `_effect_heal`'s modulate tween.
 13. **Same-SFX retrigger cuts audio.** `Audio.play` keeps exactly one
-    `AudioStreamPlayer` per sound name, so a rapid second "correct"/"zap" cuts
-    off the first. Polish-level, but it is audible during fast play.
+	`AudioStreamPlayer` per sound name, so a rapid second "correct"/"zap" cuts
+	off the first. Polish-level, but it is audible during fast play.
 14. **Asymmetric cleanup on game over**: `_level_complete()` stops both timers
-    and `_clear_foods()`; `_game_over()` stops the timers but leaves foods (the
-    scene change frees them, so it's benign today — but the asymmetry invites a
+	and `_clear_foods()`; `_game_over()` stops the timers but leaves foods (the
+	scene change frees them, so it's benign today — but the asymmetry invites a
     future bug, e.g. if game over ever shows an in-scene popup like the lesson
     does).
 15. **`_needed_groups()` returns `_meal_needed` by reference**, not a copy. All
@@ -141,18 +141,18 @@ The big picture in CLAUDE.md is accurate. Verified end-to-end:
     hunting numbers in two files.
 18. **Duplicated logic**: `_stars()` exists in both `LevelSelect.gd` and
     `ResultScreen.gd` (near-identical); `_spawn_food` re-implements
-    `_choose_spawn_group`'s missing-group-else-random choice inline.
+	`_choose_spawn_group`'s missing-group-else-random choice inline.
 
 ### 1.5 Gaps
 
 19. **No way to leave a level.** Once in `Main.tscn` there is no pause menu,
-    no quit-to-menu, and Esc does nothing — the only exits are winning, dying,
-    or killing the window. Notable for an app aimed at kids/classrooms.
+	no quit-to-menu, and Esc does nothing — the only exits are winning, dying,
+	or killing the window. Notable for an app aimed at kids/classrooms.
 20. **No automated tests at all.** The de-facto test is the manual headless
-    run in CLAUDE.md. Pure-logic pieces (star math, unlock chain, boss meal
-    bookkeeping, needed-group solvability, DB upsert semantics) are all
-    headless-testable today with a script, but no such script exists, and the
-    two headless commands aren't wrapped in a runnable one-liner.
+	run in CLAUDE.md. Pure-logic pieces (star math, unlock chain, boss meal
+	bookkeeping, needed-group solvability, DB upsert semantics) are all
+	headless-testable today with a script, but no such script exists, and the
+	two headless commands aren't wrapped in a runnable one-liner.
 21. **No audio settings** (mute / volume) — relevant for classroom use.
 22. **`is_level_unlocked` does two DB queries per tile per refresh** (12
     queries per difficulty tab click). Harmless at 6 levels; worth batching

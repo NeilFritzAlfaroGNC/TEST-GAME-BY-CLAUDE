@@ -13,6 +13,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		_toggle()
 		get_viewport().set_input_as_handled()
 
+# The Android system Back button pauses/resumes instead of killing the game.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		_toggle()
+
 # The HUD "Pause" button (wired in Main.tscn). While paused the HUD itself is
 # frozen, so this only ever opens the menu; Esc or Resume closes it.
 func _on_pause_button_pressed() -> void:
@@ -29,6 +34,11 @@ func _pause() -> void:
 	var main = get_tree().current_scene
 	if main == null or not main.game_active:
 		return
+	# Return any held food to the belt first: a mouse release during the pause
+	# would otherwise complete the drop (and could feed the Hero) on resume.
+	for f in main.foods_container.get_children():
+		if is_instance_valid(f) and f.dragging:
+			f.cancel_drag()
 	Audio.play("click")
 	get_tree().paused = true
 	visible = true

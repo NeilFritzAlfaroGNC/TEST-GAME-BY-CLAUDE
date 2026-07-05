@@ -18,6 +18,10 @@ extends Node
 
 const DB_PATH := "user://foodheroes.db"
 
+# Overridable before entering the tree — the smoke test points this at a
+# throwaway file so it never touches real progress.
+var db_file: String = DB_PATH
+
 var _db = null   # the SQLite instance (Object)
 
 func _ready() -> void:
@@ -31,13 +35,13 @@ func _open() -> void:
 	if inst == null:
 		_fail("The SQLite extension class could not be instantiated.")
 		return
-	inst.path = DB_PATH
+	inst.path = db_file
 	if not inst.open_db():
-		_fail("Could not open the save database at %s." % DB_PATH)
+		_fail("Could not open the save database at %s." % db_file)
 		return
 	_db = inst
 	_ensure_schema()
-	print("[DB] SQLite connected: ", DB_PATH)
+	print("[DB] SQLite connected: ", db_file)
 
 # Loud, release-safe failure: report the problem and close the game rather
 # than silently running without saves.
@@ -45,6 +49,18 @@ func _fail(msg: String) -> void:
 	push_error("[DB] " + msg)
 	OS.alert(msg + "\n\nFood Heroes needs its save database and will close.", "Food Heroes - save error")
 	get_tree().quit(1)
+
+# === Generic persisted settings (stored in the meta table) ===
+
+func get_setting_int(key: String, def: int) -> int:
+	return _meta_get_int(key, def)
+
+func set_setting_int(key: String, value: int) -> void:
+	_exec_bound(
+		"INSERT INTO meta (key, value) VALUES (?, ?) " +
+		"ON CONFLICT(key) DO UPDATE SET value = excluded.value;",
+		[key, str(value)]
+	)
 
 func _ensure_schema() -> void:
 	_exec("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);")

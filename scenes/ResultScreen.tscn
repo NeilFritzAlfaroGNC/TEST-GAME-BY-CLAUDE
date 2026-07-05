@@ -1,86 +1,88 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://chnqm6424y7j"]
 
-[ext_resource type="Script" path="res://scripts/ResultScreen.gd" id="1_res"]
+[ext_resource type="Script" uid="uid://dxt5k6yprj2b7" path="res://scripts/ResultScreen.gd" id="1_res"]
 
-[node name="ResultScreen" type="Control"]
+[node name="ResultScreen" type="Control" unique_id=415434290]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_res")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=334260185]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(0.18, 0.22, 0.35, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=599094894]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=739640518]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="Title" type="Label" parent="CenterContainer/VBox"]
+[node name="Title" type="Label" parent="CenterContainer/VBox" unique_id=2018558912]
 layout_mode = 2
 theme_override_font_sizes/font_size = 56
-horizontal_alignment = 1
 text = "RESULT"
+horizontal_alignment = 1
 
-[node name="Stars" type="Label" parent="CenterContainer/VBox"]
+[node name="Stars" type="Label" parent="CenterContainer/VBox" unique_id=334906420]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
 theme_override_font_sizes/font_size = 36
 horizontal_alignment = 1
-text = ""
 
-[node name="Score" type="Label" parent="CenterContainer/VBox"]
+[node name="Score" type="Label" parent="CenterContainer/VBox" unique_id=1626836086]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_font_sizes/font_size = 28
-horizontal_alignment = 1
 text = "Final Score: 0"
+horizontal_alignment = 1
 
-[node name="Best" type="Label" parent="CenterContainer/VBox"]
+[node name="Best" type="Label" parent="CenterContainer/VBox" unique_id=1588772818]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
 theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
-text = ""
 
-[node name="HighScore" type="Label" parent="CenterContainer/VBox"]
+[node name="HighScore" type="Label" parent="CenterContainer/VBox" unique_id=1093956876]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
 theme_override_font_sizes/font_size = 20
-horizontal_alignment = 1
 text = "High Score: 0"
+horizontal_alignment = 1
 
-[node name="ButtonRow" type="HBoxContainer" parent="CenterContainer/VBox"]
+[node name="ButtonRow" type="HBoxContainer" parent="CenterContainer/VBox" unique_id=1611893252]
 layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="NextButton" type="Button" parent="CenterContainer/VBox/ButtonRow"]
+[node name="NextButton" type="Button" parent="CenterContainer/VBox/ButtonRow" unique_id=1497436321]
 custom_minimum_size = Vector2(150, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Next Level"
 
-[node name="RetryButton" type="Button" parent="CenterContainer/VBox/ButtonRow"]
+[node name="RetryButton" type="Button" parent="CenterContainer/VBox/ButtonRow" unique_id=1961453363]
 custom_minimum_size = Vector2(130, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Retry"
 
-[node name="LevelSelectButton" type="Button" parent="CenterContainer/VBox/ButtonRow"]
+[node name="LevelSelectButton" type="Button" parent="CenterContainer/VBox/ButtonRow" unique_id=1808464748]
 custom_minimum_size = Vector2(170, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Level Select"
 
-[node name="MenuButton" type="Button" parent="CenterContainer/VBox/ButtonRow"]
+[node name="MenuButton" type="Button" parent="CenterContainer/VBox/ButtonRow" unique_id=1644321172]
 custom_minimum_size = Vector2(130, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24

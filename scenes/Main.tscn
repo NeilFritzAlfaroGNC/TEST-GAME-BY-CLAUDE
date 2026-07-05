@@ -1,59 +1,59 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://ds74kaqx8b7fq"]
 
-[ext_resource type="Script" path="res://scripts/Main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://cia1a4cv8g71q" path="res://scripts/Main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="2_enemy"]
-[ext_resource type="PackedScene" path="res://scenes/Food.tscn" id="3_food_scene"]
-[ext_resource type="Script" path="res://scripts/PauseMenu.gd" id="4_pause"]
+[ext_resource type="PackedScene" uid="uid://c862h0l8r2njm" path="res://scenes/Food.tscn" id="3_food_scene"]
+[ext_resource type="Script" uid="uid://cvdckj2bj28sq" path="res://scripts/PauseMenu.gd" id="4_pause"]
 
 [sub_resource type="RectangleShape2D" id="HeroShape"]
 size = Vector2(110, 150)
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=44441484]
 script = ExtResource("1_main")
 enemy_scene = ExtResource("2_enemy")
 food_scene = ExtResource("3_food_scene")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=678856767]
 z_index = -10
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(0.74, 0.87, 0.96, 1)
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=589365493]
 position = Vector2(576, 324)
 
-[node name="Hero" type="Area2D" parent="."]
+[node name="Hero" type="Area2D" parent="." unique_id=1736275931]
 position = Vector2(920, 320)
 
-[node name="ColorRect" type="ColorRect" parent="Hero"]
-mouse_filter = 2
+[node name="ColorRect" type="ColorRect" parent="Hero" unique_id=1341917307]
 offset_left = -55.0
 offset_top = -75.0
 offset_right = 55.0
 offset_bottom = 75.0
+mouse_filter = 2
 color = Color(0.2, 0.45, 0.9, 1)
 
-[node name="Label" type="Label" parent="Hero"]
-mouse_filter = 2
+[node name="Label" type="Label" parent="Hero" unique_id=18352511]
 offset_left = -55.0
 offset_top = -75.0
 offset_right = 55.0
 offset_bottom = 75.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 24
+text = "HERO"
 horizontal_alignment = 1
 vertical_alignment = 1
-text = "HERO"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hero"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hero" unique_id=172737742]
 shape = SubResource("HeroShape")
 
-[node name="Foods" type="Node2D" parent="."]
+[node name="Foods" type="Node2D" parent="." unique_id=1088336760]
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=512117138]
 
-[node name="LevelLabel" type="Label" parent="HUD"]
+[node name="LevelLabel" type="Label" parent="HUD" unique_id=846988996]
 offset_left = 24.0
 offset_top = 14.0
 offset_right = 660.0
@@ -62,7 +62,7 @@ theme_override_colors/font_color = Color(0.12, 0.12, 0.2, 1)
 theme_override_font_sizes/font_size = 26
 text = "Level"
 
-[node name="HighScoreLabel" type="Label" parent="HUD"]
+[node name="HighScoreLabel" type="Label" parent="HUD" unique_id=1669457235]
 offset_left = 24.0
 offset_top = 52.0
 offset_right = 660.0
@@ -71,7 +71,8 @@ theme_override_colors/font_color = Color(0.85, 0.6, 0.1, 1)
 theme_override_font_sizes/font_size = 22
 text = "High Score: 0"
 
-[node name="ScoreLabel" type="Label" parent="HUD"]
+[node name="ScoreLabel" type="Label" parent="HUD" unique_id=1573532301]
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -300.0
@@ -80,10 +81,11 @@ offset_right = -24.0
 offset_bottom = 52.0
 theme_override_colors/font_color = Color(0.12, 0.12, 0.2, 1)
 theme_override_font_sizes/font_size = 26
-horizontal_alignment = 2
 text = "Score: 0"
+horizontal_alignment = 2
 
-[node name="LivesLabel" type="Label" parent="HUD"]
+[node name="LivesLabel" type="Label" parent="HUD" unique_id=1052718325]
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -300.0
@@ -92,27 +94,30 @@ offset_right = -24.0
 offset_bottom = 90.0
 theme_override_colors/font_color = Color(0.7, 0.15, 0.15, 1)
 theme_override_font_sizes/font_size = 26
-horizontal_alignment = 2
 text = "Lives: 3"
+horizontal_alignment = 2
 
-[node name="TargetLabel" type="Label" parent="HUD"]
+[node name="TargetLabel" type="Label" parent="HUD" unique_id=1208129646]
+anchors_preset = 10
 anchor_right = 1.0
 offset_top = 66.0
 offset_bottom = 106.0
 theme_override_font_sizes/font_size = 30
-horizontal_alignment = 1
 text = "Feed the Hero foods!"
+horizontal_alignment = 1
 
-[node name="HintLabel" type="Label" parent="HUD"]
+[node name="HintLabel" type="Label" parent="HUD" unique_id=1728893903]
+anchors_preset = 10
 anchor_right = 1.0
 offset_top = 112.0
 offset_bottom = 150.0
 theme_override_colors/font_color = Color(0.1, 0.1, 0.1, 1)
 theme_override_font_sizes/font_size = 24
-horizontal_alignment = 1
 text = "Drag the correct food onto the Hero!"
+horizontal_alignment = 1
 
-[node name="PauseButton" type="Button" parent="HUD"]
+[node name="PauseButton" type="Button" parent="HUD" unique_id=349011091]
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -140.0
@@ -122,22 +127,26 @@ offset_bottom = 140.0
 theme_override_font_sizes/font_size = 22
 text = "Pause"
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=1007480099]
 
-[node name="LessonPopup" type="CanvasLayer" parent="."]
+[node name="LessonPopup" type="CanvasLayer" parent="." unique_id=691441683]
 layer = 10
 
-[node name="Root" type="Control" parent="LessonPopup"]
+[node name="Root" type="Control" parent="LessonPopup" unique_id=516325847]
 visible = false
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="Dim" type="ColorRect" parent="LessonPopup/Root"]
+[node name="Dim" type="ColorRect" parent="LessonPopup/Root" unique_id=2107171830]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0, 0, 0, 0.55)
 
-[node name="Panel" type="Panel" parent="LessonPopup/Root"]
+[node name="Panel" type="Panel" parent="LessonPopup/Root" unique_id=1783861414]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -147,15 +156,17 @@ offset_top = -180.0
 offset_right = 320.0
 offset_bottom = 180.0
 
-[node name="LessonTitle" type="Label" parent="LessonPopup/Root/Panel"]
+[node name="LessonTitle" type="Label" parent="LessonPopup/Root/Panel" unique_id=1700055768]
+layout_mode = 0
 anchor_right = 1.0
 offset_top = 24.0
 offset_bottom = 74.0
 theme_override_font_sizes/font_size = 32
-horizontal_alignment = 1
 text = "Level complete!"
+horizontal_alignment = 1
 
-[node name="LessonLabel" type="Label" parent="LessonPopup/Root/Panel"]
+[node name="LessonLabel" type="Label" parent="LessonPopup/Root/Panel" unique_id=1581166941]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 40.0
@@ -163,12 +174,13 @@ offset_top = 92.0
 offset_right = -40.0
 offset_bottom = -96.0
 theme_override_font_sizes/font_size = 22
+text = "Lesson text goes here."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
-text = "Lesson text goes here."
 
-[node name="ContinueButton" type="Button" parent="LessonPopup/Root/Panel"]
+[node name="ContinueButton" type="Button" parent="LessonPopup/Root/Panel" unique_id=971130856]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -180,22 +192,26 @@ offset_bottom = -26.0
 theme_override_font_sizes/font_size = 24
 text = "Continue"
 
-[node name="PausePopup" type="CanvasLayer" parent="."]
+[node name="PausePopup" type="CanvasLayer" parent="." unique_id=283916932]
 layer = 15
 
-[node name="Root" type="Control" parent="PausePopup"]
+[node name="Root" type="Control" parent="PausePopup" unique_id=506172430]
 process_mode = 3
 visible = false
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("4_pause")
 
-[node name="Dim" type="ColorRect" parent="PausePopup/Root"]
+[node name="Dim" type="ColorRect" parent="PausePopup/Root" unique_id=353997359]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0, 0, 0, 0.55)
 
-[node name="Panel" type="Panel" parent="PausePopup/Root"]
+[node name="Panel" type="Panel" parent="PausePopup/Root" unique_id=243040618]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -205,15 +221,17 @@ offset_top = -190.0
 offset_right = 220.0
 offset_bottom = 190.0
 
-[node name="Title" type="Label" parent="PausePopup/Root/Panel"]
+[node name="Title" type="Label" parent="PausePopup/Root/Panel" unique_id=1794389833]
+layout_mode = 0
 anchor_right = 1.0
 offset_top = 20.0
 offset_bottom = 70.0
 theme_override_font_sizes/font_size = 34
-horizontal_alignment = 1
 text = "PAUSED"
+horizontal_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="PausePopup/Root/Panel"]
+[node name="VBox" type="VBoxContainer" parent="PausePopup/Root/Panel" unique_id=1617155062]
+layout_mode = 0
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -140.0
@@ -222,32 +240,32 @@ offset_right = 140.0
 offset_bottom = 346.0
 theme_override_constants/separation = 12
 
-[node name="ResumeButton" type="Button" parent="PausePopup/Root/Panel/VBox"]
+[node name="ResumeButton" type="Button" parent="PausePopup/Root/Panel/VBox" unique_id=1121792307]
 custom_minimum_size = Vector2(280, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Resume"
 
-[node name="RetryButton" type="Button" parent="PausePopup/Root/Panel/VBox"]
+[node name="RetryButton" type="Button" parent="PausePopup/Root/Panel/VBox" unique_id=1889811673]
 custom_minimum_size = Vector2(280, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Retry Level"
 
-[node name="LevelSelectButton" type="Button" parent="PausePopup/Root/Panel/VBox"]
+[node name="LevelSelectButton" type="Button" parent="PausePopup/Root/Panel/VBox" unique_id=437682502]
 custom_minimum_size = Vector2(280, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Level Select"
 
-[node name="MenuButton" type="Button" parent="PausePopup/Root/Panel/VBox"]
+[node name="MenuButton" type="Button" parent="PausePopup/Root/Panel/VBox" unique_id=940062995]
 custom_minimum_size = Vector2(280, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Main Menu"
 
-[connection signal="pressed" from="LessonPopup/Root/Panel/ContinueButton" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="HUD/PauseButton" to="PausePopup/Root" method="_on_pause_button_pressed"]
+[connection signal="pressed" from="LessonPopup/Root/Panel/ContinueButton" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="PausePopup/Root/Panel/VBox/ResumeButton" to="PausePopup/Root" method="_on_resume_pressed"]
 [connection signal="pressed" from="PausePopup/Root/Panel/VBox/RetryButton" to="PausePopup/Root" method="_on_retry_pressed"]
 [connection signal="pressed" from="PausePopup/Root/Panel/VBox/LevelSelectButton" to="PausePopup/Root" method="_on_level_select_pressed"]

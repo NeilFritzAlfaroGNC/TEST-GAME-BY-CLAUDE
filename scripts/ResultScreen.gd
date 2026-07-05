@@ -8,7 +8,7 @@ func _ready() -> void:
 	title.text = "LEVEL CLEAR!" if win else "GAME OVER"
 	title.add_theme_color_override("font_color", Color(0.3, 0.9, 0.4) if win else Color(0.95, 0.4, 0.4))
 
-	$CenterContainer/VBox/Stars.text = _stars(GameData.last_stars)
+	$CenterContainer/VBox/Stars.text = "[ %s ]" % GameData.stars_text(GameData.last_stars)
 	$CenterContainer/VBox/Score.text = "Score: %d   (Level %d - %s)" % [GameData.score, GameData.current_level, GameData.current_difficulty]
 
 	var prog: Dictionary = DB.get_level_progress(GameData.current_difficulty, GameData.current_level)
@@ -20,10 +20,6 @@ func _ready() -> void:
 
 	Audio.stop_music()
 	Audio.play("win" if win else "lose")
-
-func _stars(s: int) -> String:
-	s = clampi(s, 0, 3)
-	return "[ %s ]" % ("*".repeat(s) + "-".repeat(3 - s))
 
 func _on_next_pressed() -> void:
 	Audio.play("click")

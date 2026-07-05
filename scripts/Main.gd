@@ -1,8 +1,17 @@
 extends Node2D
-## Game scene controller.
-## Drives the level loop: spawn enemies, check dropped food, score, lives,
-## special attack effects (Go zap / Glow heal / Grow slam), lesson popup, win/lose.
-## Foods ride a left-to-right conveyor belt and vanish if not used in time.
+## Game scene controller (the façade other scripts talk to).
+## Drives the level state machine: spawn enemies, check dropped food, score,
+## lives, waves + boss fights, lesson popup, win/lose. The conveyor belt lives
+## in BeltManager ("Belt" child) and all procedural effects in FxManager
+## ("Fx" child) — both created here in code.
+##
+## CONTRACT (do not break): Food.gd / Enemy.gd reach this script via
+## get_tree().current_scene and call food_dropped_on_hero / enemy_reached_hero
+## with untyped params; they find the hero at get_node("Hero"); PauseMenu.gd
+## reads `game_active` and iterates `foods_container`.
+
+const BeltManagerScript := preload("res://scripts/BeltManager.gd")
+const FxManagerScript := preload("res://scripts/FxManager.gd")
 
 @export var enemy_scene: PackedScene
 @export var food_scene: PackedScene
@@ -25,6 +34,10 @@ var correct_group: String = "Go"
 var enemies_to_spawn: int = 0
 var game_active: bool = false
 
+# The two code-created components (untyped, called dynamically).
+var belt = null
+var fx = null
+
 # Boss/wave state (only used on boss levels — every 5th level).
 var _boss_level: bool = false
 var _wave: int = 0
@@ -36,18 +49,7 @@ var _meal_needed: Array = []    # boss meal groups still to feed (a balanced Go+
 var _boss_active: bool = false
 
 const BOSS_SPAWN_POS := Vector2(120, 320)
-
-# Screen-shake state (used by the Grow slam).
-var _shake_time: float = 0.0
-var _shake_dur: float = 0.0
-var _shake_strength: float = 0.0
-
-# Hero effect tweens are single-flight: a new slam/heal kills the previous one
-# and re-anchors to _hero_home, so an interrupted lunge can never leave the
-# hero permanently displaced from its home spot.
-var _hero_home := Vector2.ZERO
-var _hero_move_tween: Tween
-var _hero_tint_tween: Tween
+const BOSS_COLOR := Color(0.42, 0.24, 0.52)   # neutral purple: the boss wants every group
 
 const SPAWN_INTERVAL := 2.2
 const POINTS_PER_ENEMY := 10
@@ -57,46 +59,22 @@ const BASE_ENEMY_SPEED := 70.0
 var _enemy_speed: float = BASE_ENEMY_SPEED
 var _score_mult: int = 1
 
-# === Food conveyor belt ===
-const FOOD_SPAWN_INTERVAL := 1.0
-const MAX_FOODS := 6
-const BELT_TOP := 552.0
-const BELT_H := 96.0
-const BELT_STRIPE_SPEED := 130.0
-const STACK_FRONT_X := 1040.0    # foods stack against here (right side), piling left
-const STACK_SPACING := 185.0     # distance between stacked food centers (leaves a visible gap)
-var _food_timer: Timer
-var _belt_stripes: Array = []
-
 func _ready() -> void:
 	# Clicking/dragging Area2D foods needs physics picking on the root viewport.
 	get_viewport().physics_object_picking = true
-	_hero_home = hero.position
 	spawn_timer.wait_time = SPAWN_INTERVAL
 	spawn_timer.timeout.connect(_spawn_enemy)
-	_food_timer = Timer.new()
-	_food_timer.wait_time = FOOD_SPAWN_INTERVAL
-	_food_timer.timeout.connect(_spawn_food)
-	add_child(_food_timer)
-	_build_belt()
+	fx = FxManagerScript.new()
+	fx.name = "Fx"
+	add_child(fx)
+	fx.setup(hero, cam)
+	belt = BeltManagerScript.new()
+	belt.name = "Belt"
+	add_child(belt)
+	belt.setup(food_scene, foods_container, _needed_groups)
 	lesson_root.visible = false
 	Audio.play_music("music")
 	_start_level()
-
-func _process(delta: float) -> void:
-	# Camera shake decay.
-	if _shake_time > 0.0:
-		_shake_time -= delta
-		var s := _shake_strength * (_shake_time / _shake_dur)
-		cam.offset = Vector2(randf_range(-s, s), randf_range(-s, s))
-	elif cam.offset != Vector2.ZERO:
-		cam.offset = Vector2.ZERO
-	# Scroll the conveyor stripes (left -> right, wrapping) for a moving-belt look.
-	for stripe in _belt_stripes:
-		stripe.position.x += BELT_STRIPE_SPEED * delta
-		if stripe.position.x > 1160.0:
-			stripe.position.x -= 1300.0
-	_layout_belt()
 
 # === Level setup ===
 func _start_level() -> void:
@@ -111,10 +89,8 @@ func _start_level() -> void:
 		e.remove_from_group("enemies")
 		e.queue_free()
 	_clear_boss()
-	_clear_foods()
+	belt.clear_foods()
 	game_active = true
-	_food_timer.start()
-	_seed_belt()
 	_boss_level = GameData.is_boss_level(GameData.current_level)
 	if _boss_level:
 		# Boss level: fight through waves, then the boss.
@@ -131,6 +107,9 @@ func _start_level() -> void:
 		_set_hint_color(Color(0.12, 0.12, 0.12))
 		spawn_timer.start()
 		_spawn_enemy()   # first enemy right away
+	# Start the belt AFTER the branch above so the seeded foods match the
+	# actual first wave/level group (not level data a boss level ignores).
+	belt.start()
 	_update_hud()
 
 # Pick each wave's target group: wave 1 is always Go, wave 2 is a random
@@ -195,11 +174,11 @@ func food_dropped_on_hero(food) -> bool:
 	if result["hit"]:
 		GameData.score += POINTS_PER_ENEMY * _score_mult
 		hint_label.text = "Correct! %s is a %s food. Monster defeated!" % [fed_name, correct_group]
-		_play_attack(correct_group, result["pos"])
+		fx.play_attack(correct_group, result["pos"])
 	else:
 		hint_label.text = "Correct! %s is a %s food. Wait for a monster!" % [fed_name, correct_group]
 		Audio.play("correct")
-	_show_nutrient_popup(GameData.food_nutrient(fed_name), GameData.group_color(correct_group))
+	fx.nutrient_popup(GameData.food_nutrient(fed_name), GameData.group_color(correct_group))
 	_set_hint_color(Color(0.10, 0.55, 0.15))
 	_update_hud()
 	return true
@@ -234,7 +213,7 @@ func enemy_reached_hero(enemy) -> void:
 	hint_label.text = "Oh no! A Hunger Monster got through!"
 	_set_hint_color(Color(0.75, 0.10, 0.10))
 	Audio.play("wrong")
-	_shake(6.0, 0.25)
+	fx.shake(6.0, 0.25)
 	if GameData.lives <= 0:
 		enemy.remove_from_group("enemies")
 		enemy.queue_free()
@@ -287,12 +266,12 @@ func _spawn_boss() -> void:
 	boss.global_position = BOSS_SPAWN_POS
 	var rect = boss.get_node_or_null("ColorRect")
 	if rect != null:
-		rect.color = Color(0.42, 0.24, 0.52)   # neutral purple: it wants every group
+		rect.color = BOSS_COLOR
 	var lbl = boss.get_node_or_null("Label")
 	if lbl != null:
 		lbl.text = "BOSS"
 	Audio.play("slam")
-	_shake(9.0, 0.4)
+	fx.shake(9.0, 0.4)
 	hint_label.text = "BOSS! Build a balanced meal — feed one Go, one Grow, and one Glow food!"
 	_set_hint_color(Color(0.75, 0.10, 0.10))
 	_update_hud()
@@ -310,8 +289,8 @@ func _feed_boss(food) -> bool:
 	# Valid new part of the meal.
 	_meal_needed.erase(g)
 	GameData.score += POINTS_PER_ENEMY * _score_mult
-	_play_attack(g, boss.global_position)
-	_show_nutrient_popup(GameData.food_nutrient(food.label.text), GameData.group_color(g))
+	fx.play_attack(g, boss.global_position)
+	fx.nutrient_popup(GameData.food_nutrient(food.label.text), GameData.group_color(g))
 	if _meal_needed.is_empty():
 		_boss_active = false
 		_clear_boss()
@@ -342,7 +321,7 @@ func _boss_reached_hero(b) -> void:
 	hint_label.text = "The BOSS struck the Hero!"
 	_set_hint_color(Color(0.75, 0.10, 0.10))
 	Audio.play("wrong")
-	_shake(9.0, 0.3)
+	fx.shake(9.0, 0.3)
 	if GameData.lives <= 0:
 		_boss_active = false
 		_clear_boss()
@@ -360,116 +339,13 @@ func _clear_boss() -> void:
 		boss.queue_free()
 	boss = null
 
-# === Special attack effects (Phase 8) ===
-func _play_attack(group: String, target: Vector2) -> void:
-	match group:
-		"Go":
-			_effect_zap(hero.global_position, target)
-		"Glow":
-			_effect_heal(hero.global_position)
-		"Grow":
-			_effect_slam(target)
-		_:
-			_effect_zap(hero.global_position, target)
-
-# Go = ZAP: a jagged lightning bolt from the Hero to the enemy.
-func _effect_zap(from: Vector2, to: Vector2) -> void:
-	Audio.play("zap")
-	var line := Line2D.new()
-	line.width = 6.0
-	line.default_color = Color(1.0, 0.95, 0.30)
-	line.z_index = 50
-	add_child(line)
-	var pts := PackedVector2Array()
-	var segments := 8
-	for i in range(segments + 1):
-		var t := float(i) / float(segments)
-		var p := from.lerp(to, t)
-		if i != 0 and i != segments:
-			p += Vector2(randf_range(-18, 18), randf_range(-18, 18))
-		pts.append(p)
-	line.points = pts
-	var tw := create_tween()
-	tw.tween_interval(0.06)
-	tw.tween_property(line, "modulate:a", 0.0, 0.20)
-	tw.tween_callback(line.queue_free)
-
-# Glow = HEAL: a green pulse on the Hero plus an expanding ring.
-func _effect_heal(center: Vector2) -> void:
-	Audio.play("heal")
-	_spawn_ring(center, Color(0.30, 0.95, 0.45))
-	if _hero_tint_tween != null and _hero_tint_tween.is_valid():
-		_hero_tint_tween.kill()
-	hero.modulate = Color(0.45, 1.0, 0.55)
-	_hero_tint_tween = create_tween()
-	_hero_tint_tween.tween_property(hero, "modulate", Color(1, 1, 1, 1), 0.4)
-
-# Grow = SLAM: a heavy impact ring, screen shake, and a Hero lunge.
-func _effect_slam(target: Vector2) -> void:
-	Audio.play("slam")
-	_spawn_ring(target, Color(1.0, 0.55, 0.20))
-	_shake(9.0, 0.30)
-	if _hero_move_tween != null and _hero_move_tween.is_valid():
-		_hero_move_tween.kill()
-	hero.position = _hero_home
-	var dir := (target - hero.global_position).normalized()
-	_hero_move_tween = create_tween()
-	_hero_move_tween.tween_property(hero, "position", _hero_home + dir * 28.0, 0.06)
-	_hero_move_tween.tween_property(hero, "position", _hero_home, 0.18)
-
-func _spawn_ring(center: Vector2, color: Color) -> void:
-	var ring := Line2D.new()
-	ring.width = 6.0
-	ring.default_color = color
-	ring.closed = true
-	ring.z_index = 40
-	ring.position = center
-	var pts := PackedVector2Array()
-	var n := 24
-	for i in range(n):
-		var a := TAU * float(i) / float(n)
-		pts.append(Vector2(cos(a), sin(a)) * 30.0)
-	ring.points = pts
-	add_child(ring)
-	var tw := create_tween()
-	tw.set_parallel(true)
-	tw.tween_property(ring, "scale", Vector2(3.0, 3.0), 0.4)
-	tw.tween_property(ring, "modulate:a", 0.0, 0.4)
-	tw.set_parallel(false)
-	tw.tween_callback(ring.queue_free)
-
-func _shake(strength: float, duration: float) -> void:
-	_shake_strength = strength
-	_shake_dur = duration
-	_shake_time = duration
-
-# Floating "+nutrient" text that rises from the Hero and fades — a small visual
-# reward that also teaches what each correct food provides.
-func _show_nutrient_popup(text: String, color: Color) -> void:
-	var lbl := Label.new()
-	lbl.text = text
-	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	lbl.z_index = 60
-	lbl.add_theme_font_size_override("font_size", 28)
-	lbl.add_theme_color_override("font_color", color)
-	lbl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
-	lbl.add_theme_constant_override("outline_size", 5)
-	lbl.position = hero.position + Vector2(randf_range(-40, 0), -80)
-	add_child(lbl)
-	var tw := create_tween()
-	tw.set_parallel(true)
-	tw.tween_property(lbl, "position:y", lbl.position.y - 80.0, 0.9)
-	tw.tween_property(lbl, "modulate:a", 0.0, 0.9)
-	tw.set_parallel(false)
-	tw.tween_callback(lbl.queue_free)
-
 # Shared end-of-level shutdown (win AND lose take the same path): freeze the
 # loop and empty the belt.
 func _stop_level() -> void:
 	game_active = false
 	spawn_timer.stop()
-	_food_timer.stop()
-	_clear_foods()
+	belt.stop()
+	belt.clear_foods()
 
 # === Lesson popup after each level ===
 func _level_complete() -> void:
@@ -495,120 +371,33 @@ func _game_over() -> void:
 	GameData.record_result(false)
 	get_tree().change_scene_to_file("res://scenes/ResultScreen.tscn")
 
-# === Food conveyor belt ===
+# === Belt contract ===
 # The groups the belt must keep available: this wave/level's group, or (during
-# the boss) every group still missing from the balanced meal.
+# the boss) every group still missing from the balanced meal. BeltManager
+# calls this every frame through the Callable handed over in _ready.
 func _needed_groups() -> Array:
 	if _boss_active:
-		return _meal_needed
+		return _meal_needed.duplicate()   # copy — callers must never alias the live meal state
 	return [correct_group]
-
-func _belt_has_group(g: String) -> bool:
-	for f in foods_container.get_children():
-		if is_instance_valid(f) and not f.is_queued_for_deletion() and f.food_group == g:
-			return true
-	return false
-
-# First needed group not on the belt (keeps levels solvable), or "" if all present.
-func _missing_needed_group() -> String:
-	for g in _needed_groups():
-		if not _belt_has_group(g):
-			return g
-	return ""
-
-func _choose_spawn_group() -> String:
-	var m := _missing_needed_group()
-	return m if m != "" else GameData.random_group()
-
-func _make_food(group: String):
-	var f = food_scene.instantiate()
-	foods_container.add_child(f)
-	f.set_food(group)
-	return f
-
-# Spawn a random small batch of 1 or 2 foods (never 3), each entering with a gap.
-func _spawn_food() -> void:
-	if not game_active:
-		return
-	var count := randi() % 2 + 1   # 1 or 2 foods this batch
-	for i in range(count):
-		var m := _missing_needed_group()
-		# Skip only when the belt is full AND no needed group is missing.
-		if m == "" and foods_container.get_child_count() >= MAX_FOODS:
-			return
-		var group := m if m != "" else GameData.random_group()
-		var f = _make_food(group)
-		if i > 0:
-			# Offset the extra food further left so the batch enters spaced out.
-			f.position = Vector2(f.position.x - i * STACK_SPACING, f.position.y)
-
-# Seed a few foods starting from the MIDDLE of the screen (not pre-stacked on
-# the right); the belt then slides them into the stack.
-func _seed_belt() -> void:
-	var x := 576.0   # center of the 1152-wide screen
-	for i in range(3):
-		var f = _make_food(_choose_spawn_group())
-		f.position.x = x
-		f.target_x = x
-		x -= STACK_SPACING
-
-# Position belt foods into a right-anchored stack: the front-most (largest x)
-# holds STACK_FRONT_X and the rest pack in behind it, so they queue up instead
-# of sliding off the right. Foods being dragged are left alone.
-func _layout_belt() -> void:
-	var items: Array = []
-	for f in foods_container.get_children():
-		if is_instance_valid(f) and not f.dragging:
-			items.append(f)
-	items.sort_custom(func(a, b): return a.position.x > b.position.x)
-	var target := STACK_FRONT_X
-	for f in items:
-		f.target_x = target
-		target -= STACK_SPACING
-
-func _clear_foods() -> void:
-	for f in foods_container.get_children():
-		f.queue_free()
-
-func _build_belt() -> void:
-	var belt := ColorRect.new()
-	belt.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	belt.position = Vector2(0, BELT_TOP)
-	belt.size = Vector2(1152, BELT_H)
-	belt.color = Color(0.26, 0.26, 0.30)
-	belt.z_index = -4
-	add_child(belt)
-	var edge := ColorRect.new()
-	edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	edge.position = Vector2(0, BELT_TOP - 4.0)
-	edge.size = Vector2(1152, 5)
-	edge.color = Color(0.5, 0.5, 0.55)
-	edge.z_index = -3
-	add_child(edge)
-	# Scrolling chevron stripes that sell the "conveyor" motion.
-	for i in range(11):
-		var st := ColorRect.new()
-		st.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		st.position = Vector2(-40.0 + i * 130.0, BELT_TOP + 12.0)
-		st.size = Vector2(30, BELT_H - 24.0)
-		st.color = Color(0.33, 0.33, 0.38)
-		st.z_index = -4
-		add_child(st)
-		_belt_stripes.append(st)
 
 # === HUD ===
 func _update_hud() -> void:
 	score_label.text = "Score: %d" % GameData.score
 	lives_label.text = "Lives: %d" % GameData.lives
 	highscore_label.text = "High Score: %d" % maxi(GameData.high_score, GameData.score)
-	level_label.text = "Level %d: %s  [%s]" % [GameData.current_level, GameData.current_level_data()["name"], GameData.current_difficulty]
+	# Boss levels ignore their LEVELS row (waves + boss instead), so show a
+	# boss title rather than the unused level name.
+	var lvl_name: String = "BOSS: Balanced Meal" if _boss_level else String(GameData.current_level_data()["name"])
+	level_label.text = "Level %d: %s  [%s]" % [GameData.current_level, lvl_name, GameData.current_difficulty]
 	if _boss_active:
 		target_label.text = "BOSS — build a meal!  Need: %s" % _meal_left_text()
+		target_label.add_theme_color_override("font_color", BOSS_COLOR)
 	elif _boss_level:
 		target_label.text = "Wave %d/%d   Feed  %s  foods!" % [_wave, _total_waves, correct_group]
+		target_label.add_theme_color_override("font_color", GameData.group_color(correct_group))
 	else:
 		target_label.text = "Feed the Hero  %s  foods!" % correct_group
-	target_label.add_theme_color_override("font_color", GameData.group_color(correct_group))
+		target_label.add_theme_color_override("font_color", GameData.group_color(correct_group))
 
 func _set_hint_color(c: Color) -> void:
 	hint_label.add_theme_color_override("font_color", c)
