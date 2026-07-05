@@ -119,6 +119,11 @@ existing feature.
 	  export preset too (README phase 9 is still open).
 - [ ] **Art phase** (per CLAUDE.md: swap `ColorRect` → `Sprite2D`, keep node
 	  names/scripts): hero, monsters, boss, per-food sprites, belt texture.
+	  **Started**: Main Menu buttons themed with Kenney UI Pack (CC0) via
+	  `assets/ui/menu_theme.tres` (first test — extend the theme to
+	  LevelSelect/Result/pause buttons next; the pack also has fonts, sounds,
+	  and vector sources at `C:\GAMES\UIPACK`). High score label removed from
+	  the menu as part of the cleanup.
 - [ ] **Per-difficulty stats screen**: total stars per track, e.g. "Easy
 	  14/18 ★" on LevelSelect — all data already lives in `progress`.
 - [ ] **Settings scene**: volume sliders (music/SFX), language, colorblind

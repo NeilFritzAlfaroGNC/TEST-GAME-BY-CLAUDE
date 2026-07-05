@@ -2,7 +2,6 @@ extends Control
 ## Main Menu. Flow: Menu -> Game -> Result -> Menu.
 
 func _ready() -> void:
-	$CenterContainer/VBox/HighScore.text = "High Score: %d" % GameData.high_score
 	_update_sound_button()
 	Audio.play_music("music")
 

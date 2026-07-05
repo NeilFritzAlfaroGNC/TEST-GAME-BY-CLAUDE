@@ -44,6 +44,7 @@ the development reference.
 
 ```
 project.godot            Project settings + the three autoloads (DB, GameData, Audio)
+assets/ui/               Menu button textures (Kenney UI Pack, CC0) + menu_theme.tres
 Icon Game.png            App icon (the project icon set in project.godot)
 icon.svg                 Old default Godot icon (no longer referenced)
 TEST GAME BY CLAUDE.approj   Anchorpoint (asset-management tool) project config
@@ -86,15 +87,15 @@ tools/
 | 7. SQLite save | ✅ `DB` autoload ([scripts/Database.gd](scripts/Database.gd)) stores **all scores AND progress** in **SQLite** — the high score and per-(difficulty, level) best score / stars / unlock state. |
 | 8. Special attack effects | ✅ Go = **zap** (lightning bolt), Glow = **heal** (green pulse + ring), Grow = **slam** (shockwave + screen shake + hero lunge) |
 | 5. Sound | ✅ Procedural SFX + looping music (correct / wrong / zap / heal / slam / click / win / lose / music) — generated, no downloads |
-| 5. Art (sprites) | ⬜ Next step — colored boxes still in place on purpose (art last) |
+| 5. Art (sprites) | 🟨 Started — Main Menu buttons use **Kenney UI Pack** textures (first UI art test); in-game visuals are still colored boxes on purpose |
 | 9. Build & device testing | ⬜ Export Android `.apk` + Windows `.exe` |
 
 ## Data — SQLite save
 
 The `DB` autoload ([scripts/Database.gd](scripts/Database.gd)) is the persistence layer.
 It stores the **high score** and per-(difficulty, level) **best score / stars / unlock**
-state. The high score is shown on the Main Menu, on the in-level HUD, and on the Result
-screen. (There is no run-history / "recent scores" feature.)
+state. The high score is shown on the in-level HUD and on the Result screen. (There is
+no run-history / "recent scores" feature.)
 
 Godot 4 has no built-in SQLite, so persistence uses the **godot-sqlite** GDExtension
 (a native plugin, committed in `addons/godot-sqlite/` for Windows + Android). On
@@ -102,6 +103,10 @@ Godot 4 has no built-in SQLite, so persistence uses the **godot-sqlite** GDExten
 If the extension is ever missing or the database cannot open, `DB` shows an error
 alert and closes the game — a **runtime check that also works in release exports**
 (an `assert` would be stripped there). The game requires SQLite; there is no fallback.
+
+## Credits
+
+- Menu button art: [Kenney UI Pack](https://kenney.nl/assets/ui-pack) (CC0 / public domain).
 
 ## Sound
 
