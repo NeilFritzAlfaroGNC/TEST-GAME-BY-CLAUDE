@@ -8,7 +8,13 @@ extends Node
 ##
 ## The SQLite class is reached by *string* (ClassDB) rather than a typed
 ## `SQLite` reference, so this script still parses even if the native
-## extension is ever removed (it will simply fail loudly at `_ready`).
+## extension is ever removed. There is NO fallback backend: if the extension
+## is missing or the database cannot open, `_fail()` alerts the player and
+## quits. These are runtime checks (not `assert`s) on purpose — asserts are
+## compiled out of release exports and the failure must stay loud there too.
+## `quit()` only takes effect at the end of the frame, so every query helper
+## also guards `_db == null` and public methods return safe defaults instead
+## of crashing while the quit is pending.
 
 const DB_PATH := "user://foodheroes.db"
 
@@ -18,22 +24,35 @@ func _ready() -> void:
 	_open()
 
 func _open() -> void:
-	assert(ClassDB.class_exists("SQLite"), "godot-sqlite extension is missing from addons/godot-sqlite/")
+	if not ClassDB.class_exists("SQLite"):
+		_fail("The godot-sqlite extension is missing from addons/godot-sqlite/.")
+		return
 	var inst = ClassDB.instantiate("SQLite")
+	if inst == null:
+		_fail("The SQLite extension class could not be instantiated.")
+		return
 	inst.path = DB_PATH
-	var ok: bool = inst.open_db()
-	assert(ok, "Failed to open SQLite database at " + DB_PATH)
+	if not inst.open_db():
+		_fail("Could not open the save database at %s." % DB_PATH)
+		return
 	_db = inst
 	_ensure_schema()
 	print("[DB] SQLite connected: ", DB_PATH)
 
+# Loud, release-safe failure: report the problem and close the game rather
+# than silently running without saves.
+func _fail(msg: String) -> void:
+	push_error("[DB] " + msg)
+	OS.alert(msg + "\n\nFood Heroes needs its save database and will close.", "Food Heroes - save error")
+	get_tree().quit(1)
+
 func _ensure_schema() -> void:
-	_db.query("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);")
+	_exec("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);")
 	# The per-run history (recent scores) has been removed entirely — drop it
 	# from any existing database as well.
-	_db.query("DROP TABLE IF EXISTS runs;")
+	_exec("DROP TABLE IF EXISTS runs;")
 	# Per-(difficulty, level) progress: best score, best stars, completed flag.
-	_db.query(
+	_exec(
 		"CREATE TABLE IF NOT EXISTS progress (" +
 		"difficulty TEXT, level INTEGER, best_score INTEGER DEFAULT 0, " +
 		"stars INTEGER DEFAULT 0, completed INTEGER DEFAULT 0, " +
@@ -47,7 +66,7 @@ func get_high_score() -> int:
 
 func _set_high_score(score: int) -> void:
 	var hs: int = maxi(score, _meta_get_int("high_score", 0))
-	_db.query_with_bindings(
+	_exec_bound(
 		"INSERT INTO meta (key, value) VALUES ('high_score', ?) " +
 		"ON CONFLICT(key) DO UPDATE SET value = excluded.value;",
 		[str(hs)]
@@ -60,7 +79,7 @@ func _set_high_score(score: int) -> void:
 func record_level_result(difficulty: String, level: int, score: int, stars: int, won: bool) -> void:
 	_set_high_score(score)
 	var done := 1 if won else 0
-	_db.query_with_bindings(
+	_exec_bound(
 		"INSERT INTO progress (difficulty, level, best_score, stars, completed) " +
 		"VALUES (?, ?, ?, ?, ?) " +
 		"ON CONFLICT(difficulty, level) DO UPDATE SET " +
@@ -72,14 +91,14 @@ func record_level_result(difficulty: String, level: int, score: int, stars: int,
 
 # Returns {best_score, stars, completed} for a level (zeros if never played).
 func get_level_progress(difficulty: String, level: int) -> Dictionary:
-	_db.query_with_bindings(
+	if _exec_bound(
 		"SELECT best_score, stars, completed FROM progress WHERE difficulty = ? AND level = ?;",
 		[difficulty, level]
-	)
-	var rows = _db.query_result
-	if rows is Array and rows.size() > 0:
-		var r = rows[0]
-		return {"best_score": int(r["best_score"]), "stars": int(r["stars"]), "completed": int(r["completed"])}
+	):
+		var rows = _db.query_result
+		if rows is Array and rows.size() > 0:
+			var r = rows[0]
+			return {"best_score": int(r["best_score"]), "stars": int(r["stars"]), "completed": int(r["completed"])}
 	return {"best_score": 0, "stars": 0, "completed": 0}
 
 # Level 1 is always open; later levels open once the previous one is completed.
@@ -89,11 +108,29 @@ func is_level_unlocked(difficulty: String, level: int) -> bool:
 	return get_level_progress(difficulty, level - 1)["completed"] > 0
 
 # === SQLite helpers ===
+# Both return true only if the DB is open AND the statement succeeded, and
+# push_error on failure so broken SQL never fails silently.
+func _exec(sql: String) -> bool:
+	if _db == null:
+		return false
+	if not _db.query(sql):
+		push_error("[DB] query failed: %s (%s)" % [sql, str(_db.error_message)])
+		return false
+	return true
+
+func _exec_bound(sql: String, bindings: Array) -> bool:
+	if _db == null:
+		return false
+	if not _db.query_with_bindings(sql, bindings):
+		push_error("[DB] query failed: %s (%s)" % [sql, str(_db.error_message)])
+		return false
+	return true
+
 func _meta_get_int(key: String, def: int) -> int:
-	_db.query_with_bindings("SELECT value FROM meta WHERE key = ?;", [key])
-	var rows = _db.query_result
-	if rows is Array and rows.size() > 0:
-		return int(rows[0]["value"])
+	if _exec_bound("SELECT value FROM meta WHERE key = ?;", [key]):
+		var rows = _db.query_result
+		if rows is Array and rows.size() > 0:
+			return int(rows[0]["value"])
 	return def
 
 func _exit_tree() -> void:

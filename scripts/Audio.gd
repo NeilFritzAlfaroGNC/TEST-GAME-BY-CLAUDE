@@ -7,6 +7,11 @@ var _players: Dictionary = {}
 var _streams: Dictionary = {}
 var _music: AudioStreamPlayer
 
+func _ready() -> void:
+	# Keep audio alive while the tree is paused (pause menu): music keeps
+	# playing and the menu's click sounds stay audible.
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 func play(sfx: String, volume_db: float = 0.0) -> void:
 	var stream = _get_stream(sfx)
 	if stream == null:

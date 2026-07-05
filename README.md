@@ -14,14 +14,16 @@ the development reference.
 
 ## How to play
 
-- From the menu, **Play** opens the **Level Select**: pick a **difficulty** (Easy / Medium / Hard) and a numbered **level**.
+- From the menu, **Play** opens the **Level Select**: pick a **difficulty** (Easy / Medium / Hard) and a numbered **level**. (The grid also shows a locked **"Coming Soon"** slot reserved for future levels.)
 - Each level asks you to feed the Hero one food group (e.g. *"Feed the Hero **Go** foods!"*).
 - **Hunger Monsters** walk in from the left toward the Hero.
 - Foods ride a **conveyor belt** along the bottom, sliding in from the left. Grab one before it **blinks and disappears** (each food lasts ~5s if untouched). New foods keep spawning at random.
 - **Drag** a correct-group food off the belt onto the Hero:
-  - **Correct** → the closest monster is defeated, points scored (×1 Easy / ×2 Medium / ×3 Hard).
+  - **Correct** → the closest monster is defeated, points scored (×1 Easy / ×2 Medium / ×3 Hard), and a floating **+nutrient** popup shows what that food gives you (e.g. *+Vitamin C*, *+Protein*).
   - **Wrong** → a hint appears; the food rides back onto the belt to try again.
 - A monster reaching the Hero costs a **life** (Easy 5 / Medium 3 / Hard 2).
+- Every **5th level is a BOSS level**: fight through **3 waves** (each wave targets a different food group), then the **Boss** appears. Beat it by building a **balanced meal** — feed one **Go**, one **Grow**, and one **Glow** food (duplicates are rejected). The boss reaching the Hero costs a life and knocks it back to try again.
+- Press **Esc** or the **Pause** button any time during a level to pause: Resume, Retry Level, Level Select, or Main Menu. Quitting mid-level records nothing — progress only saves on a win/lose result.
 - Clear all monsters → a **lesson popup**, then a results screen with **1–3 stars** (based on lives kept).
 - Clearing a level **unlocks the next one** for that difficulty. Each difficulty is its own track.
 - **All progress, stars, best scores, and the high score are saved in SQLite** (per difficulty + level) and persist between runs.
@@ -36,8 +38,9 @@ the development reference.
 ## Project structure
 
 ```
-project.godot            Project settings + GameData autoload
+project.godot            Project settings + the three autoloads (DB, GameData, Audio)
 icon.svg                 App icon
+TEST GAME BY CLAUDE.approj   Anchorpoint (asset-management tool) project config
 scenes/
   MainMenu.tscn          Title screen (main scene)
   LevelSelect.tscn       Difficulty selector + numbered level grid
@@ -50,7 +53,8 @@ scripts/
   GameData.gd            Autoload: food database, levels, difficulties, run state
   Audio.gd               Autoload: SFX pool + looping music
   LevelSelect.gd         Builds the difficulty/level grid from DB progress
-  Main.gd                One-level loop, food-belt spawning, scoring, win/lose
+  Main.gd                One-level loop, waves/boss, food-belt spawning, scoring, win/lose
+  PauseMenu.gd           Pause overlay (Esc / Pause button): Resume, Retry, quit out
   Food.gd                Conveyor-belt food: rides left→right, expires after 5s
   Enemy.gd               Walks toward the Hero
   MainMenu.gd            Menu buttons
@@ -81,8 +85,9 @@ screen. (There is no run-history / "recent scores" feature.)
 Godot 4 has no built-in SQLite, so persistence uses the **godot-sqlite** GDExtension
 (a native plugin, committed in `addons/godot-sqlite/` for Windows + Android). On
 `_ready`, `DB` opens `user://foodheroes.db` (tables `meta`, `progress`).
-If the extension is ever removed, `DB._open()` fails loudly via `assert` rather than
-silently falling back — the game requires SQLite.
+If the extension is ever missing or the database cannot open, `DB` shows an error
+alert and closes the game — a **runtime check that also works in release exports**
+(an `assert` would be stripped there). The game requires SQLite; there is no fallback.
 
 ## Sound
 
@@ -104,16 +109,18 @@ the level's group (built procedurally in [scripts/Main.gd](scripts/Main.gd), no 
 
 - **Foods are color-coded** by group (Go = yellow, Glow = green, Grow = red) and
   show a real food **name** (e.g. *Fish*, *Rice*, *Mango*). Names are randomized
-  each round from `GameData.FOODS`, and the game guarantees at least one correct
-  food is always on screen so a level is always solvable.
+  each round from `GameData.FOODS`, and the belt always re-spawns any **needed**
+  food group that's missing (on the next spawn tick, within about a second), so a
+  level or boss fight can never become unwinnable.
 - **Save** uses the `godot-sqlite` GDExtension to write `user://foodheroes.db`
   — fully offline, matching the reference's SQLite goal directly.
 - The `Enemy.tscn` is already wired into `Main`'s **Enemy Scene** slot in the
   inspector, so no manual drag step is needed.
 
-## Next steps (when you move to art & sound)
+## Next steps (when you move to art)
 
 1. Replace each `ColorRect` with a `Sprite2D` (keep the node names and scripts).
-2. Add an `AudioStreamPlayer` for music and SFX (correct / wrong / attack).
-3. Add the Go = zap / Glow = heal / Grow = slam attack effects.
-4. Export Android `.apk` (touch already works) and Windows `.exe`.
+2. Export Android `.apk` (touch already works) and Windows `.exe`.
+
+(Sound and the zap / heal / slam attack effects are already done — see the phase
+table above.)

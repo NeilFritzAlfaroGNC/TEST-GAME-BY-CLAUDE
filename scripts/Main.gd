@@ -42,6 +42,13 @@ var _shake_time: float = 0.0
 var _shake_dur: float = 0.0
 var _shake_strength: float = 0.0
 
+# Hero effect tweens are single-flight: a new slam/heal kills the previous one
+# and re-anchors to _hero_home, so an interrupted lunge can never leave the
+# hero permanently displaced from its home spot.
+var _hero_home := Vector2.ZERO
+var _hero_move_tween: Tween
+var _hero_tint_tween: Tween
+
 const SPAWN_INTERVAL := 2.2
 const POINTS_PER_ENEMY := 10
 const BASE_ENEMY_SPEED := 70.0
@@ -64,6 +71,7 @@ var _belt_stripes: Array = []
 func _ready() -> void:
 	# Clicking/dragging Area2D foods needs physics picking on the root viewport.
 	get_viewport().physics_object_picking = true
+	_hero_home = hero.position
 	spawn_timer.wait_time = SPAWN_INTERVAL
 	spawn_timer.timeout.connect(_spawn_enemy)
 	_food_timer = Timer.new()
@@ -167,7 +175,12 @@ func food_dropped_on_hero(food) -> bool:
 		return false
 	# During the boss fight, ANY group can be part of the balanced meal, so the
 	# boss handles its own right/wrong logic (build one Go + one Grow + one Glow).
-	if _boss_active and is_instance_valid(boss):
+	if _boss_active:
+		# _clear_boss always drops _boss_active together with the instance, so a
+		# missing boss here is a broken invariant — keep the food on the belt and
+		# never fall through to the (stale) last-wave group check below.
+		if not is_instance_valid(boss):
+			return false
 		return _feed_boss(food)
 	# In the waves (and normal levels), only this wave's group counts.
 	if food.food_group != correct_group:
@@ -385,20 +398,24 @@ func _effect_zap(from: Vector2, to: Vector2) -> void:
 func _effect_heal(center: Vector2) -> void:
 	Audio.play("heal")
 	_spawn_ring(center, Color(0.30, 0.95, 0.45))
+	if _hero_tint_tween != null and _hero_tint_tween.is_valid():
+		_hero_tint_tween.kill()
 	hero.modulate = Color(0.45, 1.0, 0.55)
-	var tw := create_tween()
-	tw.tween_property(hero, "modulate", Color(1, 1, 1, 1), 0.4)
+	_hero_tint_tween = create_tween()
+	_hero_tint_tween.tween_property(hero, "modulate", Color(1, 1, 1, 1), 0.4)
 
 # Grow = SLAM: a heavy impact ring, screen shake, and a Hero lunge.
 func _effect_slam(target: Vector2) -> void:
 	Audio.play("slam")
 	_spawn_ring(target, Color(1.0, 0.55, 0.20))
 	_shake(9.0, 0.30)
-	var orig := hero.position
+	if _hero_move_tween != null and _hero_move_tween.is_valid():
+		_hero_move_tween.kill()
+	hero.position = _hero_home
 	var dir := (target - hero.global_position).normalized()
-	var tw := create_tween()
-	tw.tween_property(hero, "position", orig + dir * 28.0, 0.06)
-	tw.tween_property(hero, "position", orig, 0.18)
+	_hero_move_tween = create_tween()
+	_hero_move_tween.tween_property(hero, "position", _hero_home + dir * 28.0, 0.06)
+	_hero_move_tween.tween_property(hero, "position", _hero_home, 0.18)
 
 func _spawn_ring(center: Vector2, color: Color) -> void:
 	var ring := Line2D.new()
@@ -446,12 +463,17 @@ func _show_nutrient_popup(text: String, color: Color) -> void:
 	tw.set_parallel(false)
 	tw.tween_callback(lbl.queue_free)
 
-# === Lesson popup after each level ===
-func _level_complete() -> void:
+# Shared end-of-level shutdown (win AND lose take the same path): freeze the
+# loop and empty the belt.
+func _stop_level() -> void:
 	game_active = false
 	spawn_timer.stop()
 	_food_timer.stop()
 	_clear_foods()
+
+# === Lesson popup after each level ===
+func _level_complete() -> void:
+	_stop_level()
 	Audio.play("correct")
 	var lvl: Dictionary = GameData.current_level_data()
 	if _boss_level:
@@ -469,9 +491,7 @@ func _on_continue_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/ResultScreen.tscn")
 
 func _game_over() -> void:
-	game_active = false
-	spawn_timer.stop()
-	_food_timer.stop()
+	_stop_level()
 	GameData.record_result(false)
 	get_tree().change_scene_to_file("res://scenes/ResultScreen.tscn")
 
