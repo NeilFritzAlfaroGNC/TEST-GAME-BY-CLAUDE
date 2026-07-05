@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ds74kaqx8b7fq"]
 
 [ext_resource type="Script" uid="uid://cia1a4cv8g71q" path="res://scripts/Main.gd" id="1_main"]
-[ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="2_enemy"]
+[ext_resource type="PackedScene" uid="uid://cm47b8fy54imj" path="res://scenes/Enemy.tscn" id="2_enemy"]
 [ext_resource type="PackedScene" uid="uid://c862h0l8r2njm" path="res://scenes/Food.tscn" id="3_food_scene"]
 [ext_resource type="Script" uid="uid://cvdckj2bj28sq" path="res://scripts/PauseMenu.gd" id="4_pause"]
 

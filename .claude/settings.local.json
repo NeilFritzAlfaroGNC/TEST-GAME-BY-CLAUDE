@@ -3,7 +3,11 @@
     "allow": [
       "PowerShell(Get-ChildItem -Force \"D:\\\\TEST\" | Select-Object Name, Mode | Format-Table -AutoSize; Write-Output \"---GODOT CHECK---\"; $g = Get-Command godot -ErrorAction SilentlyContinue; if \\($g\\) { Write-Output \"godot found: $\\($g.Source\\)\" } else { Write-Output \"godot NOT on PATH\" })",
       "PowerShell($sh = New-Object -ComObject WScript.Shell; $lnk = $sh.CreateShortcut\\(\"C:\\\\Users\\\\Neil\\\\Desktop\\\\GODOT.lnk\"\\); Write-Output \"Target: $\\($lnk.TargetPath\\)\"; Write-Output \"Args: $\\($lnk.Arguments\\)\"; Write-Output \"WorkDir: $\\($lnk.WorkingDirectory\\)\"; Write-Output \"Exists: $\\(Test-Path $lnk.TargetPath\\)\")",
-      "Bash(\"/c/SHIZ/Godot_v4.6.3-stable_win64.exe\" --headless --path \"C:/Users/brion/OneDrive/Documents/GitHub/TEST-GAME-BY-CLAUDE/.claude/worktrees/quizzical-chebyshev-5953e0\" --import)"
+      "Bash(\"/c/SHIZ/Godot_v4.6.3-stable_win64.exe\" --headless --path \"C:/Users/brion/OneDrive/Documents/GitHub/TEST-GAME-BY-CLAUDE/.claude/worktrees/quizzical-chebyshev-5953e0\" --import)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"D:/TEST/tools/test.ps1\")",
+      "Bash(echo \"PS1_EXIT=$?\")",
+      "Bash(\"C:/SHIZ/Godot_v4.6.3-stable_win64.exe\" --headless --path \"D:/TEST\" \"res://scenes/MainMenu.tscn\" --quit-after 60)",
+      "PowerShell($godot = \"C:\\\\SHIZ\\\\Godot_v4.6.3-stable_win64.exe\"; $failPattern = \"SCRIPT ERROR|Parse Error|Invalid access|Invalid call|null instance|Cannot find\"; $out = \\(& $godot --headless --path \"D:\\\\TEST\" res://scenes/MainMenu.tscn --quit-after 60 2>&1 | Out-String\\); $out -split \"`r?`n\" | Select-String -Pattern $failPattern | ForEach-Object { \"MATCHED: \" + $_.Line })"
     ]
   }
 }

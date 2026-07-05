@@ -105,8 +105,29 @@ func difficulty_data() -> Dictionary:
 func has_next_level() -> bool:
 	return current_level < LEVELS.size()
 
+# === Tutorial (guided first run; see Main.gd's tutorial branch) ===
+# Runs automatically the first time the player presses Play (until the
+# "tutorial_done" flag is set in DB settings), or on demand from How to Play.
+var tutorial_mode: bool = false
+
+const TUTORIAL_ENEMIES := 3
+const TUTORIAL_SPEED_MULT := 0.45   # extra-slow monsters
+const TUTORIAL_SPAWN_MULT := 1.8    # extra time between monsters
+
+# Prime a guided tutorial run (generous lives, Easy pacing).
+func start_tutorial() -> void:
+	tutorial_mode = true
+	current_difficulty = "Easy"
+	current_level = 1
+	starting_lives = 5
+	lives = starting_lives
+	score = 0
+	last_result = ""
+	last_stars = 0
+
 # Begin a chosen level at a chosen difficulty (resets the run state).
 func start_level(difficulty: String, number: int) -> void:
+	tutorial_mode = false
 	current_difficulty = difficulty
 	current_level = number
 	starting_lives = int(DIFFICULTIES[difficulty]["lives"])

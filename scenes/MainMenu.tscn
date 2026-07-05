@@ -1,6 +1,7 @@
-[gd_scene format=3 uid="uid://bm0j2lmbob3nl"]
+[gd_scene load_steps=2 format=3 uid="uid://bm0j2lmbob3nl"]
 
 [ext_resource type="Script" uid="uid://cyvg0qvkobr5h" path="res://scripts/MainMenu.gd" id="1_menu"]
+[ext_resource type="Theme" path="res://assets/ui/menu_theme.tres" id="2_theme"]
 
 [node name="MainMenu" type="Control" unique_id=275894434]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 script = ExtResource("1_menu")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1885430704]
@@ -41,20 +43,19 @@ theme_override_font_sizes/font_size = 28
 text = "Go   •   Glow   •   Grow"
 horizontal_alignment = 1
 
-[node name="HighScore" type="Label" parent="CenterContainer/VBox" unique_id=599137993]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
-theme_override_font_sizes/font_size = 22
-text = "High Score: 0"
-horizontal_alignment = 1
-
 [node name="PlayButton" type="Button" parent="CenterContainer/VBox" unique_id=1283937954]
 custom_minimum_size = Vector2(260, 60)
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Play"
 
-[node name="SoundButton" type="Button" parent="CenterContainer/VBox"]
+[node name="HowToPlayButton" type="Button" parent="CenterContainer/VBox"]
+custom_minimum_size = Vector2(260, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "How to Play"
+
+[node name="SoundButton" type="Button" parent="CenterContainer/VBox" unique_id=120059695]
 custom_minimum_size = Vector2(260, 60)
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
@@ -74,5 +75,6 @@ text = "Drag the correct food group onto the Hero to beat the Hunger Monsters!"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="CenterContainer/VBox/PlayButton" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/HowToPlayButton" to="." method="_on_howto_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/SoundButton" to="." method="_on_sound_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/QuitButton" to="." method="_on_quit_pressed"]

@@ -16,6 +16,8 @@ the development reference.
 
 ## How to play
 
+- **First time playing?** Pressing **Play** launches a guided **Tutorial**: four short intro pages, then one easy practice round (3 extra-slow monsters, Go foods, 5 lives). Finish it once and Play goes straight to the Level Select from then on. You can replay it any time from **How to Play**.
+- The menu's **How to Play** button opens an instructions screen (food groups, belt, bosses, pause) with a **Play Tutorial** button.
 - From the menu, **Play** opens the **Level Select**: pick a **difficulty** (Easy / Medium / Hard) and a numbered **level**. Boss levels are badged **"BOSS n"** with a purple tint. (The grid also shows a locked **"Coming Soon"** slot reserved for future levels.)
 - The menu's **Sound** button mutes/unmutes everything — the setting is remembered between runs.
 - Each level asks you to feed the Hero one food group (e.g. *"Feed the Hero **Go** foods!"*).
@@ -42,11 +44,13 @@ the development reference.
 
 ```
 project.godot            Project settings + the three autoloads (DB, GameData, Audio)
+assets/ui/               Menu button textures (Kenney UI Pack, CC0) + menu_theme.tres
 Icon Game.png            App icon (the project icon set in project.godot)
 icon.svg                 Old default Godot icon (no longer referenced)
 TEST GAME BY CLAUDE.approj   Anchorpoint (asset-management tool) project config
 scenes/
   MainMenu.tscn          Title screen (main scene)
+  HowToPlay.tscn         Instructions screen + Play Tutorial button
   LevelSelect.tscn       Difficulty selector + numbered level grid
   Main.tscn              The game: Hero, food belt, HUD, Timer, lesson popup
   Enemy.tscn             Reusable Hunger Monster (spawned by Main)
@@ -63,7 +67,8 @@ scripts/
   PauseMenu.gd           Pause overlay (Esc / Pause button): Resume, Retry, quit out
   Food.gd                Conveyor-belt food: rides left→right, expires after 5s
   Enemy.gd               Walks toward the Hero
-  MainMenu.gd            Menu buttons (incl. the persisted Sound toggle)
+  MainMenu.gd            Menu buttons (Sound toggle, How to Play, first-run tutorial routing)
+  HowToPlay.gd           Instructions screen buttons
   ResultScreen.gd        Stars, best score, navigation buttons
 tools/
   generate_audio.py      Regenerates every .wav (pure Python stdlib)
@@ -82,15 +87,15 @@ tools/
 | 7. SQLite save | ✅ `DB` autoload ([scripts/Database.gd](scripts/Database.gd)) stores **all scores AND progress** in **SQLite** — the high score and per-(difficulty, level) best score / stars / unlock state. |
 | 8. Special attack effects | ✅ Go = **zap** (lightning bolt), Glow = **heal** (green pulse + ring), Grow = **slam** (shockwave + screen shake + hero lunge) |
 | 5. Sound | ✅ Procedural SFX + looping music (correct / wrong / zap / heal / slam / click / win / lose / music) — generated, no downloads |
-| 5. Art (sprites) | ⬜ Next step — colored boxes still in place on purpose (art last) |
+| 5. Art (sprites) | 🟨 Started — Main Menu buttons use **Kenney UI Pack** textures (first UI art test); in-game visuals are still colored boxes on purpose |
 | 9. Build & device testing | ⬜ Export Android `.apk` + Windows `.exe` |
 
 ## Data — SQLite save
 
 The `DB` autoload ([scripts/Database.gd](scripts/Database.gd)) is the persistence layer.
 It stores the **high score** and per-(difficulty, level) **best score / stars / unlock**
-state. The high score is shown on the Main Menu, on the in-level HUD, and on the Result
-screen. (There is no run-history / "recent scores" feature.)
+state. The high score is shown on the in-level HUD and on the Result screen. (There is
+no run-history / "recent scores" feature.)
 
 Godot 4 has no built-in SQLite, so persistence uses the **godot-sqlite** GDExtension
 (a native plugin, committed in `addons/godot-sqlite/` for Windows + Android). On
@@ -98,6 +103,10 @@ Godot 4 has no built-in SQLite, so persistence uses the **godot-sqlite** GDExten
 If the extension is ever missing or the database cannot open, `DB` shows an error
 alert and closes the game — a **runtime check that also works in release exports**
 (an `assert` would be stripped there). The game requires SQLite; there is no fallback.
+
+## Credits
+
+- Menu button art: [Kenney UI Pack](https://kenney.nl/assets/ui-pack) (CC0 / public domain).
 
 ## Sound
 
