@@ -13,7 +13,7 @@ config_version=5
 config/name="Food Heroes"
 run/main_scene="res://scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="uid://bbipahpwkfm6h"
+config/icon="res://Icon Game.png"
 
 [autoload]
 
