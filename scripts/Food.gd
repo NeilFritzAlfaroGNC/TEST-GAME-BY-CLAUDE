@@ -1,8 +1,8 @@
 extends Area2D
 ## A conveyor-belt food. Main spawns these on the left; they ride the belt to
-## the right. Drag one onto the Hero to feed him. It only lasts LIFETIME seconds
-## once it's visible — the clock keeps running whether it's left untouched OR
-## picked up — then it blinks and disappears (unless it was fed to the Hero).
+## the right. Drag one onto the Hero to feed him. Once visible it lasts LIFETIME
+## seconds if left untouched, then blinks and disappears. Picking it up PAUSES
+## the clock and the blink; releasing it resumes the countdown.
 
 const LIFETIME := 3.0        # max seconds a food stays on the belt if untouched
 const BLINK_AT := 2.0        # start blinking this many seconds in (warns it's leaving)
@@ -15,7 +15,7 @@ const RETURN_TIME := 0.22    # seconds to glide back to the grab slot after a no
 
 var dragging: bool = false
 var returning: bool = false     # gliding back to its grab slot (belt-ride + layout skip it)
-var age: float = 0.0            # lifetime clock; runs continuously once activated (held or not)
+var age: float = 0.0            # lifetime clock; runs while visible on the belt, PAUSED while held
 var _activated: bool = false    # true once the food first reached an on-screen slot
 var target_x: float = SPAWN_X   # stack slot assigned by Main; the food slides toward it
 var _return_tween: Tween
@@ -49,22 +49,22 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 		modulate.a = 1.0      # cancel any mid-blink transparency
 
 func _process(delta: float) -> void:
-	# Lifetime clock — runs in EVERY state once started (untouched, held, or
-	# gliding back), so a food expires ~LIFETIME seconds after it appears whether
-	# or not the player picks it up.
+	if dragging:
+		# Held: the lifetime clock AND the blink pause — a held food never expires
+		# in the player's hand. Just follow the mouse (or finger on Android).
+		global_position = get_global_mouse_position()
+		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			_drop()
+		return
+	# Not held — run the lifetime clock once it has started. This also ticks while
+	# a released food glides back to its slot, so the countdown resumes the moment
+	# you let go.
 	if _activated:
 		age += delta
 		if age >= LIFETIME:
 			queue_free()
 			return
 		_apply_blink()
-
-	if dragging:
-		# Follow the mouse (or finger on Android).
-		global_position = get_global_mouse_position()
-		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-			_drop()
-		return
 	if returning:
 		# A tween is gliding it back to its grab slot; leave its position to it.
 		return
