@@ -91,9 +91,7 @@ func _drop() -> void:
 		if main.food_dropped_on_hero(self):
 			queue_free()
 			return
-	# Otherwise it rejoins the belt at the BACK of the line (never dropped on top
-	# of another food); the belt then slides it forward into a clean slot.
-	if main.belt != null:
-		main.belt.return_to_belt(self)
-	else:
-		position.y = GameData.BELT_Y
+	# Otherwise it snaps back to the exact slot it was grabbed from — not the
+	# start/back of the belt. The belt's layout skips dragging foods, so target_x
+	# still holds this food's pre-grab slot; other foods re-space around it.
+	position = Vector2(target_x, GameData.BELT_Y)
