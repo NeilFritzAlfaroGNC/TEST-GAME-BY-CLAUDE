@@ -115,6 +115,20 @@ func _seed() -> void:
 		f.target_x = x
 		x -= STACK_SPACING
 
+# A dragged food that wasn't fed to the Hero rejoins the belt at the BACK of the
+# line — placed behind the current left-most food (or at the front stop if the
+# belt is otherwise empty) — so it never lands stacked on top of another food.
+# _layout() then slides it forward into its clean slot. Called by Food._drop.
+func return_to_belt(food) -> void:
+	var min_x := INF
+	for f in _foods.get_children():
+		if f != food and is_instance_valid(f) and not f.dragging:
+			min_x = min(min_x, f.position.x)
+	var x: float = (min_x - STACK_SPACING) if min_x != INF else STACK_FRONT_X
+	food.position = Vector2(x, GameData.BELT_Y)
+	food.target_x = x
+	food.age = 0.0   # interacting with a food gives it a fresh ride, not an instant expiry
+
 # Position belt foods into a right-anchored stack: the front-most (largest x)
 # holds STACK_FRONT_X and the rest pack in behind it, so they queue up instead
 # of sliding off the right. Foods being dragged are left alone.

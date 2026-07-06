@@ -31,6 +31,12 @@ func set_food(group: String) -> void:
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		# One food at a time: if another food is already held (foods can briefly
+		# overlap on the belt), ignore this click so a single press can't pick up
+		# a whole stack at once.
+		for sib in get_parent().get_children():
+			if sib != self and is_instance_valid(sib) and sib.dragging:
+				return
 		dragging = true
 		z_index = 10          # draw above other foods while dragging
 		modulate.a = 1.0      # cancel any mid-blink transparency
@@ -85,5 +91,9 @@ func _drop() -> void:
 		if main.food_dropped_on_hero(self):
 			queue_free()
 			return
-	# Otherwise it goes back onto the belt and keeps riding.
-	position.y = GameData.BELT_Y
+	# Otherwise it rejoins the belt at the BACK of the line (never dropped on top
+	# of another food); the belt then slides it forward into a clean slot.
+	if main.belt != null:
+		main.belt.return_to_belt(self)
+	else:
+		position.y = GameData.BELT_Y
