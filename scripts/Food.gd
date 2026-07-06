@@ -56,8 +56,6 @@ func _process(delta: float) -> void:
 	if returning:
 		# A tween is gliding it back to its grab slot; skip the belt-ride/aging.
 		return
-	# Ride the belt.
-	age += delta
 	# Slide toward the stack slot Main assigned; stop once we reach it so foods
 	# pile up instead of running off the right of the screen.
 	var step := BELT_SPEED * delta
@@ -65,6 +63,12 @@ func _process(delta: float) -> void:
 		position.x = min(position.x + step, target_x)
 	elif position.x > target_x:
 		position.x = max(position.x - step, target_x)
+	# Only count the lifetime down once the food has ARRIVED at an on-screen slot,
+	# so the whole countdown + blink + disappearance happen where the player can
+	# see them. Foods enter from off the left edge and slide in first — aging then
+	# would let them blink/vanish before ever becoming visible/grabbable.
+	if position.x >= 0.0 and is_equal_approx(position.x, target_x):
+		age += delta
 	if age >= LIFETIME:
 		queue_free()
 		return
