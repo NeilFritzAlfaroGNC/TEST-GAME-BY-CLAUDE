@@ -99,10 +99,11 @@ func _drop() -> void:
 		if main.food_dropped_on_hero(self):
 			queue_free()
 			return
-	# Otherwise it glides smoothly back to the exact slot it was grabbed from —
-	# not the start/back of the belt. The belt layout skips dragging foods, so
-	# target_x still holds this food's pre-grab slot; other foods re-space around
-	# it once the glide finishes.
+	# Not consumed — either dropped away from the Hero, OR a WRONG food the Hero
+	# rejected (food_dropped_on_hero returned false). Either way it glides smoothly
+	# back to the exact slot it was grabbed from (never the start/back of the belt).
+	# The slot stayed reserved while the food was held — BeltManager._layout ranks
+	# it by target_x — so it drops right back into place with no reshuffle.
 	returning = true
 	_return_tween = create_tween()
 	_return_tween.tween_property(self, "position", Vector2(target_x, GameData.BELT_Y), RETURN_TIME)
