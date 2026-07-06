@@ -3,8 +3,8 @@ extends Area2D
 ## the right. Drag one onto the Hero to feed him. If it isn't grabbed within
 ## LIFETIME seconds it blinks and then disappears (it wasn't touched/used).
 
-const LIFETIME := 5.0        # max seconds a food stays on the belt if untouched
-const BLINK_AT := 3.5        # start blinking this many seconds in (warns it's leaving)
+const LIFETIME := 3.0        # max seconds a food stays on the belt if untouched
+const BLINK_AT := 2.0        # start blinking this many seconds in (warns it's leaving)
 const BELT_SPEED := 130.0    # left -> right belt speed (px/s)
 const SPAWN_X := -90.0       # just off the left edge
 const RETURN_TIME := 0.22    # seconds to glide back to the grab slot after a non-feeding drop
