@@ -121,7 +121,7 @@ func _seed() -> void:
 func _layout() -> void:
 	var items: Array = []
 	for f in _foods.get_children():
-		if is_instance_valid(f) and not f.dragging:
+		if is_instance_valid(f) and not f.dragging and not f.returning:
 			items.append(f)
 	items.sort_custom(func(a, b): return a.position.x > b.position.x)
 	var target := STACK_FRONT_X

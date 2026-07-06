@@ -7,13 +7,16 @@ const LIFETIME := 5.0        # max seconds a food stays on the belt if untouched
 const BLINK_AT := 3.5        # start blinking this many seconds in (warns it's leaving)
 const BELT_SPEED := 130.0    # left -> right belt speed (px/s)
 const SPAWN_X := -90.0       # just off the left edge
+const RETURN_TIME := 0.22    # seconds to glide back to the grab slot after a non-feeding drop
 # The belt lane Y comes from the shared layout consts: GameData.BELT_Y.
 
 @export var food_group: String = "Go"
 
 var dragging: bool = false
+var returning: bool = false     # gliding back to its grab slot (belt-ride + layout skip it)
 var age: float = 0.0            # only advances while on the belt (paused while held)
 var target_x: float = SPAWN_X   # stack slot assigned by Main; the food slides toward it
+var _return_tween: Tween
 
 @onready var rect: ColorRect = $ColorRect
 @onready var label: Label = $Label
@@ -37,6 +40,8 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 		for sib in get_parent().get_children():
 			if sib != self and is_instance_valid(sib) and sib.dragging:
 				return
+		# Re-grabbed mid-return: cancel the glide-back and follow the mouse.
+		_cancel_return()
 		dragging = true
 		z_index = 10          # draw above other foods while dragging
 		modulate.a = 1.0      # cancel any mid-blink transparency
@@ -47,6 +52,9 @@ func _process(delta: float) -> void:
 		global_position = get_global_mouse_position()
 		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			_drop()
+		return
+	if returning:
+		# A tween is gliding it back to its grab slot; skip the belt-ride/aging.
 		return
 	# Ride the belt.
 	age += delta
@@ -91,7 +99,17 @@ func _drop() -> void:
 		if main.food_dropped_on_hero(self):
 			queue_free()
 			return
-	# Otherwise it snaps back to the exact slot it was grabbed from — not the
-	# start/back of the belt. The belt's layout skips dragging foods, so target_x
-	# still holds this food's pre-grab slot; other foods re-space around it.
-	position = Vector2(target_x, GameData.BELT_Y)
+	# Otherwise it glides smoothly back to the exact slot it was grabbed from —
+	# not the start/back of the belt. The belt layout skips dragging foods, so
+	# target_x still holds this food's pre-grab slot; other foods re-space around
+	# it once the glide finishes.
+	returning = true
+	_return_tween = create_tween()
+	_return_tween.tween_property(self, "position", Vector2(target_x, GameData.BELT_Y), RETURN_TIME)
+	_return_tween.tween_callback(func(): returning = false)
+
+# Stop an in-progress glide-back (e.g. the food was grabbed again mid-return).
+func _cancel_return() -> void:
+	if _return_tween != null and _return_tween.is_valid():
+		_return_tween.kill()
+	returning = false
