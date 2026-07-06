@@ -18,6 +18,7 @@ const BELT_H := 96.0
 const BELT_STRIPE_SPEED := 130.0
 const STACK_FRONT_X := 1040.0    # foods stack against here (right side), piling left
 const STACK_SPACING := 185.0     # distance between stacked food centers
+const ENTRY_X := -110.0          # a new food enters here (off the left edge) or further left
 
 var active: bool = false
 
@@ -87,12 +88,26 @@ func _choose_group() -> String:
 
 func _make_food(group: String):
 	var f = _food_scene.instantiate()
+	var x := _entry_x()   # spaced behind the current foods, computed before f is added
 	_foods.add_child(f)
 	f.set_food(group)
+	f.position = Vector2(x, GameData.BELT_Y)
+	f.target_x = x
 	return f
 
+# X for a food just entering the belt: off the left edge, and always at least one
+# slot-spacing behind the current left-most riding food, so an entering food never
+# overlaps the ones already on the belt while they slide into the stack.
+func _entry_x() -> float:
+	var x := ENTRY_X
+	for f in _foods.get_children():
+		if is_instance_valid(f) and not f.dragging and not f.returning:
+			x = min(x, f.position.x - STACK_SPACING)
+	return x
+
 # Timed batches keep the belt varied: 1 or 2 random foods, capped at MAX_FOODS
-# (needed groups are handled — cap-free — by _ensure_needed, not here).
+# (needed groups are handled — cap-free — by _ensure_needed, not here). Each food
+# enters spaced behind the last via _entry_x, so batches never overlap.
 func _on_spawn_tick() -> void:
 	if not active:
 		return
@@ -100,10 +115,7 @@ func _on_spawn_tick() -> void:
 	for i in range(count):
 		if _foods.get_child_count() >= MAX_FOODS:
 			return
-		var f = _make_food(GameData.random_group())
-		if i > 0:
-			# Offset the extra food further left so the batch enters spaced out.
-			f.position = Vector2(f.position.x - i * STACK_SPACING, f.position.y)
+		_make_food(GameData.random_group())
 
 # Seed a few foods starting from the MIDDLE of the screen (not pre-stacked on
 # the right); the belt then slides them into the stack.
