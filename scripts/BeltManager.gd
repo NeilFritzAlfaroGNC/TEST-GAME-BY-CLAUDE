@@ -117,17 +117,26 @@ func _seed() -> void:
 
 # Position belt foods into a right-anchored stack: the front-most (largest x)
 # holds STACK_FRONT_X and the rest pack in behind it, so they queue up instead
-# of sliding off the right. Foods being dragged are left alone.
+# of sliding off the right. A dragged or gliding-back food still HOLDS its slot
+# (ranked by its reserved target_x, not its live position), so the gap stays
+# open and the other foods don't slide into it — the held food then returns to
+# the exact same spot. Its own target_x is left untouched while held.
 func _layout() -> void:
 	var items: Array = []
 	for f in _foods.get_children():
-		if is_instance_valid(f) and not f.dragging and not f.returning:
+		if is_instance_valid(f):
 			items.append(f)
-	items.sort_custom(func(a, b): return a.position.x > b.position.x)
+	items.sort_custom(func(a, b): return _rank_x(a) > _rank_x(b))
 	var target := STACK_FRONT_X
 	for f in items:
-		f.target_x = target
+		if not f.dragging and not f.returning:
+			f.target_x = target
 		target -= STACK_SPACING
+
+# Ordering key for the stack: a dragged/returning food keeps its reserved slot
+# (target_x); a food riding the belt orders by its live position.
+func _rank_x(f) -> float:
+	return f.target_x if (f.dragging or f.returning) else f.position.x
 
 # === Gray-box visuals (art phase: swap for Sprite2D/TextureRect, keep names) ===
 func _build_visuals() -> void:
