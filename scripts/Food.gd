@@ -1,7 +1,8 @@
 extends Area2D
 ## A conveyor-belt food. Main spawns these on the left; they ride the belt to
-## the right. Drag one onto the Hero to feed him. If it isn't grabbed within
-## LIFETIME seconds it blinks and then disappears (it wasn't touched/used).
+## the right. Drag one onto the Hero to feed him. It only lasts LIFETIME seconds
+## once it's visible — the clock keeps running whether it's left untouched OR
+## picked up — then it blinks and disappears (unless it was fed to the Hero).
 
 const LIFETIME := 3.0        # max seconds a food stays on the belt if untouched
 const BLINK_AT := 2.0        # start blinking this many seconds in (warns it's leaving)
@@ -14,7 +15,8 @@ const RETURN_TIME := 0.22    # seconds to glide back to the grab slot after a no
 
 var dragging: bool = false
 var returning: bool = false     # gliding back to its grab slot (belt-ride + layout skip it)
-var age: float = 0.0            # only advances while on the belt (paused while held)
+var age: float = 0.0            # lifetime clock; runs continuously once activated (held or not)
+var _activated: bool = false    # true once the food first reached an on-screen slot
 var target_x: float = SPAWN_X   # stack slot assigned by Main; the food slides toward it
 var _return_tween: Tween
 
@@ -47,14 +49,24 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 		modulate.a = 1.0      # cancel any mid-blink transparency
 
 func _process(delta: float) -> void:
+	# Lifetime clock — runs in EVERY state once started (untouched, held, or
+	# gliding back), so a food expires ~LIFETIME seconds after it appears whether
+	# or not the player picks it up.
+	if _activated:
+		age += delta
+		if age >= LIFETIME:
+			queue_free()
+			return
+		_apply_blink()
+
 	if dragging:
-		# Follow the mouse (or finger on Android). Age is paused while held.
+		# Follow the mouse (or finger on Android).
 		global_position = get_global_mouse_position()
 		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			_drop()
 		return
 	if returning:
-		# A tween is gliding it back to its grab slot; skip the belt-ride/aging.
+		# A tween is gliding it back to its grab slot; leave its position to it.
 		return
 	# Slide toward the stack slot Main assigned; stop once we reach it so foods
 	# pile up instead of running off the right of the screen.
@@ -63,16 +75,14 @@ func _process(delta: float) -> void:
 		position.x = min(position.x + step, target_x)
 	elif position.x > target_x:
 		position.x = max(position.x - step, target_x)
-	# Only count the lifetime down once the food has ARRIVED at an on-screen slot,
-	# so the whole countdown + blink + disappearance happen where the player can
-	# see them. Foods enter from off the left edge and slide in first — aging then
-	# would let them blink/vanish before ever becoming visible/grabbable.
-	if position.x >= 0.0 and is_equal_approx(position.x, target_x):
-		age += delta
-	if age >= LIFETIME:
-		queue_free()
-		return
-	# Blink during the final stretch so the player knows it's about to vanish.
+	# Start the clock once the food has ARRIVED at an on-screen slot, so the whole
+	# countdown + blink + disappearance happen where the player can see them (foods
+	# enter from off the left edge and slide in first).
+	if not _activated and position.x >= 0.0 and is_equal_approx(position.x, target_x):
+		_activated = true
+
+# Blink during the final stretch (age >= BLINK_AT) so the player sees it leaving.
+func _apply_blink() -> void:
 	if age >= BLINK_AT:
 		modulate.a = 1.0 if (int(age * 8.0) % 2 == 0) else 0.25
 	else:
