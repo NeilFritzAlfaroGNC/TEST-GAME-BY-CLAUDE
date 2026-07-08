@@ -19,6 +19,11 @@ var age: float = 0.0            # lifetime clock; runs while visible on the belt
 var _activated: bool = false    # true once the food first reached an on-screen slot
 var target_x: float = SPAWN_X   # stack slot assigned by Main; the food slides toward it
 var _return_tween: Tween
+var _sprite: Sprite2D           # optional food art (assets/food/<name>.png); hidden if none
+
+# Cache of loaded food textures (misses stored as null) keyed by name slug, so
+# foods spawning every second don't re-hit the disk. Shared across all foods.
+static var _tex_cache: Dictionary = {}
 
 @onready var rect: ColorRect = $ColorRect
 @onready var label: Label = $Label
@@ -27,12 +32,51 @@ func _ready() -> void:
 	input_pickable = true
 	input_event.connect(_on_input_event)
 	position = Vector2(SPAWN_X, GameData.BELT_Y)
+	# Art layer over the gray box: shows a sprite when art exists, else stays hidden.
+	_sprite = Sprite2D.new()
+	_sprite.z_index = 1
+	_sprite.visible = false
+	add_child(_sprite)
+	label.z_index = 2   # keep the food name readable above any sprite
 
 # Assign this food a group ("Go"/"Glow"/"Grow"), a random real name, and color.
 func set_food(group: String) -> void:
 	food_group = group
-	label.text = GameData.random_food(group)
+	var food_name := GameData.random_food(group)
+	label.text = food_name
 	rect.color = GameData.group_color(group)
+	_apply_sprite(food_name)
+
+# Show assets/food/<name>.png over the colored box if that art exists; otherwise
+# leave the gray box as-is. A missing or wrong-type file is ignored (never a
+# crash) — the safe hook for dropping in food sprites during the art phase.
+func _apply_sprite(food_name: String) -> void:
+	if _sprite == null:
+		return
+	var tex = _load_food_texture(food_name.to_lower().replace(" ", "_"))
+	if tex != null:
+		_sprite.texture = tex
+		var sz: Vector2 = tex.get_size()
+		if sz.x > 0.0 and sz.y > 0.0:
+			_sprite.scale = Vector2(130.0 / sz.x, 70.0 / sz.y)   # fit inside the 150x90 box
+		_sprite.visible = true
+	else:
+		_sprite.texture = null
+		_sprite.visible = false
+
+# Load + cache assets/food/<slug>.png. Returns a Texture2D, or null if the file
+# is missing or isn't a texture. Misses are cached too, so we only check once.
+static func _load_food_texture(slug: String):
+	if _tex_cache.has(slug):
+		return _tex_cache[slug]
+	var tex = null
+	var path := "res://assets/food/%s.png" % slug
+	if ResourceLoader.exists(path):
+		var res = load(path)
+		if res is Texture2D:
+			tex = res
+	_tex_cache[slug] = tex
+	return tex
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
