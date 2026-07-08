@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://chnqm6424y7j"]
 
 [ext_resource type="Script" uid="uid://dxt5k6yprj2b7" path="res://scripts/ResultScreen.gd" id="1_res"]
+[ext_resource type="Theme" path="res://assets/ui/menu_theme.tres" id="2_theme"]
 
 [node name="ResultScreen" type="Control" unique_id=415434290]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 script = ExtResource("1_res")
 
 [node name="Background" type="ColorRect" parent="." unique_id=334260185]

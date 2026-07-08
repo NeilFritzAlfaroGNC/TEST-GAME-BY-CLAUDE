@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cdnibew5qt83d"]
 
 [ext_resource type="Script" uid="uid://dlg8mivvdboxf" path="res://scripts/LevelSelect.gd" id="1_ls"]
+[ext_resource type="Theme" path="res://assets/ui/menu_theme.tres" id="2_theme"]
 
 [node name="LevelSelect" type="Control" unique_id=585941991]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 script = ExtResource("1_ls")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1178268531]
