@@ -13,7 +13,6 @@ var boss_level: bool = false
 var wave: int = 0
 var total_waves: int = 0
 
-var _label_mode: String = "group"
 var _alive_weaknesses: Array = []
 
 # Hard asks for a nutrient only about half the time. Grow contributes a single
@@ -26,7 +25,6 @@ func pick_label_mode(tier_mode: String) -> String:
 
 func start(level: int, diff: Dictionary) -> void:
 	boss_level = GameData.is_boss_level(level)
-	_label_mode = String(diff.get("monster_label", "group"))
 	total_waves = GameData.BOSS_WAVES if boss_level else 1
 	wave = 0
 	_alive_weaknesses = []

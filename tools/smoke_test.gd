@@ -134,6 +134,27 @@ func _test_gamedata() -> void:
 	_check(WD.pick_label_mode("group") == "group", "Easy and Medium always ask by group")
 	WD.free()
 
+	# Safety-critical: track/untrack/needed_groups must correctly report all distinct
+	# weaknesses alive on screen, or the belt stops guaranteeing a correct food.
+	# This catches the worst failure mode: untrack() accidentally removing all matching
+	# entries instead of just one would silently make levels unwinnable when monsters
+	# share a weakness and one dies first.
+	var WD2 = load("res://scripts/WaveDirector.gd").new()
+	_check(WD2.needed_groups().is_empty(), "no monsters means no needed groups")
+	WD2.track("Go")
+	WD2.track("Go")
+	WD2.track("Grow")
+	var n: Array = WD2.needed_groups()
+	_check(n.size() == 2, "duplicate weaknesses are reported once")
+	_check(n.has("Go") and n.has("Grow"), "every distinct weakness is reported")
+	WD2.untrack("Go")
+	_check(WD2.needed_groups().has("Go"), "a shared weakness survives one untrack")
+	WD2.untrack("Go")
+	_check(not WD2.needed_groups().has("Go"), "the last untrack clears the group")
+	WD2.untrack("Grow")
+	_check(WD2.needed_groups().is_empty(), "all monsters gone means nothing needed")
+	WD2.free()
+
 	gd.free()
 
 # === Nutrients: Hard mode can only ask questions with one answer ===
