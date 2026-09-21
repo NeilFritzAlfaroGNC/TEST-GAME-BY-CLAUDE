@@ -103,12 +103,15 @@ func _test_gamedata() -> void:
 	_check(bosses == 3, "three boss levels across the run")
 
 	# Every level is well-formed, or a level silently becomes unplayable.
+	var seen := {}
 	for i in range(gd.LEVELS.size()):
 		var row: Dictionary = gd.LEVELS[i]
 		_check(row.has("name") and String(row["name"]) != "", "level %d has a name" % (i + 1))
 		_check(gd.FOODS.has(row["correct_group"]), "level %d targets a real group" % (i + 1))
 		_check(int(row["enemies"]) > 0, "level %d spawns monsters" % (i + 1))
 		_check(String(row["lesson"]) != "", "level %d has a lesson" % (i + 1))
+		seen[String(row["name"])] = true
+	_check(seen.size() == gd.LEVELS.size(), "every level name is unique")
 
 	# Difficulty is a teaching ladder, not just a speed knob.
 	for diff in gd.DIFFICULTY_ORDER:
