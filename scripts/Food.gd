@@ -9,7 +9,8 @@ const BLINK_AT := 2.0        # start blinking this many seconds in (warns it's l
 const BELT_SPEED := 130.0    # left -> right belt speed (px/s)
 const SPAWN_X := -90.0       # just off the left edge
 const RETURN_TIME := 0.22    # seconds to glide back to the grab slot after a non-feeding drop
-# The belt lane Y comes from the shared layout consts: GameData.BELT_Y.
+# The belt lane Y comes from Layout.m["belt_y"] (safe-area aware: it clears the
+# OS gesture bar / home indicator on notched devices) -- see _belt_y() below.
 
 @export var food_group: String = "Go"
 
@@ -31,13 +32,18 @@ static var _tex_cache: Dictionary = {}
 func _ready() -> void:
 	input_pickable = true
 	input_event.connect(_on_input_event)
-	position = Vector2(SPAWN_X, GameData.BELT_Y)
+	position = Vector2(SPAWN_X, _belt_y())
 	# Art layer over the gray box: shows a sprite when art exists, else stays hidden.
 	_sprite = Sprite2D.new()
 	_sprite.z_index = 1
 	_sprite.visible = false
 	add_child(_sprite)
 	label.z_index = 2   # keep the food name readable above any sprite
+
+# Layout owns the belt lane's Y; read fresh each time rather than caching, since
+# Layout.m can be refreshed on a resize.
+func _belt_y() -> float:
+	return Layout.m["belt_y"]
 
 # Assign this food a group, a random real name, and -- only on Easy -- the
 # group colour. Medium and Hard render neutral so the player must read the name
@@ -146,7 +152,7 @@ func cancel_drag() -> void:
 	dragging = false
 	z_index = 0
 	modulate.a = 1.0
-	position.y = GameData.BELT_Y
+	position.y = _belt_y()
 
 func _drop() -> void:
 	dragging = false
@@ -169,7 +175,7 @@ func _drop() -> void:
 	# it by target_x — so it drops right back into place with no reshuffle.
 	returning = true
 	_return_tween = create_tween()
-	_return_tween.tween_property(self, "position", Vector2(target_x, GameData.BELT_Y), RETURN_TIME)
+	_return_tween.tween_property(self, "position", Vector2(target_x, _belt_y()), RETURN_TIME)
 	_return_tween.tween_callback(func(): returning = false)
 
 # Stop an in-progress glide-back (e.g. the food was grabbed again mid-return).

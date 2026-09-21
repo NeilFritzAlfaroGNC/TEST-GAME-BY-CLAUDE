@@ -13,7 +13,8 @@ extends Node2D
 ## move here.
 
 const FOOD_SPAWN_INTERVAL := 1.0
-const BELT_STRIPE_SPEED := 130.0
+const BELT_STRIPE_SPEED := 130.0     # scroll speed (px/s)
+const BELT_STRIPE_SPACING := 130.0   # x-offset between stripe centers
 
 var active: bool = false
 
@@ -22,6 +23,7 @@ var _foods: Node2D       # Main's $Foods container (holds the Food nodes)
 var _needed: Callable    # -> Array of groups the belt must keep available
 var _timer: Timer
 var _stripes: Array = []
+var _stripe_wrap: float = 1300.0     # recomputed in _build_visuals to match stripe_count
 
 func _ready() -> void:
 	_build_visuals()
@@ -56,10 +58,19 @@ func _spacing() -> float:
 func _entry_base_x() -> float:
 	return Layout.m["spawn_x"]
 
-# Drawn belt height, derived from the lane band Layout already computed
-# (belt_y is the food lane center, belt_top is the drawn band's top edge).
+func _view_x() -> float:
+	return Layout.m["view"].x
+
+func _belt_top() -> float:
+	return Layout.m["belt_top"]
+
+func _belt_y() -> float:
+	return Layout.m["belt_y"]
+
+# Drawn belt band thickness — the same fixed constant Layout.compute() used to
+# derive belt_top from belt_y.
 func _belt_h() -> float:
-	return (Layout.m["belt_y"] - Layout.m["belt_top"]) * 2.0
+	return Layout.BELT_H
 
 func clear_foods() -> void:
 	for f in _foods.get_children():
@@ -69,8 +80,8 @@ func _process(delta: float) -> void:
 	# Scroll the conveyor stripes (left -> right, wrapping) for a moving-belt look.
 	for stripe in _stripes:
 		stripe.position.x += BELT_STRIPE_SPEED * delta
-		if stripe.position.x > GameData.DESIGN_SIZE.x + 8.0:
-			stripe.position.x -= 1300.0
+		if stripe.position.x > _view_x() + 8.0:
+			stripe.position.x -= _stripe_wrap
 	_layout()
 	if active:
 		_ensure_needed()
@@ -102,7 +113,7 @@ func _make_food(group: String):
 	var x := _entry_x()   # spaced behind the current foods, computed before f is added
 	_foods.add_child(f)
 	f.set_food(group, bool(GameData.difficulty_data().get("show_food_color", true)))
-	f.position = Vector2(x, GameData.BELT_Y)
+	f.position = Vector2(x, _belt_y())
 	f.target_x = x
 	return f
 
@@ -131,7 +142,7 @@ func _on_spawn_tick() -> void:
 # Seed a few foods starting from the MIDDLE of the screen (not pre-stacked on
 # the right); the belt then slides them into the stack.
 func _seed() -> void:
-	var x := GameData.DESIGN_SIZE.x / 2.0
+	var x := _view_x() / 2.0
 	for i in range(3):
 		var f = _make_food(_choose_group())
 		f.position.x = x
@@ -162,26 +173,35 @@ func _rank_x(f) -> float:
 	return f.target_x if (f.dragging or f.returning) else f.position.x
 
 # === Gray-box visuals (art phase: swap for Sprite2D/TextureRect, keep names) ===
+# NOTE: built once, sized to the viewport Layout reports at startup. Not yet
+# re-anchored on Layout.changed (a resize/rotate mid-session) — Task 12 owns
+# wiring that signal up for the belt, same as the Hero.
 func _build_visuals() -> void:
+	var view_x := _view_x()
 	var belt := ColorRect.new()
 	belt.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	belt.position = Vector2(0, GameData.BELT_TOP)
-	belt.size = Vector2(GameData.DESIGN_SIZE.x, _belt_h())
+	belt.position = Vector2(0, _belt_top())
+	belt.size = Vector2(view_x, _belt_h())
 	belt.color = Color(0.26, 0.26, 0.30)
 	belt.z_index = -4
 	add_child(belt)
 	var edge := ColorRect.new()
 	edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	edge.position = Vector2(0, GameData.BELT_TOP - 4.0)
-	edge.size = Vector2(GameData.DESIGN_SIZE.x, 5)
+	edge.position = Vector2(0, _belt_top() - 4.0)
+	edge.size = Vector2(view_x, 5)
 	edge.color = Color(0.5, 0.5, 0.55)
 	edge.z_index = -3
 	add_child(edge)
-	# Scrolling chevron stripes that sell the "conveyor" motion.
-	for i in range(11):
+	# Scrolling chevron stripes that sell the "conveyor" motion. Count scales with
+	# the viewport width (a 21:9 phone reveals more design units than 16:9) so the
+	# strip never runs out before the right edge; the wrap distance is recomputed
+	# to match so the loop stays seamless.
+	var stripe_count: int = int(ceil(view_x / BELT_STRIPE_SPACING)) + 2
+	_stripe_wrap = float(stripe_count - 1) * BELT_STRIPE_SPACING
+	for i in range(stripe_count):
 		var st := ColorRect.new()
 		st.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		st.position = Vector2(-40.0 + i * 130.0, GameData.BELT_TOP + 12.0)
+		st.position = Vector2(-40.0 + i * BELT_STRIPE_SPACING, _belt_top() + 12.0)
 		st.size = Vector2(30, _belt_h() - 24.0)
 		st.color = Color(0.33, 0.33, 0.38)
 		st.z_index = -4
