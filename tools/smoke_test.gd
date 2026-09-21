@@ -19,6 +19,7 @@ var _fails: int = 0
 func _initialize() -> void:
 	_test_gamedata()
 	_test_nutrients()
+	_test_scoring()
 	_test_layout()
 	_test_database()
 	if _fails == 0:
@@ -158,6 +159,51 @@ func _test_nutrients() -> void:
 	_check(gd.nutrient_group("+Nonsense") == "", "unknown nutrient resolves to empty")
 
 	gd.free()
+
+# === ScoreKeeper: streaks reward knowing, not flailing ===
+func _test_scoring() -> void:
+	print("[ScoreKeeper]")
+	var sk = load("res://scripts/ScoreKeeper.gd").new()
+	sk.score_mult = 1
+
+	_check(sk.streak_mult() == 1, "streak multiplier starts at 1")
+	# Four correct answers is not yet a multiplier; the fifth is.
+	for i in range(4):
+		sk.correct("Go")
+	_check(sk.streak_mult() == 1, "multiplier holds at 1 below five in a row")
+	sk.correct("Go")
+	_check(sk.streak_mult() == 2, "five in a row doubles the multiplier")
+
+	# A wrong answer resets the streak but never the score.
+	var before: int = sk.score
+	sk.wrong("Go")
+	_check(sk.streak == 0, "a wrong answer resets the streak")
+	_check(sk.streak_mult() == 1, "multiplier falls back to 1")
+	_check(sk.score == before, "a wrong answer does not cost points")
+
+	# The multiplier is capped so a long run cannot run away with the score.
+	sk.reset()
+	for i in range(100):
+		sk.correct("Glow")
+	_check(sk.streak_mult() == 5, "multiplier caps at 5")
+
+	# Points are base 10, scaled by difficulty and streak.
+	sk.reset()
+	sk.score_mult = 3
+	_check(sk.correct("Grow") == 30, "first correct pays 10 x difficulty x 1")
+
+	# Accuracy tally is per group and survives a reset boundary correctly.
+	sk.reset()
+	sk.correct("Go")
+	sk.correct("Go")
+	sk.wrong("Go")
+	sk.wrong("Glow")
+	_check(sk.percent("Go") == 67, "two of three rounds to 67 percent")
+	_check(sk.percent("Glow") == 0, "all misses reads zero percent")
+	_check(sk.percent("Grow") == 0, "an unseen group reads zero, not a crash")
+	_check(int(sk.tally()["Go"]["wrong"]) == 1, "tally exposes raw counts")
+
+	sk.free()
 
 # === Layout: pure geometry at every shipped aspect ===
 func _test_layout() -> void:
