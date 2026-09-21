@@ -34,6 +34,14 @@ func refresh(ctx: Dictionary) -> void:
 	if bool(ctx.get("boss_active", false)):
 		target.text = "BOSS - build a meal!  Need: %s" % String(ctx.get("meal_left", ""))
 		target.add_theme_color_override("font_color", BOSS_COLOR)
+	elif int(ctx.get("total_waves", 1)) > 1:
+		# A boss level is several waves before the boss, and which wave you are on
+		# is the only progress cue the player gets -- the old build showed it
+		# permanently. That is why the "wave"/"total_waves" keys are read here
+		# rather than dropped from the context dictionary.
+		target.text = "Wave %d of %d - feed each monster what it asks for!" % [
+			int(ctx.get("wave", 1)), int(ctx.get("total_waves", 1))]
+		target.add_theme_color_override("font_color", Color(0.15, 0.15, 0.2))
 	else:
 		# Per-monster weakness means there is no single level-wide target to
 		# announce -- the monsters carry the question now.

@@ -89,7 +89,13 @@ func _process(_d: float) -> void:
 		8: _phase_punish_is_recorded()
 		9: _phase_stunned_drop_is_refused()
 		10: _phase_restart_resets_cleanly()
-		11: _finish()
+		11: _phase_boss_level_starts()
+		12, 13, 14: _grind_one_wave()
+		15: _phase_boss_is_armed()
+		16: _phase_belt_covers_the_meal()
+		17: _phase_needed_group_lands_duplicate_is_rejected()
+		18: _phase_boss_defeated_finishes_the_level()
+		19: _finish()
 
 # === Phases ===
 
@@ -187,6 +193,107 @@ func _phase_restart_resets_cleanly() -> void:
 	_game._start_level()
 	_check(_live().size() == 1, "restart: the sweep ran and a fresh wave spawned one monster")
 	_pairing("after _start_level swept and restarted")
+
+# === Boss fight (Task 13) ===
+# The belt's guarantee has a SECOND source: while _boss_active, Game._needed_groups
+# returns the still-missing balanced-meal groups instead of the director's live
+# weaknesses. Everything above tests the first source; these phases test the
+# second, and they also gate two specific regressions:
+#   * Task 12's boss STUB completed the level the instant the boss appeared,
+#     which would have awarded a full-star clear and unlocked the next level for
+#     a fight nobody fought. "the level is still running" below is that gate.
+#   * a boss fight that opens with no feedable food on the conveyor.
+# The real path is driven end to end: a genuine level 5, its three waves cleared
+# through the real _spawn_enemy/_despawn, and WaveDirector's own boss_ready.
+
+var _acc_before: Dictionary = {}
+
+func _phase_boss_level_starts() -> void:
+	GameData.start_level("Easy", 5)
+	_game._start_level()
+	# The stun from _phase_punish_is_recorded is still ticking: it is measured on
+	# the WALL clock and _start_level does not reset it. Both are known bugs that
+	# Task 13 step 3 fixes; until then, clear it by hand so the boss phases test
+	# the boss rather than the stun. Step 3 replaces this with an assertion.
+	_game._stunned_until = 0.0
+	_check(_game.director.boss_level, "boss level: level 5 is a boss level")
+	_check(_game.director.total_waves == GameData.BOSS_WAVES,
+		"boss level: %d waves before the boss" % GameData.BOSS_WAVES)
+	_check(not _game._boss_active and _game.boss == null,
+		"boss level: the boss does NOT exist before the waves are cleared")
+
+# One frame = one wave: top the wave up to its full size through the real
+# spawner, then despawn it through the real _despawn. The deferred
+# on_enemy_removed at the end of the frame advances the director.
+func _grind_one_wave() -> void:
+	var guard := 0
+	while _game.director.enemies_to_spawn > 0 and guard < 50 and not _game._boss_active:
+		guard += 1
+		_game._spawn_enemy()
+	for e in _live():
+		_game._despawn(e)
+
+func _phase_boss_is_armed() -> void:
+	_acc_before = DB.get_accuracy(GameData.current_difficulty)
+	_check(_game.game_active,
+		"boss: the level is still running -- the boss did NOT auto-complete it (Task 12 stub regression)")
+	_check(is_instance_valid(_game.boss), "boss: the boss exists after the last wave")
+	_check(_game._boss_active, "boss: the fight is armed")
+	_check(_game.boss.is_in_group("boss") and not _game.boss.is_in_group("enemies"),
+		"boss: it is in the \"boss\" group and NOT in \"enemies\"")
+	# The ordering guarantee, observed from outside: the meal must be populated,
+	# not empty, the moment the fight is armed.
+	_check(str(_game._meal_needed) == str(GameData.BOSS_MEAL_GROUPS),
+		"boss: the meal needs every group (%s)" % str(_game._meal_needed))
+	_check(str(_game._needed_groups()) == str(GameData.BOSS_MEAL_GROUPS),
+		"boss: the belt Callable reports the meal groups, not the (empty) live-monster list")
+	# The boss must not have entered the director's bookkeeping.
+	_check(_live().is_empty(), "boss: no normal monsters are left")
+	_pairing("with the boss on screen")
+
+func _phase_belt_covers_the_meal() -> void:
+	var on_belt: Array = _belt_groups()
+	for g in GameData.BOSS_MEAL_GROUPS:
+		_check(on_belt.has(g), "boss belt: a %s food is on the conveyor for the meal" % g)
+
+func _phase_needed_group_lands_duplicate_is_rejected() -> void:
+	var first: String = String(GameData.BOSS_MEAL_GROUPS[0])
+	var food = _make_food(first)
+	var consumed: bool = _game.food_dropped_on_hero(food)
+	food.queue_free()
+	_check(consumed, "boss: a needed %s food is consumed" % first)
+	_check(not _game._meal_needed.has(first), "boss: %s left the still-needed list" % first)
+	_check(_game._boss_active and is_instance_valid(_game.boss),
+		"boss: it survives a single course")
+	# Same group again: already on the plate. Rejected, but NOT punished -- the
+	# group was read correctly, so it must not stun and must not be recorded.
+	var left := str(_game._meal_needed)
+	var dupe = _make_food(first)
+	var dupe_consumed: bool = _game.food_dropped_on_hero(dupe)
+	dupe.queue_free()
+	_check(not dupe_consumed, "boss: a duplicate %s food is rejected" % first)
+	_check(str(_game._meal_needed) == left, "boss: a duplicate changes nothing")
+	_check(not _game._is_stunned(), "boss: a duplicate does not stun the Hero")
+	_check(str(_game._needed_groups()) == left,
+		"boss: the belt now guarantees only what the meal still misses (%s)" % left)
+
+func _phase_boss_defeated_finishes_the_level() -> void:
+	for g in _game._meal_needed.duplicate():
+		var food = _make_food(String(g))
+		var consumed: bool = _game.food_dropped_on_hero(food)
+		food.queue_free()
+		_check(consumed, "boss: the %s course lands" % String(g))
+	_check(not _game._boss_active, "boss: the fight is over once the meal is complete")
+	_check(not is_instance_valid(_game.boss) or _game.boss == null,
+		"boss: the boss instance is gone")
+	_check(not _game.game_active, "boss: the level is finished")
+	_check(_game.lesson_root.visible, "boss: the closing lesson popup is up")
+	_check(_game.lesson_label.text == GameData.BOSS_LESSON, "boss: it is the balanced-meal lesson")
+	# Nothing is saved until Continue is pressed, and a boss feed is not a
+	# classification decision, so the accuracy table must be byte-identical.
+	_check(GameData.last_result == "", "boss: no result was recorded by the fight itself")
+	_check(str(DB.get_accuracy(GameData.current_difficulty)) == str(_acc_before),
+		"boss: the accuracy table is untouched by the boss fight")
 
 func _finish() -> void:
 	_teardown_db()

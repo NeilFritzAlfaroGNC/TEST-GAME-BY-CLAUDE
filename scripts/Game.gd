@@ -26,6 +26,12 @@ const STUN_TIME := 1.0         # seconds the hero cannot feed after a wrong answ
 const SPAWN_INTERVAL := 2.2    # base seconds between monsters (scaled by difficulty)
 const BASE_ENEMY_SPEED := 70.0
 
+# Boss looks: it reuses Enemy.tscn, scaled up, slowed down and tinted a neutral
+# purple because it wants every group rather than one.
+const BOSS_SPEED_MULT := 0.5
+const BOSS_SCALE := Vector2(2.2, 2.2)
+const BOSS_COLOR := Color(0.42, 0.24, 0.52)
+
 @export var enemy_scene: PackedScene
 @export var food_scene: PackedScene
 
@@ -50,9 +56,12 @@ var _diff: Dictionary = {}
 var _enemy_speed: float = BASE_ENEMY_SPEED
 var _stunned_until: float = 0.0
 
-# Boss state. Task 12 builds only the HOOK; Task 13 ports the real fight.
+# Boss state. `boss` is the live boss Enemy instance (untyped, like every other
+# cross-node reference here); _meal_needed holds the balanced-meal groups still
+# missing, and doubles as the belt's guarantee list while _boss_active.
 var _boss_active: bool = false
 var _meal_needed: Array = []
+var boss = null
 
 func _ready() -> void:
 	# Clicking/dragging Area2D foods needs physics picking on the root viewport.
@@ -149,6 +158,7 @@ func _start_level() -> void:
 	for e in get_tree().get_nodes_in_group("enemies"):
 		e.remove_from_group("enemies")
 		e.queue_free()
+	_clear_boss()   # a restart mid-boss must not leave the old boss on screen
 	belt.clear_foods()
 	game_active = true
 	director.start(level, _diff)   # emits wave_started -> _on_wave_started
@@ -292,39 +302,145 @@ func _on_level_cleared() -> void:
 		return
 	_level_complete()
 
-# === Boss hook ===
-# WaveDirector says WHEN to unleash the boss but has no signal for the boss being
-# BEATEN, so the win path is wired here: _feed_boss -> _boss_defeated ->
-# _level_complete.
+# === Boss fight: build a BALANCED MEAL ===
+# WaveDirector says WHEN to unleash the boss (boss_ready, once the last wave is
+# clear) but has no signal for the boss being BEATEN, so the win path is wired
+# here: _feed_boss -> _boss_defeated -> _level_complete.
 #
-# !!! STUB !!! _spawn_boss and _feed_boss below are placeholders. Task 13 ports
-# the real balanced-meal fight (_spawn_boss / _feed_boss / _boss_reached_hero)
-# from the old Main.gd. Until then the hook is exercised end to end but the fight
-# is skipped, so a boss level finishes instead of hanging on an empty screen.
+# The boss reuses Enemy.tscn — bigger, slower, and in the "boss" group so it is
+# never mistaken for a one-hit monster and never enters the director's
+# track/untrack bookkeeping. You beat it by building a balanced meal: one food
+# from each group in GameData.BOSS_MEAL_GROUPS. A still-needed group lands a
+# hit; a duplicate is rejected.
 func _on_boss_ready() -> void:
 	if not game_active:
 		return
 	_spawn_boss()
 
 func _spawn_boss() -> void:
-	push_warning("Game._spawn_boss is a STUB (Task 12); Task 13 ports the real boss fight.")
+	# THE ORDER OF THESE TWO LINES IS LOAD-BEARING. _needed_groups() starts
+	# returning _meal_needed the instant _boss_active is true, and
+	# BeltManager._ensure_needed() calls it EVERY FRAME. Arming the flag first
+	# would leave the belt guaranteeing an empty list for at least one frame, and
+	# the fight could open with nothing feedable on the conveyor. Fill the meal
+	# FIRST, then arm the flag.
+	_meal_needed = GameData.BOSS_MEAL_GROUPS.duplicate()
+	_boss_active = true
 	spawn_timer.stop()
-	_boss_active = false
-	_meal_needed = []
-	_boss_defeated()
+	boss = enemy_scene.instantiate()
+	add_child(boss)   # before setup(): it refreshes the @onready Label
+	boss.global_position = _boss_spawn_pos()
+	# The group handed to setup() is inert — while _boss_active every group is a
+	# valid answer and food_dropped_on_hero routes to _feed_boss — but setup() is
+	# also what injects the speed, the walk target and the reached-hero callback,
+	# so the boss is built through the same door as any other monster.
+	boss.setup(GameData.BOSS_MEAL_GROUPS[0], "group",
+		_enemy_speed * BOSS_SPEED_MULT, Layout.m["hero_x"], _boss_reached_hero)
+	boss.add_to_group("boss")
+	boss.scale = BOSS_SCALE
+	var rect = boss.get_node_or_null("ColorRect")
+	if rect != null:
+		rect.color = BOSS_COLOR
+	var lbl = boss.get_node_or_null("Label")
+	if lbl != null:
+		lbl.text = "BOSS"
+	Audio.play("slam")
+	fx.shake(9.0, 0.4)
+	hud.say("BOSS! Build a balanced meal — feed one Go, one Grow, and one Glow food!", false)
+	_refresh_hud()
 
-# Task 13's _feed_boss calls this once _meal_needed empties. This is the boss
-# equivalent of WaveDirector.level_cleared, which the director cannot emit.
+# A food was fed while the boss is up. Every still-needed group lands a hit; a
+# group already on the plate does nothing (the meal needs one of EACH, not
+# duplicates). Returns true if the food was consumed, false to glide it back.
+func _feed_boss(food) -> bool:
+	# _clear_boss always drops the instance and the flag together, so a missing
+	# boss here is a broken invariant: keep the food on the belt rather than run
+	# meal logic with nothing to feed.
+	if not is_instance_valid(boss):
+		return false
+	var g: String = food.food_group
+	if not _meal_needed.has(g):
+		# Deliberately NOT _punish(). The group was read correctly — it is just
+		# already on the plate — so stunning the hero (or writing a wrong answer
+		# into the accuracy table) would charge the child for a bookkeeping slip
+		# instead of a knowledge gap.
+		hud.say("Already added a %s food! The meal still needs: %s." % [g, _meal_left_text()], false)
+		Audio.play("wrong")
+		return false
+	_meal_needed.erase(g)
+	# Points and streak as usual, but NOTHING goes to DB.record_answer here.
+	# While the boss is up ANY group is a correct answer, so a feed is not a
+	# classification decision and does not belong in the per-group accuracy
+	# table — that table is the educational telemetry, and only the per-monster
+	# weakness game actually tests the knowledge it claims to measure.
+	var points: int = score_keeper.correct(g)
+	GameData.score = score_keeper.score
+	fx.play_attack(g, boss.global_position)
+	fx.nutrient_popup(GameData.food_nutrient(food.label.text), GameData.group_color(g))
+	if _meal_needed.is_empty():
+		hud.say("Balanced meal complete! BOSS DEFEATED!  +%d" % points, true)
+		_boss_defeated()
+		return true
+	# Boss survived — flash it white; the belt keeps offering what is still missing.
+	_flash_boss()
+	hud.say("Added a %s food! Still need: %s.  +%d" % [g, _meal_left_text(), points], true)
+	_refresh_hud()
+	return true
+
+# Called from _feed_boss once _meal_needed empties. This is the boss equivalent
+# of WaveDirector.level_cleared, which the director structurally cannot emit.
 func _boss_defeated() -> void:
 	_boss_active = false
 	_meal_needed = []
+	_clear_boss()
 	_refresh_hud()
 	_level_complete()
 
-# STUB — replaced in Task 13 by the real balanced-meal logic. Unreachable while
-# _boss_active is never set true.
-func _feed_boss(_food) -> bool:
-	return false
+# Injected into the boss through setup(): the boss reaching the Hero costs a
+# life and is then knocked back, so the fight carries on instead of ending.
+func _boss_reached_hero(b) -> void:
+	if not game_active or not _boss_active or not is_instance_valid(b):
+		return
+	GameData.lives -= 1
+	hud.say("The BOSS struck the Hero!", false)
+	Audio.play("wrong")
+	fx.shake(9.0, 0.3)
+	if GameData.lives <= 0:
+		_boss_active = false
+		_meal_needed = []
+		_clear_boss()
+		_refresh_hud()
+		_game_over()
+		return
+	# Enemy latches itself "spent" on arrival so the callback fires once per
+	# charge; re-arming that latch is exactly what a knockback is.
+	b.knock_back_to(_boss_spawn_pos())
+	_refresh_hud()
+
+func _clear_boss() -> void:
+	if is_instance_valid(boss):
+		boss.remove_from_group("boss")
+		boss.queue_free()
+	boss = null
+
+# Where the boss enters (and returns to after a knockback): the monster spawn
+# line, centred in the lane band. Read from Layout so it follows a resize.
+func _boss_spawn_pos() -> Vector2:
+	var m: Dictionary = Layout.m
+	return Vector2(m["spawn_x"], (float(m["lane_top"]) + float(m["lane_bottom"])) * 0.5)
+
+func _flash_boss() -> void:
+	var rect = boss.get_node_or_null("ColorRect")
+	if rect == null:
+		return
+	var base: Color = rect.color
+	rect.color = Color(1, 1, 1)
+	var tw := create_tween()
+	tw.tween_property(rect, "color", base, 0.25)
+
+# Comma-joined list of the meal groups still missing (HUD + hint text).
+func _meal_left_text() -> String:
+	return ", ".join(PackedStringArray(_meal_needed))
 
 # === Belt contract ===
 # The groups the belt must keep available. Normally the live monsters' distinct
@@ -342,6 +458,9 @@ func _stop_level() -> void:
 	spawn_timer.stop()
 	belt.stop()
 	belt.clear_foods()
+	# Idempotent: the win path already cleared it, but a loss during the fight
+	# must not leave the boss standing over the lesson popup.
+	_clear_boss()
 
 func _level_complete() -> void:
 	_stop_level()
@@ -373,5 +492,5 @@ func _refresh_hud() -> void:
 		"boss_active": _boss_active,
 		"wave": director.wave,
 		"total_waves": director.total_waves,
-		"meal_left": ", ".join(PackedStringArray(_meal_needed)),
+		"meal_left": _meal_left_text(),
 	})

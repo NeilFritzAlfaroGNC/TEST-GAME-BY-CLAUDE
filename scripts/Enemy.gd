@@ -41,6 +41,14 @@ func _refresh_label() -> void:
 	if label != null:
 		label.text = weakness_text()
 
+# The boss is not a one-hit monster: instead of despawning it when it reaches
+# the Hero, Game knocks it back to the far side and the fight continues. _spent
+# is a one-shot latch so _on_reach fires exactly once per charge, and re-arming
+# that latch is precisely what "knocked back" means. Nothing else calls this.
+func knock_back_to(pos: Vector2) -> void:
+	global_position = pos
+	_spent = false
+
 func _process(delta: float) -> void:
 	if _spent:
 		return
