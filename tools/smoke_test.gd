@@ -18,6 +18,7 @@ var _fails: int = 0
 
 func _initialize() -> void:
 	_test_gamedata()
+	_test_layout()
 	_test_database()
 	if _fails == 0:
 		print("SMOKE TEST: ALL PASS")
@@ -92,6 +93,42 @@ func _test_gamedata() -> void:
 	_check(not gd.tutorial_mode, "start_level clears tutorial_mode")
 
 	gd.free()
+
+# === Layout: pure geometry at every shipped aspect ===
+func _test_layout() -> void:
+	print("[Layout]")
+	var L = load("res://scripts/Layout.gd")
+
+	# Scale is the smaller of the two axis ratios; with a fixed 648 design
+	# height in landscape that is always the height ratio.
+	_check(is_equal_approx(L.design_scale(Vector2(1152, 648), L.BASE), 1.0), "scale is 1.0 at the design size")
+	_check(is_equal_approx(L.design_scale(Vector2(2400, 1080), L.BASE), 1080.0 / 648.0), "scale follows the height ratio")
+
+	# Visible width grows with the device; height stays at the design 648.
+	var vis: Vector2 = L.visible_size(Vector2(2400, 1080), L.BASE)
+	_check(is_equal_approx(vis.y, 648.0), "visible height stays 648")
+	_check(int(round(vis.x)) == 1440, "20:9 reveals 1440 design units of width")
+
+	# Every shipped aspect must produce a sane, ordered play field.
+	var windows := [Vector2(1152, 648), Vector2(2556, 1179), Vector2(2400, 1080), Vector2(2520, 1080)]
+	for w in windows:
+		var v: Vector2 = L.visible_size(w, L.BASE)
+		var safe: Rect2 = Rect2(Vector2.ZERO, v)          # no insets: the desktop case
+		var m: Dictionary = L.compute(v, safe)
+		var tag := "%dx%d" % [int(w.x), int(w.y)]
+		_check(m["hero_x"] > 0.0 and m["hero_x"] < v.x, "%s: hero is on screen" % tag)
+		_check(m["spawn_x"] < 0.0, "%s: monsters spawn off the left edge" % tag)
+		_check(m["spawn_x"] < m["hero_x"], "%s: monsters spawn left of the hero" % tag)
+		_check(m["belt_top"] < m["belt_y"], "%s: belt top is above the food lane" % tag)
+		_check(m["belt_y"] < v.y, "%s: food lane is on screen" % tag)
+		_check(m["lane_top"] < m["lane_bottom"], "%s: monster lanes are not inverted" % tag)
+		_check(m["lane_bottom"] < m["belt_top"], "%s: monster lanes clear the belt" % tag)
+		_check(m["stack_spacing"] >= 185.0 and m["stack_spacing"] <= 230.0, "%s: spacing stays in range" % tag)
+
+	# Wider devices get more breathing room, never more foods.
+	var narrow: Dictionary = L.compute(Vector2(1152, 648), Rect2(Vector2.ZERO, Vector2(1152, 648)))
+	var wide: Dictionary = L.compute(Vector2(1440, 648), Rect2(Vector2.ZERO, Vector2(1440, 648)))
+	_check(wide["stack_spacing"] > narrow["stack_spacing"], "surplus width becomes spacing")
 
 # === Database: real SQLite roundtrip against a throwaway file ===
 func _test_database() -> void:
