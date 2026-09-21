@@ -1,6 +1,6 @@
 # Food Heroes — one-command validation (Windows PowerShell 5.1 compatible).
 #   powershell -ExecutionPolicy Bypass -File tools\test.ps1
-# Runs: import -> logic smoke test -> headless Main.tscn -> headless MainMenu.tscn.
+# Runs: import -> logic smoke test -> headless Game.tscn -> headless MainMenu.tscn.
 # Exits 0 on PASS, 1 on FAIL.
 
 $godot = "C:\SHIZ\Godot_v4.6.3-stable_win64.exe"
@@ -21,8 +21,8 @@ $out = (& $godot --headless --path $proj -s res://tools/smoke_test.gd 2>&1 | Out
 Write-Host $out
 if ($LASTEXITCODE -ne 0 -or $out -notmatch "ALL PASS" -or $out -match $failPattern) { $failed = $true }
 
-Write-Host "== 3/5 Headless run: Main.tscn =="
-$out = (& $godot --headless --path $proj res://scenes/Main.tscn --quit-after 150 2>&1 | Out-String)
+Write-Host "== 3/5 Headless run: Game.tscn =="
+$out = (& $godot --headless --path $proj res://scenes/Game.tscn --quit-after 150 2>&1 | Out-String)
 if ($out -match $failPattern) { Write-Host $out; $failed = $true } else { Write-Host "   clean" }
 
 Write-Host "== 4/5 Headless run: MainMenu.tscn =="

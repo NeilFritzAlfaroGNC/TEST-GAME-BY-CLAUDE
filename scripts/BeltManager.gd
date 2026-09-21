@@ -23,10 +23,14 @@ var _foods: Node2D       # Main's $Foods container (holds the Food nodes)
 var _needed: Callable    # -> Array of groups the belt must keep available
 var _timer: Timer
 var _stripes: Array = []
+var _visuals: Array = []             # every node _build_visuals created (band, edge, stripes)
 var _stripe_wrap: float = 1300.0     # recomputed in _build_visuals to match stripe_count
 
 func _ready() -> void:
 	_build_visuals()
+	# A resize or device rotation changes the viewport the band is drawn to.
+	if not Layout.changed.is_connected(_rebuild_visuals):
+		Layout.changed.connect(_rebuild_visuals)
 	_timer = Timer.new()
 	_timer.wait_time = FOOD_SPAWN_INTERVAL
 	_timer.timeout.connect(_on_spawn_tick)
@@ -173,9 +177,9 @@ func _rank_x(f) -> float:
 	return f.target_x if (f.dragging or f.returning) else f.position.x
 
 # === Gray-box visuals (art phase: swap for Sprite2D/TextureRect, keep names) ===
-# NOTE: built once, sized to the viewport Layout reports at startup. Not yet
-# re-anchored on Layout.changed (a resize/rotate mid-session) — Task 12 owns
-# wiring that signal up for the belt, same as the Hero.
+# Sized to the viewport Layout reports, and rebuilt whenever Layout says that
+# changed (see _rebuild_visuals). Food positions re-derive from Layout every
+# frame in _layout(), so only these static nodes need the signal.
 func _build_visuals() -> void:
 	var view_x := _view_x()
 	var belt := ColorRect.new()
@@ -185,6 +189,7 @@ func _build_visuals() -> void:
 	belt.color = Color(0.26, 0.26, 0.30)
 	belt.z_index = -4
 	add_child(belt)
+	_visuals.append(belt)
 	var edge := ColorRect.new()
 	edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	edge.position = Vector2(0, _belt_top() - 4.0)
@@ -192,6 +197,7 @@ func _build_visuals() -> void:
 	edge.color = Color(0.5, 0.5, 0.55)
 	edge.z_index = -3
 	add_child(edge)
+	_visuals.append(edge)
 	# Scrolling chevron stripes that sell the "conveyor" motion. Count scales with
 	# the viewport width (a 21:9 phone reveals more design units than 16:9) so the
 	# strip never runs out before the right edge; the wrap distance is recomputed
@@ -207,3 +213,15 @@ func _build_visuals() -> void:
 		st.z_index = -4
 		add_child(st)
 		_stripes.append(st)
+		_visuals.append(st)
+
+# Layout.changed: the band, its edge and the stripe strip are all sized to the
+# viewport width, so throw them away and redraw at the new size. Cheap (a couple
+# of dozen ColorRects) and only ever runs on a real resize/rotation.
+func _rebuild_visuals() -> void:
+	for n in _visuals:
+		if is_instance_valid(n):
+			n.queue_free()
+	_visuals.clear()
+	_stripes.clear()
+	_build_visuals()

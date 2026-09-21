@@ -19,13 +19,13 @@ func say(text: String, good: bool) -> void:
 	hint.add_theme_color_override("font_color", GOOD if good else BAD)
 
 func refresh(ctx: Dictionary) -> void:
-	_set("score", "Score: %d" % GameData.score)
-	_set("lives", "Lives: %d" % GameData.lives)
-	_set("highscore", "High Score: %d" % maxi(GameData.high_score, GameData.score))
+	_put("score", "Score: %d" % GameData.score)
+	_put("lives", "Lives: %d" % GameData.lives)
+	_put("highscore", "High Score: %d" % maxi(GameData.high_score, GameData.score))
 	if GameData.tutorial_mode:
-		_set("level", "TUTORIAL - learn the basics")
+		_put("level", "TUTORIAL - learn the basics")
 	else:
-		_set("level", "Level %d: %s  [%s]" % [
+		_put("level", "Level %d: %s  [%s]" % [
 			GameData.current_level, String(ctx.get("level_name", "")), GameData.current_difficulty])
 
 	var target: Label = _n.get("target")
@@ -40,7 +40,10 @@ func refresh(ctx: Dictionary) -> void:
 		target.text = "Feed each monster what it asks for!"
 		target.add_theme_color_override("font_color", Color(0.15, 0.15, 0.2))
 
-func _set(key: String, text: String) -> void:
+# NOT named _set: Object declares a virtual `_set(StringName, Variant) -> bool`,
+# and a same-named helper with a different signature is a hard parse error that
+# takes every script depending on this one down with it.
+func _put(key: String, text: String) -> void:
 	var n: Label = _n.get(key)
 	if n != null:
 		n.text = text

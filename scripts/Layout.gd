@@ -68,6 +68,12 @@ func _ready() -> void:
 # only ever appear on a device build.
 func refresh() -> void:
 	var win := Vector2(DisplayServer.window_get_size())
+	# The headless DisplayServer reports a 0x0 window, and dividing by that ratio
+	# turns every metric into NaN — which silently poisons the whole play field in
+	# exactly the runs tools/test.ps1 uses to catch problems. Fall back to the
+	# design box whenever the driver gives us nothing usable.
+	if win.x <= 0.0 or win.y <= 0.0:
+		win = BASE
 	var view := visible_size(win, BASE)
 	var safe_px := Rect2(DisplayServer.get_display_safe_area())
 	var safe := safe_in_design(safe_px, win, BASE)
