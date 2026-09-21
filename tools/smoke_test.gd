@@ -130,6 +130,27 @@ func _test_layout() -> void:
 	var wide: Dictionary = L.compute(Vector2(1440, 648), Rect2(Vector2.ZERO, Vector2(1440, 648)))
 	_check(wide["stack_spacing"] > narrow["stack_spacing"], "surplus width becomes spacing")
 
+	# Physical safe-area pixels convert to design units by the same scale.
+	# iPhone-shaped case: a notch inset on the left, gesture strip at the bottom.
+	var win := Vector2(2556, 1179)
+	var safe_px := Rect2(132.0, 0.0, 2292.0, 1077.0)
+	var safe_d: Rect2 = L.safe_in_design(safe_px, win, L.BASE)
+	var view_d: Vector2 = L.visible_size(win, L.BASE)
+	_check(safe_d.position.x > 0.0, "notch inset survives conversion")
+	_check(safe_d.end.x < view_d.x, "right safe edge is inside the viewport")
+	_check(safe_d.end.y < view_d.y, "bottom safe edge is above the screen bottom")
+
+	# The belt must clear the gesture strip once the inset is applied.
+	var inset: Dictionary = L.compute(view_d, safe_d)
+	_check(inset["belt_y"] < safe_d.end.y, "food lane sits inside the safe area")
+	_check(inset["belt_top"] > safe_d.position.y, "belt does not reach the top safe edge")
+	_check(inset["hero_x"] < safe_d.end.x, "hero clears the right safe edge")
+
+	# An inset layout must never be identical to an uninst one, or the
+	# conversion is silently doing nothing.
+	var none: Dictionary = L.compute(view_d, Rect2(Vector2.ZERO, view_d))
+	_check(inset["belt_y"] < none["belt_y"], "insets lift the belt off the bottom edge")
+
 # === Database: real SQLite roundtrip against a throwaway file ===
 func _test_database() -> void:
 	print("[Database]")

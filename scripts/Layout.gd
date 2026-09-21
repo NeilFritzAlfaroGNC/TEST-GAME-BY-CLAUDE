@@ -53,3 +53,26 @@ static func compute(view: Vector2, safe: Rect2) -> Dictionary:
 		"lane_top": safe.position.y + HUD_H + LANE_MARGIN,
 		"lane_bottom": belt_top - LANE_MARGIN,
 	}
+
+signal changed
+
+var m: Dictionary = {}
+
+func _ready() -> void:
+	refresh()
+	get_tree().get_root().size_changed.connect(refresh)
+
+# Reads live engine state, converts it, and republishes the metrics.
+# Desktop reports the whole screen as safe, which is correct there — the insets
+# only ever appear on a device build.
+func refresh() -> void:
+	var win := Vector2(DisplayServer.window_get_size())
+	var view := visible_size(win, BASE)
+	var safe_px := Rect2(DisplayServer.get_display_safe_area())
+	var safe := safe_in_design(safe_px, win, BASE)
+	# Clamp: a driver reporting nonsense must never push geometry off-screen.
+	safe = safe.intersection(Rect2(Vector2.ZERO, view))
+	if safe.size.x <= 0.0 or safe.size.y <= 0.0:
+		safe = Rect2(Vector2.ZERO, view)
+	m = compute(view, safe)
+	changed.emit()
