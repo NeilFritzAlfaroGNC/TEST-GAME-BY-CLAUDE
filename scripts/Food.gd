@@ -39,12 +39,17 @@ func _ready() -> void:
 	add_child(_sprite)
 	label.z_index = 2   # keep the food name readable above any sprite
 
-# Assign this food a group ("Go"/"Glow"/"Grow"), a random real name, and color.
-func set_food(group: String) -> void:
+# Assign this food a group, a random real name, and -- only on Easy -- the
+# group colour. Medium and Hard render neutral so the player must read the name
+# instead of matching a swatch. This is the single change that stops the game
+# being winnable without reading.
+const NEUTRAL := Color(0.86, 0.84, 0.78)
+
+func set_food(group: String, coloured: bool) -> void:
 	food_group = group
-	var food_name := GameData.random_food(group)
+	var food_name: String = GameData.random_food(group)
 	label.text = food_name
-	rect.color = GameData.group_color(group)
+	rect.color = GameData.group_color(group) if coloured else NEUTRAL
 	_apply_sprite(food_name)
 
 # Show assets/food/<name>.png over the colored box if that art exists; otherwise
