@@ -209,7 +209,13 @@ func food_dropped_on_hero(food) -> bool:
 		# knows. The live "enemies" group is the test — never needed_groups(), so
 		# the two can never drift.
 		if get_tree().get_nodes_in_group("enemies").is_empty():
-			hud.say("Wait for a monster!", true)
+			# Deliberately good=true. HudController has exactly two colours and red
+			# is this HUD's "you got it wrong" signal — the entire point of this
+			# branch is that the child did NOT get anything wrong, so red would say
+			# the opposite of what just happened. Green reads as "you're fine", and
+			# the wording carries the neutrality the two-colour palette cannot:
+			# no points, no praise, just "not yet".
+			hud.say("No monster to feed yet — wait for the next one!", true)
 			return false
 		# Monsters ARE out there and not one of them wants this group. The child
 		# chose which food to pick up, so this is a genuine classification error:

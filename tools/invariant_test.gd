@@ -19,31 +19,63 @@ extends Node
 ## and compares, as a multiset, the weaknesses WaveDirector believes are alive
 ## against the weaknesses of the monsters actually in the "enemies" group.
 ##
-## DB SAFETY: it never feeds a food the hero accepts and never lets a level
-## finish, so it makes no scoring or GameData.record_result write. The one path
-## that does reach DB.record_answer (the punish probe) runs under the throwaway
-## difficulty PROBE_DIFF and deletes its own rows afterwards, so the real
-## per-group accuracy table — the educational telemetry the rebuild exists to
-## produce — is never polluted by a test run.
+## DB SAFETY: FILE-LEVEL isolation. This driver runs as an ordinary scene, so
+## all four autoloads boot first and DB._open() has already connected to the real
+## save (user://foodheroes.db) by the time _ready() here runs. Before any phase
+## executes, _isolate_db() closes that connection and reopens DB against the
+## throwaway TEST_DB, so EVERY write this run causes — the punish probe included
+## — lands in a disposable file that _finish() deletes. A decoy key inside the
+## live save is not good enough: a --quit-after kill, which CLAUDE.md documents
+## as a real occurrence here, would strand a row in a player's save, and even a
+## correctly deleted row leaves its bytes in the file's free pages.
+##
+## The real save is still OPENED at boot by the DB autoload itself — that happens
+## in every headless run of every scene, including smoke_test.gd's, and is not
+## something a test scene can prevent. What this guarantees is that no WRITE from
+## this driver ever reaches it.
 
 const GameScene := preload("res://scenes/Game.tscn")
 
-# Not a real difficulty, so a probe row can never be mistaken for a child's
-# answer, and can be deleted by difficulty without touching anything real.
-const PROBE_DIFF := "__invariant_probe__"
+# Throwaway save, mirroring tools/smoke_test.gd's user://smoke_test.db.
+const TEST_DB := "user://invariant_test.db"
 
 var _game: Node = null
 var _fails: int = 0
 var _frame: int = 0
 
 func _ready() -> void:
-	# Belt and braces: clear probe rows a previously crashed run may have left.
-	DB._exec_bound('DELETE FROM accuracy WHERE difficulty = ?', [PROBE_DIFF])
+	_isolate_db()
 	# Easy level 1 = 4 monsters. The driver never spawns all of them, so
 	# enemies_to_spawn stays > 0 and the level can never complete underneath it.
 	GameData.start_level("Easy", 1)
 	_game = GameScene.instantiate()
 	add_child(_game)   # Game._ready -> _start_level -> first wave -> one monster
+
+# === Database isolation ===
+
+func _isolate_db() -> void:
+	_remove_test_db()   # a previously killed run may have left one behind
+	if DB._db != null:
+		DB._db.close_db()
+	DB._db = null
+	DB.db_file = TEST_DB
+	DB._open()
+	_check(DB.db_file == TEST_DB and DB._db != null, "isolation: DB reopened against the throwaway file")
+	# The real save has accuracy rows in it; a fresh throwaway cannot. If this
+	# ever passes on the real file, that assertion is what catches it.
+	_check(DB.get_accuracy("Easy").is_empty(), "isolation: the throwaway save starts empty, so this is NOT foodheroes.db")
+
+func _teardown_db() -> void:
+	if DB._db != null:
+		DB._db.close_db()
+		DB._db = null
+	_remove_test_db()
+	_check(not FileAccess.file_exists(TEST_DB), "cleanup: the throwaway save is removed")
+
+func _remove_test_db() -> void:
+	var gpath := ProjectSettings.globalize_path(TEST_DB)
+	if FileAccess.file_exists(gpath):
+		DirAccess.remove_absolute(gpath)
 
 func _process(_d: float) -> void:
 	_frame += 1
@@ -113,8 +145,9 @@ func _phase_no_monster_is_not_a_wrong_answer() -> void:
 
 # The other half of Item 1: with a monster on screen, a food not one of them
 # wants IS a misclassification — the child chose which food to pick up — so it
-# must stun, reset the streak, and land in the accuracy table. Recorded under
-# PROBE_DIFF and cleaned up in _finish.
+# must stun, reset the streak, and land in the accuracy table. The write goes to
+# the isolated TEST_DB, so this exercises the real difficulty key on a real
+# DB.record_answer call without any of it reaching the player's save.
 func _phase_punish_is_recorded() -> void:
 	_game._spawn_enemy()
 	_check(_live().size() == 1, "punish: one monster is on screen to classify against")
@@ -125,18 +158,15 @@ func _phase_punish_is_recorded() -> void:
 			other = g
 			break
 	_game.score_keeper.streak = 3
-	var real_diff: String = GameData.current_difficulty
-	GameData.current_difficulty = PROBE_DIFF
 	var food = _make_food(other)
 	var consumed: bool = _game.food_dropped_on_hero(food)
-	GameData.current_difficulty = real_diff
 	food.queue_free()
 	_check(not consumed, "punish: a %s food no live monster wants is rejected" % other)
 	_check(_game.score_keeper.streak == 0, "punish: the streak resets")
 	_check(_game._is_stunned(), "punish: the hero is stunned")
-	var acc: Dictionary = DB.get_accuracy(PROBE_DIFF)
+	var acc: Dictionary = DB.get_accuracy(GameData.current_difficulty)
 	_check(acc.has(other) and int(acc[other]["wrong"]) == 1,
-		"punish: exactly one wrong answer reached the accuracy table for %s (acc=%s)" % [other, str(acc)])
+		"punish: exactly one wrong answer reached the isolated accuracy table for %s (acc=%s)" % [other, str(acc)])
 
 # The stun has to bite, and it must bite the CORRECT food too — that is what
 # makes a wrong answer cost something rather than being a free retry.
@@ -159,10 +189,7 @@ func _phase_restart_resets_cleanly() -> void:
 	_pairing("after _start_level swept and restarted")
 
 func _finish() -> void:
-	# Leave the real database exactly as it was found.
-	var cleaned: bool = DB._exec_bound('DELETE FROM accuracy WHERE difficulty = ?', [PROBE_DIFF])
-	_check(cleaned and DB.get_accuracy(PROBE_DIFF).is_empty(),
-		"cleanup: the probe rows are gone, the real accuracy table is untouched")
+	_teardown_db()
 	if _fails == 0:
 		print("INVARIANT: ALL PASS")
 		get_tree().quit(0)
