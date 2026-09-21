@@ -18,6 +18,7 @@ var _fails: int = 0
 
 func _initialize() -> void:
 	_test_gamedata()
+	_test_nutrients()
 	_test_layout()
 	_test_database()
 	if _fails == 0:
@@ -94,6 +95,38 @@ func _test_gamedata() -> void:
 
 	gd.free()
 
+# === Nutrients: Hard mode can only ask questions with one answer ===
+func _test_nutrients() -> void:
+	print("[Nutrients]")
+	var gd = load("res://scripts/GameData.gd").new()
+
+	# Build nutrient -> set of groups straight from the food tables.
+	var spread := {}
+	for group in gd.FOODS.keys():
+		for food in gd.FOODS[group]:
+			var n: String = gd.FOOD_NUTRIENTS.get(food, "")
+			_check(n != "", "%s has a nutrient" % food)
+			if not spread.has(n):
+				spread[n] = {}
+			spread[n][group] = true
+
+	# Every nutrient offered to Hard mode must resolve to exactly one group.
+	for n in gd.NUTRIENT_GROUPS.keys():
+		var groups: Dictionary = spread.get(n, {})
+		_check(groups.size() == 1, "%s belongs to exactly one group" % n)
+		_check(groups.has(gd.NUTRIENT_GROUPS[n]), "%s maps to the group that carries it" % n)
+
+	# The ambiguous three must be absent, or Hard mode asks unanswerable questions.
+	for n in ["+Vitamin A", "+Iron", "+Calcium"]:
+		_check(not gd.NUTRIENT_GROUPS.has(n), "%s is excluded as ambiguous" % n)
+
+	# Every group must be able to produce at least one Hard-mode request.
+	for group in gd.FOODS.keys():
+		_check(gd.random_nutrient_for(group) != "", "%s can produce a nutrient request" % group)
+
+	_check(gd.nutrient_group("+Protein") == "Grow", "protein resolves to Grow")
+	_check(gd.nutrient_group("+Nonsense") == "", "unknown nutrient resolves to empty")
+
 # === Layout: pure geometry at every shipped aspect ===
 func _test_layout() -> void:
 	print("[Layout]")
@@ -155,6 +188,14 @@ func _test_layout() -> void:
 	var inset2: Dictionary = L.compute(view_d2, safe_d2)
 	var none2: Dictionary = L.compute(view_d2, Rect2(Vector2.ZERO, view_d2))
 	_check(inset2["lane_top"] > none2["lane_top"], "a top inset pushes lanes down")
+	_check(safe_d2.position.y < safe_px2.position.y, "y inset is scaled down, not passed through raw")
+
+	# m must never be observable as empty: an autoload consumer could read it
+	# before _ready() runs, and a missing key would crash at startup.
+	var inst = L.new()
+	_check(not inst.m.is_empty(), "Layout.m is populated at construction")
+	_check(inst.m.has("hero_x") and inst.m.has("view"), "the construction default has real keys")
+	inst.free()
 
 # === Database: real SQLite roundtrip against a throwaway file ===
 func _test_database() -> void:

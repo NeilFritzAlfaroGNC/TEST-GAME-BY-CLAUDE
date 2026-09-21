@@ -25,6 +25,30 @@ const FOOD_NUTRIENTS := {
 	"Cheese": "+Calcium", "Pork": "+Protein",
 }
 
+# Nutrients that belong to EXACTLY ONE group, so a Hard-mode monster asking for
+# one has a single correct answer. Vitamin A (Go + Glow), Iron and Calcium
+# (Glow + Grow) are deliberately excluded — a monster asking for them would be
+# unanswerable. tools/smoke_test.gd asserts this stays true as foods are added.
+const NUTRIENT_GROUPS := {
+	"+Carbs": "Go", "+Fiber": "Go", "+Energy": "Go",
+	"+Vitamin C": "Glow", "+Potassium": "Glow",
+	"+Protein": "Grow",
+}
+
+func nutrient_group(nutrient: String) -> String:
+	return NUTRIENT_GROUPS.get(nutrient, "")
+
+# Grow only contributes "+Protein", which is why Hard mode mixes nutrient and
+# group requests rather than asking for nutrients every time (see WaveDirector).
+func random_nutrient_for(group: String) -> String:
+	var options: Array = []
+	for n in NUTRIENT_GROUPS.keys():
+		if NUTRIENT_GROUPS[n] == group:
+			options.append(n)
+	if options.is_empty():
+		return ""
+	return options[randi() % options.size()]
+
 # === Numbered levels (1-based). Each focuses on one food group. ===
 const LEVELS := [
 	{"name": "Energy Start", "correct_group": "Go", "enemies": 4,
