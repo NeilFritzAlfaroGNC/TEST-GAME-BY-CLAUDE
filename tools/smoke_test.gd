@@ -124,6 +124,16 @@ func _test_gamedata() -> void:
 	_check(gd.DIFFICULTIES["Medium"]["show_food_color"] == false, "Medium removes the colour crutch")
 	_check(gd.DIFFICULTIES["Hard"]["monster_label"] == "nutrient", "Hard asks for nutrients")
 
+	# Hard mode must not ask for nutrients every single time, because Grow only
+	# offers "+Protein" and the request would repeat constantly.
+	var WD = load("res://scripts/WaveDirector.gd").new()
+	var modes := {}
+	for i in range(200):
+		modes[WD.pick_label_mode("nutrient")] = true
+	_check(modes.has("nutrient") and modes.has("group"), "Hard mixes nutrient and group requests")
+	_check(WD.pick_label_mode("group") == "group", "Easy and Medium always ask by group")
+	WD.free()
+
 	gd.free()
 
 # === Nutrients: Hard mode can only ask questions with one answer ===
