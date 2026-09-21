@@ -74,6 +74,16 @@ func _ensure_schema() -> void:
 		"stars INTEGER DEFAULT 0, completed INTEGER DEFAULT 0, " +
 		"PRIMARY KEY (difficulty, level));"
 	)
+	# Per-(difficulty, group) accuracy: the evidence-of-learning record.
+	# "group" is a reserved SQL word and must stay quoted everywhere it appears.
+	_exec("""
+		CREATE TABLE IF NOT EXISTS accuracy (
+			difficulty TEXT NOT NULL,
+			"group"    TEXT NOT NULL,
+			correct    INTEGER NOT NULL DEFAULT 0,
+			wrong      INTEGER NOT NULL DEFAULT 0,
+			PRIMARY KEY (difficulty, "group")
+		)""")
 
 # === Public API ===
 
@@ -122,6 +132,34 @@ func is_level_unlocked(difficulty: String, level: int) -> bool:
 	if level <= 1:
 		return true
 	return get_level_progress(difficulty, level - 1)["completed"] > 0
+
+# === Per-group accuracy (evidence of learning) ===
+
+# Records one answer against its food group. Fire-and-forget: a failure here
+# must never interrupt play, so it logs and returns.
+func record_answer(difficulty: String, group: String, was_correct: bool) -> void:
+	if _db == null:
+		return
+	var col := "correct" if was_correct else "wrong"
+	var sql := """
+		INSERT INTO accuracy (difficulty, "group", correct, wrong) VALUES (?, ?, ?, ?)
+		ON CONFLICT(difficulty, "group") DO UPDATE SET %s = %s + 1""" % [col, col]
+	var ok: bool = _db.query_with_bindings(sql, [difficulty, group, 1 if was_correct else 0, 0 if was_correct else 1])
+	if not ok:
+		push_error("[DB] record_answer failed: %s" % _db.error_message)
+
+func get_accuracy(difficulty: String) -> Dictionary:
+	var out := {}
+	if _db == null:
+		return out
+	var ok: bool = _db.query_with_bindings(
+		'SELECT "group", correct, wrong FROM accuracy WHERE difficulty = ?', [difficulty])
+	if not ok:
+		push_error("[DB] get_accuracy failed: %s" % _db.error_message)
+		return out
+	for row in _db.query_result:
+		out[String(row["group"])] = {"correct": int(row["correct"]), "wrong": int(row["wrong"])}
+	return out
 
 # === SQLite helpers ===
 # Both return true only if the DB is open AND the statement succeeded, and

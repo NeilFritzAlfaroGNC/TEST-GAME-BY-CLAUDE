@@ -275,6 +275,21 @@ func _test_database() -> void:
 	db.set_setting_int("muted", 0)
 	_check(db.get_setting_int("muted", 1) == 0, "settings roundtrip (muted=0)")
 
+	# Accuracy: the evidence-of-learning record.
+	_check(db.get_accuracy("Easy").is_empty(), "fresh accuracy is empty")
+	db.record_answer("Easy", "Go", true)
+	db.record_answer("Easy", "Go", true)
+	db.record_answer("Easy", "Go", false)
+	db.record_answer("Easy", "Grow", false)
+	var acc: Dictionary = db.get_accuracy("Easy")
+	_check(acc.has("Go") and acc.has("Grow"), "both answered groups are recorded")
+	_check(int(acc["Go"]["correct"]) == 2, "correct answers accumulate")
+	_check(int(acc["Go"]["wrong"]) == 1, "wrong answers accumulate")
+	_check(int(acc["Grow"]["correct"]) == 0, "a group with only misses reads zero correct")
+
+	# Accuracy is per difficulty, like the unlock chain.
+	_check(db.get_accuracy("Hard").is_empty(), "accuracy does not leak across difficulties")
+
 	db._db.close_db()   # never entered the tree, so close explicitly
 	db.free()
 	_remove_test_db()
