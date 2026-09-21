@@ -19,7 +19,7 @@ Write-Host "== 1/5 Import =="
 Write-Host "== 2/5 Logic smoke test =="
 $out = (& $godot --headless --path $proj -s res://tools/smoke_test.gd 2>&1 | Out-String)
 Write-Host $out
-if ($LASTEXITCODE -ne 0 -or $out -notmatch "ALL PASS") { $failed = $true }
+if ($LASTEXITCODE -ne 0 -or $out -notmatch "ALL PASS" -or $out -match $failPattern) { $failed = $true }
 
 Write-Host "== 3/5 Headless run: Main.tscn =="
 $out = (& $godot --headless --path $proj res://scenes/Main.tscn --quit-after 150 2>&1 | Out-String)

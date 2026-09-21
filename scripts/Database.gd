@@ -136,29 +136,26 @@ func is_level_unlocked(difficulty: String, level: int) -> bool:
 # === Per-group accuracy (evidence of learning) ===
 
 # Records one answer against its food group. Fire-and-forget: a failure here
-# must never interrupt play, so it logs and returns.
+# must never interrupt play, so it just delegates to _exec_bound, which
+# already guards _db == null and push_errors on failure.
 func record_answer(difficulty: String, group: String, was_correct: bool) -> void:
-	if _db == null:
-		return
 	var col := "correct" if was_correct else "wrong"
 	var sql := """
 		INSERT INTO accuracy (difficulty, "group", correct, wrong) VALUES (?, ?, ?, ?)
 		ON CONFLICT(difficulty, "group") DO UPDATE SET %s = %s + 1""" % [col, col]
-	var ok: bool = _db.query_with_bindings(sql, [difficulty, group, 1 if was_correct else 0, 0 if was_correct else 1])
-	if not ok:
-		push_error("[DB] record_answer failed: %s" % _db.error_message)
+	_exec_bound(sql, [difficulty, group, 1 if was_correct else 0, 0 if was_correct else 1])
 
+# Returns {group: {"correct": int, "wrong": int}} for a difficulty (empty if
+# nothing recorded yet or the DB is unavailable).
 func get_accuracy(difficulty: String) -> Dictionary:
 	var out := {}
-	if _db == null:
-		return out
-	var ok: bool = _db.query_with_bindings(
-		'SELECT "group", correct, wrong FROM accuracy WHERE difficulty = ?', [difficulty])
-	if not ok:
-		push_error("[DB] get_accuracy failed: %s" % _db.error_message)
-		return out
-	for row in _db.query_result:
-		out[String(row["group"])] = {"correct": int(row["correct"]), "wrong": int(row["wrong"])}
+	if _exec_bound(
+		'SELECT "group", correct, wrong FROM accuracy WHERE difficulty = ?', [difficulty]
+	):
+		var rows = _db.query_result
+		if rows is Array:
+			for row in rows:
+				out[String(row["group"])] = {"correct": int(row["correct"]), "wrong": int(row["wrong"])}
 	return out
 
 # === SQLite helpers ===
