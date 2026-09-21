@@ -93,6 +93,33 @@ func _test_gamedata() -> void:
 	gd.start_level("Medium", 2)
 	_check(not gd.tutorial_mode, "start_level clears tutorial_mode")
 
+	# 15 levels means bosses land on 5, 10 and 15.
+	_check(gd.LEVELS.size() == 15, "there are 15 levels")
+	_check(gd.num_levels() == 15, "num_levels agrees with the table")
+	var bosses := 0
+	for n in range(1, gd.num_levels() + 1):
+		if gd.is_boss_level(n):
+			bosses += 1
+	_check(bosses == 3, "three boss levels across the run")
+
+	# Every level is well-formed, or a level silently becomes unplayable.
+	for i in range(gd.LEVELS.size()):
+		var row: Dictionary = gd.LEVELS[i]
+		_check(row.has("name") and String(row["name"]) != "", "level %d has a name" % (i + 1))
+		_check(gd.FOODS.has(row["correct_group"]), "level %d targets a real group" % (i + 1))
+		_check(int(row["enemies"]) > 0, "level %d spawns monsters" % (i + 1))
+		_check(String(row["lesson"]) != "", "level %d has a lesson" % (i + 1))
+
+	# Difficulty is a teaching ladder, not just a speed knob.
+	for diff in gd.DIFFICULTY_ORDER:
+		var d: Dictionary = gd.DIFFICULTIES[diff]
+		_check(d.has("monster_label"), "%s declares a monster label mode" % diff)
+		_check(d["monster_label"] in ["group", "nutrient"], "%s label mode is valid" % diff)
+		_check(d.has("show_food_color"), "%s declares whether foods are coloured" % diff)
+	_check(gd.DIFFICULTIES["Easy"]["show_food_color"] == true, "Easy keeps the colour crutch")
+	_check(gd.DIFFICULTIES["Medium"]["show_food_color"] == false, "Medium removes the colour crutch")
+	_check(gd.DIFFICULTIES["Hard"]["monster_label"] == "nutrient", "Hard asks for nutrients")
+
 	gd.free()
 
 # === Nutrients: Hard mode can only ask questions with one answer ===
@@ -126,6 +153,8 @@ func _test_nutrients() -> void:
 
 	_check(gd.nutrient_group("+Protein") == "Grow", "protein resolves to Grow")
 	_check(gd.nutrient_group("+Nonsense") == "", "unknown nutrient resolves to empty")
+
+	gd.free()
 
 # === Layout: pure geometry at every shipped aspect ===
 func _test_layout() -> void:

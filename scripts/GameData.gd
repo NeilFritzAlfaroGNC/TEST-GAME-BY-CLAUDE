@@ -59,19 +59,45 @@ const LEVELS := [
 	 "lesson": "GROW foods build strong muscles and bones! Fish, egg, milk, and beans are Grow foods."},
 	{"name": "Power Snack", "correct_group": "Go", "enemies": 5,
 	 "lesson": "Go foods are your fuel! Noodles, oatmeal, and porridge also give you energy to keep going."},
-	{"name": "Fruit Shield", "correct_group": "Glow", "enemies": 6,
-	 "lesson": "Fruits are Glow foods too! Mango, papaya, and orange give vitamins that keep you healthy."},
 	{"name": "Strong Finish", "correct_group": "Grow", "enemies": 6,
 	 "lesson": "Grow foods help you grow tall and strong! Chicken, shrimp, tofu, and cheese build your body."},
+	{"name": "Fruit Shield", "correct_group": "Glow", "enemies": 6,
+	 "lesson": "Fruits are Glow foods too! Mango, papaya, and orange give vitamins that keep you healthy."},
+	{"name": "Market Run", "correct_group": "Go", "enemies": 7,
+	 "lesson": "Go foods are grains and starchy roots. Rice, corn, and sweet potato all give lasting energy."},
+	{"name": "Garden Guard", "correct_group": "Glow", "enemies": 7,
+	 "lesson": "Dark green leaves are the strongest Glow foods. Moringa and bok choy are packed with vitamins."},
+	{"name": "Protein Power", "correct_group": "Grow", "enemies": 8,
+	 "lesson": "Fish, egg, tofu, and mung beans are all Grow foods. They repair your body every single day."},
+	{"name": "Lunchbox Logic", "correct_group": "Go", "enemies": 8,
+	 "lesson": "A Go food belongs in every meal. Noodles, bread, and porridge keep your energy steady."},
+	{"name": "Vitamin Vault", "correct_group": "Glow", "enemies": 9,
+	 "lesson": "Glow foods protect you from sickness. Eat a colourful mix of fruits and vegetables daily."},
+	{"name": "Build and Grow", "correct_group": "Grow", "enemies": 9,
+	 "lesson": "Milk and cheese give calcium for strong bones, while fish and beef give iron for your blood."},
+	{"name": "Snack Smart", "correct_group": "Go", "enemies": 9,
+	 "lesson": "Snacks count too! Choose corn, oatmeal, or a sweet potato instead of sweets for steady energy."},
+	{"name": "Healthy Habit", "correct_group": "Glow", "enemies": 10,
+	 "lesson": "Eating well is a habit, not a one-time meal. Choose Go, Grow, and Glow foods every day."},
+	{"name": "Balanced Plate", "correct_group": "Glow", "enemies": 10,
+	 "lesson": "Fill half your plate with Glow fruits and vegetables, then add a Go food and a Grow food."},
 ]
 
 # === Difficulty modifiers ===
 # lives: starting lives. speed_mult: enemy speed. spawn_mult: time between
 # spawns (>1 = slower). enemy_bonus: extra enemies. score_mult: points multiplier.
+# monster_label: what a monster displays as its weakness -- "group" ("GROW") or
+#   "nutrient" ("needs PROTEIN"). show_food_color: whether belt foods are tinted
+#   by group. Together these make difficulty a TEACHING ladder: Easy lets the
+#   player match colours, Medium demands group knowledge, Hard demands the
+#   food -> nutrient -> group chain.
 const DIFFICULTIES := {
-	"Easy":   {"lives": 5, "speed_mult": 0.70, "spawn_mult": 1.30, "enemy_bonus": 0, "score_mult": 1},
-	"Medium": {"lives": 3, "speed_mult": 1.00, "spawn_mult": 1.00, "enemy_bonus": 1, "score_mult": 2},
-	"Hard":   {"lives": 2, "speed_mult": 1.40, "spawn_mult": 0.70, "enemy_bonus": 2, "score_mult": 3},
+	"Easy":   {"lives": 5, "speed_mult": 0.70, "spawn_mult": 1.30, "enemy_bonus": 0, "score_mult": 1,
+			   "monster_label": "group", "show_food_color": true},
+	"Medium": {"lives": 3, "speed_mult": 1.00, "spawn_mult": 1.00, "enemy_bonus": 1, "score_mult": 2,
+			   "monster_label": "group", "show_food_color": false},
+	"Hard":   {"lives": 2, "speed_mult": 1.40, "spawn_mult": 0.70, "enemy_bonus": 2, "score_mult": 3,
+			   "monster_label": "nutrient", "show_food_color": false},
 }
 const DIFFICULTY_ORDER := ["Easy", "Medium", "Hard"]
 
