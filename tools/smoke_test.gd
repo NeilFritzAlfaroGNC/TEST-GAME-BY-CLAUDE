@@ -158,6 +158,18 @@ func _test_nutrients() -> void:
 	_check(gd.nutrient_group("+Protein") == "Grow", "protein resolves to Grow")
 	_check(gd.nutrient_group("+Nonsense") == "", "unknown nutrient resolves to empty")
 
+	# A monster's displayed request must always resolve back to its weakness.
+	var E = load("res://scripts/Enemy.gd").new()
+	for group in gd.FOODS.keys():
+		E.weakness = group
+		E.label_mode = "group"
+		_check(E.weakness_text().find(group.to_upper()) >= 0, "%s group label names the group" % group)
+		E.label_mode = "nutrient"
+		E.nutrient = gd.random_nutrient_for(group)
+		_check(gd.nutrient_group(E.nutrient) == group, "%s nutrient request resolves to %s" % [group, group])
+		_check(E.weakness_text() != "", "%s nutrient label is not blank" % group)
+	E.free()
+
 	gd.free()
 
 # === ScoreKeeper: streaks reward knowing, not flailing ===
