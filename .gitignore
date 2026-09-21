@@ -37,3 +37,6 @@ addons/godot-sqlite/bin/*web*
 # Godot editor hot-reload temp copies of the native lib (transient)
 addons/godot-sqlite/bin/~*
 *.TMP
+
+# Subagent-driven-development scratch workspace (ledger, briefs, review packages)
+.superpowers/
