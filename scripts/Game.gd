@@ -139,7 +139,13 @@ func _start_level() -> void:
 	GameData.score = score_keeper.score
 	_boss_active = false
 	_meal_needed = []
-	# Clear anything left over from a previous level in this scene instance.
+	# Clear anything left over from a previous level in this scene instance. This
+	# is the ONE free-without-untrack in the file, and it is safe only because
+	# director.start() three lines below resets _alive_weaknesses to [] wholesale
+	# — untracking each enemy here would be redundant work on a list about to be
+	# thrown away. Anywhere else, a free MUST go through _despawn() so track() and
+	# untrack() stay paired. (Today this loop is also a no-op: _start_level runs
+	# once, from _ready, on a freshly instantiated scene.)
 	for e in get_tree().get_nodes_in_group("enemies"):
 		e.remove_from_group("enemies")
 		e.queue_free()
@@ -183,15 +189,31 @@ func _spawn_enemy() -> void:
 # Called by Food.gd when a food is dropped on the hero. Returns true if the food
 # was consumed (remove it), false to glide it back to its belt slot.
 func food_dropped_on_hero(food) -> bool:
-	if not game_active or _is_stunned():
+	if not game_active:
+		return false
+	if _is_stunned():
+		# Say so. Without this the previous "Not what they asked for!" is the only
+		# thing on screen, so a correct food being ignored looks like a bug.
+		hud.say("The Hero is still dazed — wait a moment, then try again!", false)
 		return false
 	var group: String = food.food_group
 	if _boss_active:
 		return _feed_boss(food)
 	var target = _closest_matching(group)
 	if target == null:
-		# Wrong in both senses — no monster wants this group, or none is present.
-		# One path only: stun, streak reset, accuracy record.
+		# Nothing on screen to classify against — between waves, or the wave's last
+		# monster just died. That is a TIMING artifact, not a misclassification, so
+		# it must never stun and must never reach the per-group accuracy table: that
+		# table is the educational telemetry the whole game exists to produce, and a
+		# non-knowledge failure written into it makes it lie about what the child
+		# knows. The live "enemies" group is the test — never needed_groups(), so
+		# the two can never drift.
+		if get_tree().get_nodes_in_group("enemies").is_empty():
+			hud.say("Wait for a monster!", true)
+			return false
+		# Monsters ARE out there and not one of them wants this group. The child
+		# chose which food to pick up, so this is a genuine classification error:
+		# stun, reset the streak, record the miss.
 		_punish(group, food.label.text)
 		return false
 	var points: int = score_keeper.correct(group)

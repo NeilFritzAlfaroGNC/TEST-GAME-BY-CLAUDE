@@ -58,6 +58,10 @@ signal changed
 
 var m: Dictionary = compute(BASE, Rect2(Vector2.ZERO, BASE))
 
+# One-shot latch for the degenerate-window warning below: refresh() runs on every
+# size_changed, and a driver stuck at 0x0 must not flood the log.
+var _warned_degenerate: bool = false
+
 func _ready() -> void:
 	refresh()
 	if not get_tree().get_root().size_changed.is_connected(refresh):
@@ -71,8 +75,12 @@ func refresh() -> void:
 	# The headless DisplayServer reports a 0x0 window, and dividing by that ratio
 	# turns every metric into NaN — which silently poisons the whole play field in
 	# exactly the runs tools/test.ps1 uses to catch problems. Fall back to the
-	# design box whenever the driver gives us nothing usable.
+	# design box whenever the driver gives us nothing usable, and SAY SO: that bug
+	# survived several tasks purely because the substitution was silent.
 	if win.x <= 0.0 or win.y <= 0.0:
+		if not _warned_degenerate:
+			_warned_degenerate = true
+			push_warning("Layout: DisplayServer reported a %s window; falling back to the %s design box (every metric would otherwise be NaN). Expected headless; on a device it means the driver is wrong." % [str(win), str(BASE)])
 		win = BASE
 	var view := visible_size(win, BASE)
 	var safe_px := Rect2(DisplayServer.get_display_safe_area())

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dtne0s2gq6ga7"]
+
+[ext_resource type="Script" uid="uid://b36l0eucrevt3" path="res://tools/invariant_test.gd" id="1_driver"]
+
+[node name="InvariantTest" type="Node"]
+script = ExtResource("1_driver")
