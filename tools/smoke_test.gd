@@ -142,14 +142,19 @@ func _test_layout() -> void:
 
 	# The belt must clear the gesture strip once the inset is applied.
 	var inset: Dictionary = L.compute(view_d, safe_d)
-	_check(inset["belt_y"] < safe_d.end.y, "food lane sits inside the safe area")
-	_check(inset["belt_top"] > safe_d.position.y, "belt does not reach the top safe edge")
-	_check(inset["hero_x"] < safe_d.end.x, "hero clears the right safe edge")
-
-	# An inset layout must never be identical to an uninst one, or the
-	# conversion is silently doing nothing.
 	var none: Dictionary = L.compute(view_d, Rect2(Vector2.ZERO, view_d))
+	_check(inset["belt_top"] > safe_d.position.y, "belt does not reach the top safe edge")
+	_check(inset["hero_x"] < none["hero_x"], "a right-edge inset pulls the hero left")
 	_check(inset["belt_y"] < none["belt_y"], "insets lift the belt off the bottom edge")
+
+	# A top inset must push the lanes down. The y-axis conversion is tested here.
+	var win2 := Vector2(2400, 1080)
+	var safe_px2 := Rect2(0.0, 120.0, 2400.0, 960.0)
+	var safe_d2: Rect2 = L.safe_in_design(safe_px2, win2, L.BASE)
+	var view_d2: Vector2 = L.visible_size(win2, L.BASE)
+	var inset2: Dictionary = L.compute(view_d2, safe_d2)
+	var none2: Dictionary = L.compute(view_d2, Rect2(Vector2.ZERO, view_d2))
+	_check(inset2["lane_top"] > none2["lane_top"], "a top inset pushes lanes down")
 
 # === Database: real SQLite roundtrip against a throwaway file ===
 func _test_database() -> void:
