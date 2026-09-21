@@ -56,11 +56,12 @@ static func compute(view: Vector2, safe: Rect2) -> Dictionary:
 
 signal changed
 
-var m: Dictionary = {}
+var m: Dictionary = compute(BASE, Rect2(Vector2.ZERO, BASE))
 
 func _ready() -> void:
 	refresh()
-	get_tree().get_root().size_changed.connect(refresh)
+	if not get_tree().get_root().size_changed.is_connected(refresh):
+		get_tree().get_root().size_changed.connect(refresh)
 
 # Reads live engine state, converts it, and republishes the metrics.
 # Desktop reports the whole screen as safe, which is correct there — the insets
