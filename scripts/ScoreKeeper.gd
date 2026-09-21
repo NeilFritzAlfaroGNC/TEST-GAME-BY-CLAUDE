@@ -34,7 +34,7 @@ func wrong(group: String) -> void:
 	streak = 0
 
 func tally() -> Dictionary:
-	return _tally
+	return _tally.duplicate(true)
 
 # 0-100. An unseen group reads 0 rather than dividing by zero.
 func percent(group: String) -> int:
