@@ -1,6 +1,17 @@
 extends Control
 ## Level select: pick a difficulty (Easy/Medium/Hard) and a numbered level.
 ## Levels unlock in order per difficulty; stars/locks come from the DB (SQLite).
+##
+## GRID WIDTH: 15 levels + 1 "coming soon" tile no longer fit a fixed 3-column
+## grid inside the design box's fixed 648-unit height without the rows running
+## off the bottom. Tile size stays fixed at TILE_SIZE (150 units wide is
+## ~15mm on a 6.1" phone per the project's own arithmetic, against a ~9mm
+## minimum, so it must not shrink) — instead the COLUMN COUNT adapts to
+## Layout.m["view"].x, which grows from 1152 (16:9) to ~1512 (21:9), so a
+## wider device gets more columns and fewer rows instead of overflow.
+
+const TILE_SIZE := Vector2(150, 96)
+const TILE_H_SEP := 16.0   # must match Grid's theme_override_constants/h_separation
 
 @onready var grid: GridContainer = $Center/VBox/Grid
 @onready var info: Label = $Center/VBox/Info
@@ -17,7 +28,17 @@ func _ready() -> void:
 	medium_btn.pressed.connect(func(): _set_difficulty("Medium"))
 	hard_btn.pressed.connect(func(): _set_difficulty("Hard"))
 	$Center/VBox/BackButton.pressed.connect(_on_back)
+	if not Layout.changed.is_connected(_build_grid):
+		Layout.changed.connect(_build_grid)
 	_refresh()
+
+# How many tiles fit per row at the current viewport without shrinking TILE_SIZE.
+# Never below 3 (defensive floor; the narrowest supported view already fits 6).
+func _grid_columns() -> int:
+	var avail_x: float = Layout.m["view"].x
+	var per_col: float = TILE_SIZE.x + TILE_H_SEP
+	var cols: int = int(floor((avail_x + TILE_H_SEP) / per_col))
+	return maxi(cols, 3)
 
 func _set_difficulty(d: String) -> void:
 	Audio.play("click")
@@ -51,13 +72,14 @@ func _speed_word(diff: Dictionary) -> String:
 	return "normal"
 
 func _build_grid() -> void:
+	grid.columns = _grid_columns()
 	for c in grid.get_children():
 		c.queue_free()
 	for n in range(1, GameData.num_levels() + 1):
 		var prog: Dictionary = DB.get_level_progress(difficulty, n)
 		var unlocked: bool = DB.is_level_unlocked(difficulty, n)
 		var btn := Button.new()
-		btn.custom_minimum_size = Vector2(150, 96)
+		btn.custom_minimum_size = TILE_SIZE
 		btn.add_theme_font_size_override("font_size", 22)
 		# Boss levels get a badge so the player knows a boss fight is coming.
 		var title := ("BOSS %d" % n) if GameData.is_boss_level(n) else ("Level %d" % n)
@@ -73,7 +95,7 @@ func _build_grid() -> void:
 	# One locked "coming soon" slot (shown for every difficulty) — reserved for
 	# a future content update. Always disabled.
 	var soon := Button.new()
-	soon.custom_minimum_size = Vector2(150, 96)
+	soon.custom_minimum_size = TILE_SIZE
 	soon.add_theme_font_size_override("font_size", 20)
 	soon.text = "Level %d\nComing Soon" % (GameData.num_levels() + 1)
 	soon.disabled = true
