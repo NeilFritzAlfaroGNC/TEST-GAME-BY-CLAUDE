@@ -69,7 +69,13 @@ var game_active: bool = false
 
 var _diff: Dictionary = {}
 var _enemy_speed: float = BASE_ENEMY_SPEED
+# _stunned_until is compared against _stun_clock, NOT the wall clock: _stun_clock
+# only advances in _process(), which the engine skips while get_tree().paused is
+# true (Game's process_mode is the default PAUSABLE). Using Time.get_ticks_msec()
+# here would let a stun tick down (or even finish) while the game is paused,
+# quietly forgiving a wrong-answer penalty the player never waited out.
 var _stunned_until: float = 0.0
+var _stun_clock: float = 0.0
 
 # Boss state. `boss` is the live boss Enemy instance (untyped, like every other
 # cross-node reference here); _meal_needed holds the balanced-meal groups still
@@ -130,6 +136,11 @@ func _ready() -> void:
 	Audio.play_music("music")
 	_start_level()
 
+# Advances the pause-immune stun clock. Nothing else needs a per-frame update,
+# which is why the whole node went this long without a _process() at all.
+func _process(delta: float) -> void:
+	_stun_clock += delta
+
 # === Layout ===
 # Layout.changed (a resize or device rotation): re-place everything positioned
 # once. Belt foods and monster lanes re-derive from Layout every frame, and the
@@ -163,6 +174,7 @@ func _start_level() -> void:
 	GameData.score = score_keeper.score
 	_boss_active = false
 	_meal_needed = []
+	_stunned_until = 0.0   # a restart (retry, tutorial retry, game-over) must not inherit a stun
 	# Clear anything left over from a previous level in this scene instance. This
 	# is the ONE free-without-untrack in the file, and it is safe only because
 	# director.start() three lines below resets _alive_weaknesses to [] wholesale
@@ -299,13 +311,13 @@ func food_dropped_on_hero(food) -> bool:
 	return true
 
 func _is_stunned() -> bool:
-	return Time.get_ticks_msec() / 1000.0 < _stunned_until
+	return _stun_clock < _stunned_until
 
 # A wrong answer has to cost something, or guessing is free.
 func _punish(group: String, food_name: String) -> void:
 	score_keeper.wrong(group)
 	DB.record_answer(GameData.current_difficulty, group, false)
-	_stunned_until = Time.get_ticks_msec() / 1000.0 + STUN_TIME
+	_stunned_until = _stun_clock + STUN_TIME
 	hud.say("Not what they asked for! %s is a %s food." % [food_name, group], false)
 	Audio.play("wrong")
 	fx.shake(4.0, 0.2)

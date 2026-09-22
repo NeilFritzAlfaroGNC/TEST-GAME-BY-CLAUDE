@@ -211,11 +211,10 @@ var _acc_before: Dictionary = {}
 func _phase_boss_level_starts() -> void:
 	GameData.start_level("Easy", 5)
 	_game._start_level()
-	# The stun from _phase_punish_is_recorded is still ticking: it is measured on
-	# the WALL clock and _start_level does not reset it. Both are known bugs that
-	# Task 13 step 3 fixes; until then, clear it by hand so the boss phases test
-	# the boss rather than the stun. Step 3 replaces this with an assertion.
-	_game._stunned_until = 0.0
+	# The stun from _phase_punish_is_recorded would still be ticking under the old
+	# wall-clock design; _start_level() now resets _stunned_until itself (Task 13:
+	# pause overlay), so assert that instead of clearing it by hand.
+	_check(not _game._is_stunned(), "restart: _start_level() resets the stun, not just the wave")
 	_check(_game.director.boss_level, "boss level: level 5 is a boss level")
 	_check(_game.director.total_waves == GameData.BOSS_WAVES,
 		"boss level: %d waves before the boss" % GameData.BOSS_WAVES)
