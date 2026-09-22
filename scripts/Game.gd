@@ -32,6 +32,21 @@ const BOSS_SPEED_MULT := 0.5
 const BOSS_SCALE := Vector2(2.2, 2.2)
 const BOSS_COLOR := Color(0.42, 0.24, 0.52)
 
+# Tutorial intro pages, shown one by one through the lesson popup before the
+# guided first wave starts (GameData.tutorial_mode). [title, text] pairs.
+const TUTORIAL_PAGES := [
+	["Welcome to Food Heroes!",
+	 "The blue box is the HERO. Hungry Monsters march in from the left — don't let them reach him!"],
+	["The Food Belt",
+	 "Foods ride the conveyor belt at the bottom.\nYELLOW = GO (energy)   GREEN = GLOW (protect)   RED = GROW (build)\nGrab a food before it blinks away — new ones keep coming!"],
+	["Feed the Hero",
+	 "DRAG a food from the belt and DROP it on the Hero.\nThe RIGHT food group defeats the closest monster.\nA wrong food just rides back onto the belt — no harm done, try again!"],
+	["Your First Mission",
+	 "Feed the Hero GO foods (yellow) to defeat 3 slow monsters.\nYou have 5 lives, and you can pause any time with Esc or the Pause button.\nGood luck, Hero!"],
+]
+var _tutorial_page: int = 0
+var _tutorial_intro_active: bool = false
+
 @export var enemy_scene: PackedScene
 @export var food_scene: PackedScene
 
@@ -161,9 +176,48 @@ func _start_level() -> void:
 	_clear_boss()   # a restart mid-boss must not leave the old boss on screen
 	belt.clear_foods()
 	game_active = true
+	if GameData.tutorial_mode:
+		# Guided first run: the TUTORIAL_PAGES intro shows one page at a time through
+		# the lesson popup (_tutorial_intro_active reroutes _on_continue_pressed);
+		# monsters and the belt only start once the last page closes, in
+		# _advance_tutorial_intro(). WaveDirector is bypassed here -- there is no
+		# wave/boss structure to run, same as the old Main.gd's tutorial branch --
+		# but enemies_to_spawn stays a director field so _spawn_enemy/_despawn keep
+		# going through the normal track/untrack path (and on_enemy_removed's
+		# level_cleared signal fires the same way once the wave is cleared).
+		_enemy_speed = BASE_ENEMY_SPEED * GameData.TUTORIAL_SPEED_MULT
+		spawn_timer.wait_time = SPAWN_INTERVAL * GameData.TUTORIAL_SPAWN_MULT
+		director.boss_level = false
+		director.wave = 1
+		director.total_waves = 1
+		director.enemies_to_spawn = GameData.TUTORIAL_ENEMIES
+		hud.say("Drag GO (yellow) foods onto the Hero!", true)
+		_refresh_hud()
+		_show_tutorial_page(0)
+		return
 	director.start(level, _diff)   # emits wave_started -> _on_wave_started
 	# Start the belt AFTER the first wave so its seeded foods already match the
 	# weaknesses of the monsters that just spawned.
+	belt.start()
+	_refresh_hud()
+
+# === Tutorial intro (pages through the lesson popup, then a slow wave) ===
+func _show_tutorial_page(i: int) -> void:
+	_tutorial_page = i
+	_tutorial_intro_active = true
+	lesson_title.text = TUTORIAL_PAGES[i][0]
+	lesson_label.text = TUTORIAL_PAGES[i][1]
+	lesson_root.visible = true
+
+func _advance_tutorial_intro() -> void:
+	if _tutorial_page + 1 < TUTORIAL_PAGES.size():
+		_show_tutorial_page(_tutorial_page + 1)
+		return
+	# Intro done: unleash the (slow) monsters and roll the belt.
+	_tutorial_intro_active = false
+	lesson_root.visible = false
+	spawn_timer.start()
+	_spawn_enemy()   # first monster right away
 	belt.start()
 	_refresh_hud()
 
@@ -186,7 +240,9 @@ func _spawn_enemy() -> void:
 		return
 	director.enemies_to_spawn -= 1
 	var m: Dictionary = Layout.m
-	var group: String = GameData.random_group()
+	# The tutorial's single teaching wave must have every monster want the SAME
+	# group, so a first-time player meets one idea at a time instead of three.
+	var group: String = "Go" if GameData.tutorial_mode else GameData.random_group()
 	var mode: String = director.pick_label_mode(String(_diff.get("monster_label", "group")))
 	var enemy = enemy_scene.instantiate()
 	add_child(enemy)   # before setup(): it refreshes the @onready Label
@@ -465,7 +521,10 @@ func _stop_level() -> void:
 func _level_complete() -> void:
 	_stop_level()
 	Audio.play("correct")
-	if GameData.is_boss_level(GameData.current_level):
+	if GameData.tutorial_mode:
+		lesson_title.text = "Tutorial Complete!"
+		lesson_label.text = "You're ready, Hero! Remember: GO gives energy, GLOW protects you, GROW builds your body — eat from all three groups every day. Now pick a level and save the day!"
+	elif GameData.is_boss_level(GameData.current_level):
 		lesson_title.text = "Balanced Meal Complete!"
 		lesson_label.text = GameData.BOSS_LESSON
 	else:
@@ -475,12 +534,27 @@ func _level_complete() -> void:
 
 func _on_continue_pressed() -> void:
 	Audio.play("click")
+	if _tutorial_intro_active:
+		_advance_tutorial_intro()
+		return
 	lesson_root.visible = false
+	if GameData.tutorial_mode:
+		# Tutorial cleared: remember it, then hand over to the real game. Nothing
+		# is recorded -- the tutorial doesn't count as level 1.
+		DB.set_setting_int("tutorial_done", 1)
+		GameData.tutorial_mode = false
+		get_tree().change_scene_to_file("res://scenes/LevelSelect.tscn")
+		return
 	GameData.record_result(true)
 	get_tree().change_scene_to_file("res://scenes/ResultScreen.tscn")
 
 func _game_over() -> void:
 	_stop_level()
+	if GameData.tutorial_mode:
+		# The tutorial can't be failed out of -- just run it again.
+		GameData.start_tutorial()
+		get_tree().change_scene_to_file("res://scenes/Game.tscn")
+		return
 	GameData.record_result(false)
 	get_tree().change_scene_to_file("res://scenes/ResultScreen.tscn")
 
