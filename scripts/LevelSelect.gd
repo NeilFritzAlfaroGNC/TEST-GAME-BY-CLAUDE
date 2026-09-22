@@ -83,7 +83,7 @@ func _build_grid() -> void:
 func _on_level_pressed(n: int) -> void:
 	Audio.play("click")
 	GameData.start_level(difficulty, n)
-	get_tree().change_scene_to_file("res://scenes/Main.tscn")
+	get_tree().change_scene_to_file("res://scenes/Game.tscn")
 
 func _on_back() -> void:
 	Audio.play("click")

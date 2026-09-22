@@ -30,12 +30,12 @@ func _ready() -> void:
 func _on_next_pressed() -> void:
 	Audio.play("click")
 	GameData.start_level(GameData.current_difficulty, GameData.current_level + 1)
-	get_tree().change_scene_to_file("res://scenes/Main.tscn")
+	get_tree().change_scene_to_file("res://scenes/Game.tscn")
 
 func _on_retry_pressed() -> void:
 	Audio.play("click")
 	GameData.start_level(GameData.current_difficulty, GameData.current_level)
-	get_tree().change_scene_to_file("res://scenes/Main.tscn")
+	get_tree().change_scene_to_file("res://scenes/Game.tscn")
 
 func _on_level_select_pressed() -> void:
 	Audio.play("click")

@@ -155,7 +155,7 @@ func difficulty_data() -> Dictionary:
 func has_next_level() -> bool:
 	return current_level < LEVELS.size()
 
-# === Tutorial (guided first run; see Main.gd's tutorial branch) ===
+# === Tutorial (guided first run; see Game.gd's tutorial branch) ===
 # Runs automatically the first time the player presses Play (until the
 # "tutorial_done" flag is set in DB settings), or on demand from How to Play.
 var tutorial_mode: bool = false

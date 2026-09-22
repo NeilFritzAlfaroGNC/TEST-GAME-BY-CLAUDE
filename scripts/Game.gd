@@ -9,7 +9,7 @@ extends Node2D
 ##    food_dropped_on_hero(food) with an UNTYPED param (typing it would make the
 ##    static checker reject food.food_group / food.label); it finds the hero at
 ##    get_node("Hero"), so the Hero must stay a direct child named exactly that.
-##  - PauseMenu.gd reads `game_active` and iterates `foods_container`.
+##  - PauseMenu.gd calls `can_pause()` and iterates `foods_container`.
 ##
 ## TYPE NOTE: none of the component scripts declares `class_name`, so they are
 ## preloaded as consts and held in UNTYPED vars. Annotating them
@@ -66,6 +66,14 @@ var belt = null
 var fx = null
 
 var game_active: bool = false
+
+# PauseMenu's single source of truth for whether Esc/Pause should be allowed
+# to open the overlay right now. game_active alone is not enough: it is set
+# true before the tutorial's intro pages are shown (see _start_level), so a
+# raw game_active check would let the pause overlay layer on top of the
+# lesson popup mid-intro. _tutorial_intro_active excludes exactly that window.
+func can_pause() -> bool:
+	return game_active and not _tutorial_intro_active
 
 var _diff: Dictionary = {}
 var _enemy_speed: float = BASE_ENEMY_SPEED
@@ -193,7 +201,7 @@ func _start_level() -> void:
 		# the lesson popup (_tutorial_intro_active reroutes _on_continue_pressed);
 		# monsters and the belt only start once the last page closes, in
 		# _advance_tutorial_intro(). WaveDirector is bypassed here -- there is no
-		# wave/boss structure to run, same as the old Main.gd's tutorial branch --
+		# wave/boss structure to run, same as the retired Main.gd's tutorial branch --
 		# but enemies_to_spawn stays a director field so _spawn_enemy/_despawn keep
 		# going through the normal track/untrack path (and on_enemy_removed's
 		# level_cleared signal fires the same way once the wave is cleared).

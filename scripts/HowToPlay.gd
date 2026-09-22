@@ -8,7 +8,7 @@ func _ready() -> void:
 func _on_tutorial_pressed() -> void:
 	Audio.play("click")
 	GameData.start_tutorial()
-	get_tree().change_scene_to_file("res://scenes/Main.tscn")
+	get_tree().change_scene_to_file("res://scenes/Game.tscn")
 
 func _on_back_pressed() -> void:
 	Audio.play("click")
