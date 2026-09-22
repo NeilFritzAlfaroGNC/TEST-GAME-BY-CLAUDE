@@ -35,7 +35,11 @@ func _ready() -> void:
 # How many tiles fit per row at the current viewport without shrinking TILE_SIZE.
 # Never below 3 (defensive floor; the narrowest supported view already fits 6).
 func _grid_columns() -> int:
-	var avail_x: float = Layout.m["view"].x
+	# Layout.m["safe"] excludes any device cutout (notch/rounded corner) inset;
+	# sizing from the raw view instead (as this used to) can pack a column's
+	# worth of tiles into that dead margin, landing the leftmost tile under a
+	# left-edge cutout.
+	var avail_x: float = Layout.m["safe"].size.x
 	var per_col: float = TILE_SIZE.x + TILE_H_SEP
 	var cols: int = int(floor((avail_x + TILE_H_SEP) / per_col))
 	return maxi(cols, 3)

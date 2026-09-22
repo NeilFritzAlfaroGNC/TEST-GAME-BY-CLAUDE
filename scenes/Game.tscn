@@ -55,7 +55,13 @@ shape = SubResource("HeroShape")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
-[node name="LevelLabel" type="Label" parent="HUD"]
+[node name="Safe" type="Control" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="LevelLabel" type="Label" parent="HUD/Safe"]
 offset_left = 24.0
 offset_top = 14.0
 offset_right = 660.0
@@ -65,7 +71,7 @@ theme_override_colors/font_color = Color(0.12, 0.12, 0.2, 1)
 theme_override_font_sizes/font_size = 26
 text = "Level"
 
-[node name="HighScoreLabel" type="Label" parent="HUD"]
+[node name="HighScoreLabel" type="Label" parent="HUD/Safe"]
 offset_left = 24.0
 offset_top = 52.0
 offset_right = 660.0
@@ -75,7 +81,7 @@ theme_override_colors/font_color = Color(0.85, 0.6, 0.1, 1)
 theme_override_font_sizes/font_size = 22
 text = "High Score: 0"
 
-[node name="ScoreLabel" type="Label" parent="HUD"]
+[node name="ScoreLabel" type="Label" parent="HUD/Safe"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -89,7 +95,7 @@ theme_override_font_sizes/font_size = 26
 text = "Score: 0"
 horizontal_alignment = 2
 
-[node name="LivesLabel" type="Label" parent="HUD"]
+[node name="LivesLabel" type="Label" parent="HUD/Safe"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -103,7 +109,7 @@ theme_override_font_sizes/font_size = 26
 text = "Lives: 3"
 horizontal_alignment = 2
 
-[node name="TargetLabel" type="Label" parent="HUD"]
+[node name="TargetLabel" type="Label" parent="HUD/Safe"]
 anchors_preset = 10
 anchor_right = 1.0
 offset_top = 66.0
@@ -113,7 +119,7 @@ theme_override_font_sizes/font_size = 30
 text = "Feed each monster what it asks for!"
 horizontal_alignment = 1
 
-[node name="HintLabel" type="Label" parent="HUD"]
+[node name="HintLabel" type="Label" parent="HUD/Safe"]
 anchors_preset = 10
 anchor_right = 1.0
 offset_top = 112.0
@@ -124,7 +130,7 @@ theme_override_font_sizes/font_size = 24
 text = "Drag the food each monster asks for onto the Hero!"
 horizontal_alignment = 1
 
-[node name="PauseButton" type="Button" parent="HUD"]
+[node name="PauseButton" type="Button" parent="HUD/Safe"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -276,7 +282,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Main Menu"
 
-[connection signal="pressed" from="HUD/PauseButton" to="PausePopup/Root" method="_on_pause_button_pressed"]
+[connection signal="pressed" from="HUD/Safe/PauseButton" to="PausePopup/Root" method="_on_pause_button_pressed"]
 [connection signal="pressed" from="LessonPopup/Root/Panel/ContinueButton" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="PausePopup/Root/Panel/VBox/ResumeButton" to="PausePopup/Root" method="_on_resume_pressed"]
 [connection signal="pressed" from="PausePopup/Root/Panel/VBox/RetryButton" to="PausePopup/Root" method="_on_retry_pressed"]

@@ -115,10 +115,6 @@ const BOSS_WAVE_SIZE := 3
 const BOSS_MEAL_GROUPS := ["Go", "Grow", "Glow"]
 const BOSS_LESSON := "A balanced meal mixes all three groups in one dish: energy-giving GO carbs, body-building GROW protein, and vitamin-rich GLOW fruits & vegetables. A well-loved Filipino example is SINIGANG served with rice — rice (Go) + pork or shrimp (Grow) + vegetables like water spinach, radish, and string beans (Glow). Eat a mix like this every day to grow strong and stay healthy!"
 
-# === Screen layout (gray-box; matches the 1152x648 design resolution) ===
-const DESIGN_SIZE := Vector2(1152, 648)
-const BELT_TOP := 552.0    # top edge of the drawn conveyor belt (BeltManager)
-const BELT_Y := 600.0      # lane the conveyor foods ride on (Food.gd)
 
 # === Runtime state for the current level attempt ===
 var current_difficulty: String = "Easy"

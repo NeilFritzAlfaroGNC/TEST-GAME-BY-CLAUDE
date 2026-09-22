@@ -30,6 +30,15 @@ func start(level: int, diff: Dictionary) -> void:
 	_alive_weaknesses = []
 	_next_wave(diff)
 
+# Clears the same per-run bookkeeping start() resets, WITHOUT touching the
+# wave/boss state machine (boss_level/wave/total_waves/enemies_to_spawn) --
+# those are set directly by Game.gd's tutorial branch, which never calls
+# start(). Call this unconditionally before any leftover-enemy sweep so a
+# stale _alive_weaknesses list can never survive into a reused director
+# (see Game.gd:_start_level for why that matters on the tutorial path).
+func reset() -> void:
+	_alive_weaknesses = []
+
 func _next_wave(diff: Dictionary) -> void:
 	wave += 1
 	var row: Dictionary = GameData.level_data(GameData.current_level)

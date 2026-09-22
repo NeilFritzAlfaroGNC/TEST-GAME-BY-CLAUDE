@@ -1,8 +1,17 @@
 extends Node2D
-## Plays exactly one level. A thin orchestrator: it builds the components,
-## wires them together, and owns the cross-script contract — nothing else.
-## Scoring lives in ScoreKeeper, HUD text in HudController, what-spawns-when in
-## WaveDirector, the conveyor in BeltManager, and every effect in FxManager.
+## Plays exactly one level. It builds and wires the five component nodes below,
+## and owns the cross-script contract with Food.gd/Enemy.gd/PauseMenu.gd — but
+## it is not a thin pass-through: it directly owns the level/wave state
+## machine (enemy spawn/despawn and the WaveDirector signal handlers), the
+## per-monster right/wrong check (food_dropped_on_hero), the ENTIRE boss fight
+## (spawn, the balanced-meal feed logic, defeat/knockback), and the ENTIRE
+## guided tutorial (intro pages through the lesson popup, then a slowed first
+## wave). Scoring lives in ScoreKeeper, HUD text in HudController,
+## what-spawns-when for normal waves in WaveDirector, the conveyor in
+## BeltManager, and every visual effect in FxManager — but boss and tutorial
+## logic live here, not in a component, because splitting them out is a
+## follow-up (a BossManager/TutorialManager extraction), not something this
+## file already does.
 ##
 ## CONTRACT (do not break):
 ##  - Food.gd reaches this script through get_tree().current_scene and calls
@@ -54,6 +63,7 @@ var _tutorial_intro_active: bool = false
 @onready var cam: Camera2D = $Camera2D
 @onready var spawn_timer: Timer = $Timer
 @onready var foods_container: Node2D = $Foods
+@onready var hud_safe: Control = $HUD/Safe
 @onready var lesson_root: Control = $LessonPopup/Root
 @onready var lesson_title: Label = $LessonPopup/Root/Panel/LessonTitle
 @onready var lesson_label: Label = $LessonPopup/Root/Panel/LessonLabel
@@ -106,12 +116,12 @@ func _ready() -> void:
 	hud.name = "Hud"
 	add_child(hud)
 	hud.bind({
-		"score": $HUD/ScoreLabel,
-		"lives": $HUD/LivesLabel,
-		"highscore": $HUD/HighScoreLabel,
-		"level": $HUD/LevelLabel,
-		"target": $HUD/TargetLabel,
-		"hint": $HUD/HintLabel,
+		"score": $HUD/Safe/ScoreLabel,
+		"lives": $HUD/Safe/LivesLabel,
+		"highscore": $HUD/Safe/HighScoreLabel,
+		"level": $HUD/Safe/LevelLabel,
+		"target": $HUD/Safe/TargetLabel,
+		"hint": $HUD/Safe/HintLabel,
 	})
 
 	director = WaveDirectorScript.new()
@@ -167,6 +177,20 @@ func _reanchor() -> void:
 		# Refresh FxManager's cached hero home, or the slam lunge re-anchors to
 		# the pre-resize spot.
 		fx.setup(hero, cam)
+	var safe_ctrl: Control = get_node_or_null("HUD/Safe")
+	if safe_ctrl != null:
+		# HUD/Safe is a full-rect Control (anchors 0,0,1,1) sitting directly under
+		# the HUD CanvasLayer, so its offsets are literal design-unit margins from
+		# the raw viewport edges. Every HUD label/button is parented under it and
+		# keeps its pre-existing anchor/offset numbers, now measured from this
+		# inset rect instead of the screen edge -- that is what keeps the Pause
+		# button (and every other HUD element) off a notch/cutout on a real device.
+		var safe: Rect2 = m["safe"]
+		var view: Vector2 = m["view"]
+		safe_ctrl.offset_left = safe.position.x
+		safe_ctrl.offset_top = safe.position.y
+		safe_ctrl.offset_right = safe.end.x - view.x
+		safe_ctrl.offset_bottom = safe.end.y - view.y
 
 # === Level setup ===
 func _start_level() -> void:
@@ -184,12 +208,18 @@ func _start_level() -> void:
 	_meal_needed = []
 	_stunned_until = 0.0   # a restart (retry, tutorial retry, game-over) must not inherit a stun
 	# Clear anything left over from a previous level in this scene instance. This
-	# is the ONE free-without-untrack in the file, and it is safe only because
-	# director.start() three lines below resets _alive_weaknesses to [] wholesale
-	# — untracking each enemy here would be redundant work on a list about to be
-	# thrown away. Anywhere else, a free MUST go through _despawn() so track() and
-	# untrack() stay paired. (Today this loop is also a no-op: _start_level runs
-	# once, from _ready, on a freshly instantiated scene.)
+	# is the ONE free-without-untrack in the file. It is safe ONLY because
+	# director.reset() is called right here, unconditionally, before either
+	# branch below runs -- NOT because of director.start(), which the tutorial
+	# branch a few lines down never reaches (it sets enemies_to_spawn directly
+	# and returns). Without the explicit reset() call, the tutorial path would
+	# leave stale entries in _alive_weaknesses forever, and
+	# WaveDirector.on_enemy_removed() would early-return forever -- the level
+	# could never complete. Anywhere else, a free MUST go through _despawn() so
+	# track() and untrack() stay paired. (Today this loop is also a no-op:
+	# _start_level runs once, from _ready, on a freshly instantiated scene --
+	# but reset() must stay unconditional in case that ever changes.)
+	director.reset()
 	for e in get_tree().get_nodes_in_group("enemies"):
 		e.remove_from_group("enemies")
 		e.queue_free()
@@ -439,9 +469,15 @@ func _feed_boss(food) -> bool:
 		# Deliberately NOT _punish(). The group was read correctly — it is just
 		# already on the plate — so stunning the hero (or writing a wrong answer
 		# into the accuracy table) would charge the child for a bookkeeping slip
-		# instead of a knowledge gap.
+		# instead of a knowledge gap. For the same reason this must not play
+		# "wrong": that sound reads as "you failed" against text that says "no
+		# harm done", which for a 9-12 year old lands before the sentence does.
+		# Nothing in audio/ is a neutral acknowledgment SFX (see Audio.gd's
+		# roster), so this plays the same neutral UI "click" used for ordinary
+		# button presses elsewhere -- an acknowledgment, not a verdict -- rather
+		# than adding a new sound.
 		hud.say("Already added a %s food! The meal still needs: %s." % [g, _meal_left_text()], false)
-		Audio.play("wrong")
+		Audio.play("click")
 		return false
 	_meal_needed.erase(g)
 	# Points and streak as usual, but NOTHING goes to DB.record_answer here.
