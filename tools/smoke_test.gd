@@ -1,6 +1,8 @@
 extends SceneTree
-## Headless logic smoke test. Run with:
-##   & "C:\SHIZ\Godot_v4.6.3-stable_win64.exe" --headless --path "D:\TEST" -s res://tools/smoke_test.gd
+## Headless smoke test for campaign calculations and SQLite persistence.
+## It redirects the Database instance to a disposable user://smoke_test.db so
+## normal player progress is not modified. Run with:
+##   & "<path to Godot.exe>" --headless --path "<project folder>" -s res://tools/smoke_test.gd
 ## (or via tools/test.ps1, which also does the headless scene runs.)
 ##
 ## Exit code 0 = every check passed, 1 = failures (look for "FAIL" lines).

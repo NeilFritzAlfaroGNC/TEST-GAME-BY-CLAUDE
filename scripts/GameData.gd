@@ -2,6 +2,9 @@ extends Node
 ## Autoload singleton ("GameData").
 ## Food database, numbered level + difficulty definitions, the current run's
 ## live state, and a thin bridge to the DB autoload (SQLite-backed progress).
+## Edit FOODS and FOOD_NUTRIENTS together when maintaining food data. LEVELS,
+## DIFFICULTIES and boss constants tune campaign content without changing scenes.
+## Runtime values below track one attempt; DB is responsible for persistent saves.
 
 # === Food database: foods grouped Go / Glow / Grow (English names) ===
 const FOODS := {
@@ -64,11 +67,37 @@ const BOSS_WAVE_SIZE := 3
 # group. Groups needed = these three; also drives the closing lesson.
 const BOSS_MEAL_GROUPS := ["Go", "Grow", "Glow"]
 const BOSS_LESSON := "A balanced meal mixes all three groups in one dish: energy-giving GO carbs, body-building GROW protein, and vitamin-rich GLOW fruits & vegetables. A well-loved Filipino example is SINIGANG served with rice — rice (Go) + pork or shrimp (Grow) + vegetables like water spinach, radish, and string beans (Glow). Eat a mix like this every day to grow strong and stay healthy!"
+# === Screen layout ===
+# Landscape design resolution. canvas_items + expand grows visible world space on
+# wide/tall windows; BeltManager and Main derive their layout from that visible rect.
+const DESIGN_SIZE := Vector2(956, 440)
+const BELT_H := 112.0      # responsive bottom conveyor lane height used by BeltManager and Food
 
-# === Screen layout (gray-box; matches the 1152x648 design resolution) ===
-const DESIGN_SIZE := Vector2(1152, 648)
-const BELT_TOP := 552.0    # top edge of the drawn conveyor belt (BeltManager)
-const BELT_Y := 600.0      # lane the conveyor foods ride on (Food.gd)
+# Wrapper-free spelling of the design centre (the Camera2D parks here, which
+# keeps world units equal to screen units at the reference resolution).
+func design_center() -> Vector2:
+	return DESIGN_SIZE * 0.5
+
+# Logical (stretched) viewport size: at least DESIGN_SIZE, larger on one axis
+# when the device aspect ratio differs from the reference.
+func view_size() -> Vector2:
+	if not is_inside_tree():
+		return DESIGN_SIZE
+	return get_viewport().get_visible_rect().size
+
+# The slice of world space the camera currently shows. The camera sits on the
+# design centre, so this is just the viewport size centred there.
+func view_world_rect() -> Rect2:
+	var s: Vector2 = view_size()
+	return Rect2(design_center() - s * 0.5, s)
+
+# Conveyor-belt lane: pinned to the bottom edge of whatever is on screen so the
+# belt lies flush with the bottom of any display (BeltManager + Food.gd read it).
+func belt_top() -> float:
+	return view_world_rect().end.y - BELT_H
+
+func belt_y() -> float:
+	return belt_top() + BELT_H * 0.5
 
 # === Runtime state for the current level attempt ===
 var current_difficulty: String = "Easy"
@@ -105,10 +134,12 @@ func difficulty_data() -> Dictionary:
 func has_next_level() -> bool:
 	return current_level < LEVELS.size()
 
-# === Tutorial (guided first run; see Main.gd's tutorial branch) ===
-# Runs automatically the first time the player presses Play (until the
-# "tutorial_done" flag is set in DB settings), or on demand from How to Play.
+# === Tutorial state ===
+# tutorial_mode marks the guided lesson run; tutorial_completed is loaded from DB.
 var tutorial_mode: bool = false
+var tutorial_completed: bool = false
+var tutorial_entry_pending: bool = false
+var startup_splash: bool = true
 
 const TUTORIAL_ENEMIES := 3
 const TUTORIAL_SPEED_MULT := 0.45   # extra-slow monsters
@@ -121,9 +152,7 @@ func start_tutorial() -> void:
 	current_level = 1
 	starting_lives = 5
 	lives = starting_lives
-	score = 0
-	last_result = ""
-	last_stars = 0
+	_reset_run_state()
 
 # Begin a chosen level at a chosen difficulty (resets the run state).
 func start_level(difficulty: String, number: int) -> void:
@@ -132,6 +161,10 @@ func start_level(difficulty: String, number: int) -> void:
 	current_level = number
 	starting_lives = int(DIFFICULTIES[difficulty]["lives"])
 	lives = starting_lives
+	_reset_run_state()
+
+# Clear the per-run scoring state (shared by both starters above).
+func _reset_run_state() -> void:
 	score = 0
 	last_result = ""
 	last_stars = 0

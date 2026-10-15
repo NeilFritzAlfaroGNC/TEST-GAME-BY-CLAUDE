@@ -1,9 +1,11 @@
 # Food Heroes — one-command validation (Windows PowerShell 5.1 compatible).
-#   powershell -ExecutionPolicy Bypass -File tools\test.ps1
+#   powershell -ExecutionPolicy Bypass -File tools\test.ps1 [-Godot "C:\path\to\Godot.exe"]
 # Runs: import -> logic smoke test -> headless Main.tscn -> headless MainMenu.tscn.
 # Exits 0 on PASS, 1 on FAIL.
 
-$godot = "C:\SHIZ\Godot_v4.6.3-stable_win64.exe"
+param([string]$Godot = "D:\Godot\Godot_v4.7.1-stable_win64.exe")
+
+$godot = $Godot
 $proj  = Split-Path $PSScriptRoot -Parent
 $failPattern = "SCRIPT ERROR|Parse Error|Invalid access|Invalid call|null instance|Cannot find"
 $failed = $false

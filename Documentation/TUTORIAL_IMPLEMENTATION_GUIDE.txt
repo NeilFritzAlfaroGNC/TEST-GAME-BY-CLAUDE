@@ -1,0 +1,39 @@
+FOOD HEROES — LEVEL 1 GUIDED TUTORIAL
+
+Overview
+--------
+Entering an incomplete Level 1 automatically shows two clear teaching popups in the same gameplay scene. First, a yellow marker points to the food belt while the popup explains the belt and GO/GLOW/GROW foods. Next, a marker points to a real practice Hunger Monster while the second popup explains what the enemy does and the matching-food game loop. Gameplay is safely paused during the explanations. The player then gets hands-on practice with the real belt and drag/drop mechanics. Completing the lesson closes the overlay and continues this same Level 1 run; it does not restart the level or award tutorial score/progression.
+
+Editing the popup wording
+-------------------------
+Open `res://scripts/TutorialText.gd` and edit the quoted text constants such as `BELT_TITLE`, `BELT_DESCRIPTION`, `ENEMY_TITLE`, and `ENEMY_DESCRIPTION`. These are plain strings, so the wording can be changed without changing the tutorial flow. Keep the constant names intact unless you also update their references in Main.gd.
+
+Flow and files
+--------------
+- scripts/Main.gd: starts regular Level 1 setup, opens the in-game overlay only when the current level is 1 and completion is false, drives the tutorial steps, and restores regular Level 1 play after completion.
+- scenes/Main.tscn: existing LessonPopup is reused as the centered, input-blocking, dimmed overlay.
+- scripts/GameData.gd: stores runtime tutorial mode/completion flags; DB setting tutorial_done remains the persisted completion value.
+- scripts/MainMenu.gd: loads the saved tutorial completion state, then goes to Level Select as usual.
+- scripts/LevelSelect.gd: starts the selected level through the existing Main scene; it does not route through a separate tutorial scene.
+- scripts/PauseMenu.gd: existing pause menu is preserved and cannot override the tutorial overlay pause.
+- scenes/HowToPlay.tscn and scripts/HowToPlay.gd: remain optional menu-access instructions; they are no longer part of automatic Level 1 navigation.
+
+Interactive lesson
+------------------
+1. Level 1 saves the run's score/lives/spawn values, suspends the normal level, then shows the belt popup and a marker aimed at the conveyor.
+2. Next shows the enemy popup and creates a real slow Hunger Monster. The monster marker is placed by the enemy; the game remains paused while its explanation is read.
+3. After both initial explanations, Start Practice runs the same belt and tutorial enemy. The food explanation remains available during real drag/drop practice.
+4. Food drops lead through matching and wrong-food practice. Wrong food returns safely; a matching GO feed uses real monster defeat and visual effects.
+5. Lives, boss, and pause information follow. Practice never costs campaign lives. Finish saves `tutorial_done`, restores campaign score/lives, and resumes the same Level 1 run without awarding a tutorial result.
+
+Editable text
+-------------
+All headline and explanatory copy is in `scripts/TutorialText.gd`. Edit the string constants there (for example `BELT_DESCRIPTION` or `ENEMY_DESCRIPTION`). Keep constant names unchanged so Main.gd can still look them up.
+
+Persistence and replay
+----------------------
+The persistent completion key is `tutorial_done` in the existing DB settings table. `GameData.tutorial_completed` is loaded from this key in MainMenu and checked by Main using the actual current level number. An incomplete Level 1 shows the overlay again whenever the level is entered; other levels do not show it. Completed players can replay the optional How to Play content from the menu, but it is not automatic. No score, unlock, high-score, or level result is reset when completion is saved.
+
+Testing notes
+-------------
+Run `tools/tutorial_flow_test.gd` in headless script mode for automatic overlay, pause and resume, live-food callback, wrong/correct handling, one-time score effect, completion persistence, Level 2 skipping, and completed Level 1 replay checks. Also manually drag with a mouse or touch in the game view, and verify pause/resume and ordinary Level 1 completion/Level 2 progression. The script is an automated flow check, not a substitute for end-to-end physical pointer testing.

@@ -1,6 +1,8 @@
 extends Control
 ## Level select: pick a difficulty (Easy/Medium/Hard) and a numbered level.
 ## Levels unlock in order per difficulty; stars/locks come from the DB (SQLite).
+## The scene's Center/VBox nodes provide the buttons and Grid; this script
+## rebuilds level tiles whenever the selected difficulty changes.
 
 @onready var grid: GridContainer = $Center/VBox/Grid
 @onready var info: Label = $Center/VBox/Info
@@ -57,8 +59,9 @@ func _build_grid() -> void:
 		var prog: Dictionary = DB.get_level_progress(difficulty, n)
 		var unlocked: bool = DB.is_level_unlocked(difficulty, n)
 		var btn := Button.new()
-		btn.custom_minimum_size = Vector2(150, 96)
-		btn.add_theme_font_size_override("font_size", 22)
+		btn.custom_minimum_size = Vector2(120, 88)
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btn.add_theme_font_size_override("font_size", 17)
 		# Boss levels get a badge so the player knows a boss fight is coming.
 		var title := ("BOSS %d" % n) if GameData.is_boss_level(n) else ("Level %d" % n)
 		if unlocked:
@@ -73,8 +76,9 @@ func _build_grid() -> void:
 	# One locked "coming soon" slot (shown for every difficulty) — reserved for
 	# a future content update. Always disabled.
 	var soon := Button.new()
-	soon.custom_minimum_size = Vector2(150, 96)
-	soon.add_theme_font_size_override("font_size", 20)
+	soon.custom_minimum_size = Vector2(120, 88)
+	soon.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	soon.add_theme_font_size_override("font_size", 14)
 	soon.text = "Level %d\nComing Soon" % (GameData.num_levels() + 1)
 	soon.disabled = true
 	soon.modulate = Color(0.72, 0.72, 0.9)
@@ -82,8 +86,13 @@ func _build_grid() -> void:
 
 func _on_level_pressed(n: int) -> void:
 	Audio.play("click")
+	# Prime the chosen run without creating gameplay before the introduction.
+	GameData.tutorial_entry_pending = false
 	GameData.start_level(difficulty, n)
-	get_tree().change_scene_to_file("res://scenes/Main.tscn")
+	if n == 1:
+		get_tree().change_scene_to_file("res://scenes/StoryScene.tscn")
+	else:
+		get_tree().change_scene_to_file("res://scenes/Main.tscn")
 
 func _on_back() -> void:
 	Audio.play("click")

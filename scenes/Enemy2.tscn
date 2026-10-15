@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://b4jgou53hgjrj"]
+
+[ext_resource type="Script" path="res://scripts/Enemy2.gd" id="2_enemy2"]
+
+[ext_resource type="Texture2D" uid="uid://b2v13bk2w2oh7" path="res://assets/generated/candy/candy WALK.png" id="1_0h3bv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i1eqr"]
+atlas = ExtResource("1_0h3bv")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wna3i"]
+atlas = ExtResource("1_0h3bv")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xemqh"]
+atlas = ExtResource("1_0h3bv")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_damwt"]
+atlas = ExtResource("1_0h3bv")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i1eqr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wna3i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xemqh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_damwt")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wb6sh"]
+radius = 20.0
+height = 84.0
+
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=818304361]
+script = ExtResource("2_enemy2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1297862126]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"walk"
+frame_progress = 0.8280242
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=993937436]
+position = Vector2(0, 6)
+shape = SubResource("CapsuleShape2D_wb6sh")

@@ -1,14 +1,88 @@
 [gd_scene format=3 uid="uid://cm47b8fy54imj"]
 
 [ext_resource type="Script" uid="uid://bqt841rxe11dj" path="res://scripts/Enemy.gd" id="1_enemy"]
+[ext_resource type="Texture2D" uid="uid://c46fftl2fhm1v" path="res://assets/generated/Spaghetti/frame_000.png" id="2_ly5gv"]
+[ext_resource type="Texture2D" uid="uid://bmi70iftgnur4" path="res://assets/generated/spagheti-attack/frame_000.png" id="2_x3f71"]
+[ext_resource type="Texture2D" uid="uid://c606fpehq14gd" path="res://assets/generated/Spaghetti/frame_001.png" id="3_82o86"]
+[ext_resource type="Texture2D" uid="uid://dye6vhrxvqvrc" path="res://assets/generated/spagheti-attack/frame_001.png" id="3_ksmwx"]
+[ext_resource type="Texture2D" uid="uid://ck45w72cqw17f" path="res://assets/generated/Spaghetti/frame_002.png" id="4_1gqeq"]
+[ext_resource type="Texture2D" uid="uid://k2xneqbn60k2" path="res://assets/generated/spagheti-attack/frame_002.png" id="4_oq86d"]
+[ext_resource type="Texture2D" uid="uid://bvunlrhc6no7b" path="res://assets/generated/Spaghetti/frame_003.png" id="5_isvm2"]
+[ext_resource type="Texture2D" uid="uid://b77desiyhifi3" path="res://assets/generated/spagheti-attack/frame_003.png" id="5_joqoj"]
+[ext_resource type="Texture2D" uid="uid://cri1g6ycn8hip" path="res://assets/generated/spagheti-attack/frame_004.png" id="6_govun"]
+[ext_resource type="Texture2D" uid="uid://be3ss2yc5jt00" path="res://assets/generated/Spaghetti/frame_004.png" id="6_gr8dl"]
+[ext_resource type="Texture2D" uid="uid://b1oxwc0jmciyu" path="res://assets/generated/Spaghetti/frame_005.png" id="7_axa8o"]
+[ext_resource type="Texture2D" uid="uid://rjp75lrxtjxo" path="res://assets/generated/spagheti-attack/frame_005.png" id="7_hwoi6"]
+[ext_resource type="Texture2D" uid="uid://c0m4txd0l30p0" path="res://assets/generated/Spaghetti/frame_006.png" id="8_4iqch"]
+[ext_resource type="Texture2D" uid="uid://ifp1s3yjnw34" path="res://assets/generated/spagheti-attack/frame_006.png" id="8_g512e"]
+[ext_resource type="Texture2D" uid="uid://c75v4pnwbod0o" path="res://assets/generated/Spaghetti/frame_007.png" id="9_x3f71"]
 
 [sub_resource type="RectangleShape2D" id="EnemyShape"]
 size = Vector2(80, 80)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ksmwx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_x3f71")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_ksmwx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_oq86d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_joqoj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_govun")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_hwoi6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_g512e")
+}],
+"loop": 0,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ly5gv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_82o86")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_1gqeq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_isvm2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_gr8dl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_axa8o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_4iqch")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_x3f71")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 8.0
+}]
 
 [node name="Enemy" type="Area2D" unique_id=1812204254]
 script = ExtResource("1_enemy")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1302693924]
+visible = false
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
@@ -17,6 +91,7 @@ mouse_filter = 2
 color = Color(0.65, 0.18, 0.3, 1)
 
 [node name="Label" type="Label" parent="." unique_id=1412809564]
+visible = false
 offset_left = -40.0
 offset_top = -40.0
 offset_right = 40.0
@@ -28,3 +103,11 @@ vertical_alignment = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1315079765]
 shape = SubResource("EnemyShape")
+
+[node name="SpaghettiSprite" type="AnimatedSprite2D" parent="." unique_id=904167994]
+z_index = 1
+scale = Vector2(0.75, 0.75)
+sprite_frames = SubResource("SpriteFrames_ksmwx")
+animation = &"attack"
+autoplay = "walk"
+frame_progress = 0.82931256

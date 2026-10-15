@@ -3,6 +3,8 @@ extends Node2D
 ## Owns the Go/Glow/Grow attack effects (zap / heal / slam), the camera shake,
 ## and the floating "+nutrient" reward popups. Pure output: it reads no game
 ## state, so it survives the art phase unchanged.
+## Main creates this manager and calls setup(Hero, Camera2D). Change attack and
+## popup timings here to tune effects without changing hit/scoring rules.
 
 var _hero: Area2D
 var _cam: Camera2D

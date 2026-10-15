@@ -1,6 +1,8 @@
 extends Control
 ## Win / Lose screen for a single level. Shows stars, score, level best, and
 ## high score (all from the DB), and routes to Next / Retry / Level Select / Menu.
+## GameData.record_result() saves before this screen is loaded; handlers prepare
+## fresh runtime state before returning to Main.tscn.
 
 func _ready() -> void:
 	var win: bool = GameData.last_result == "win"

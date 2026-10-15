@@ -27,67 +27,72 @@ anchor_bottom = 1.0
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=739640518]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 8
 
 [node name="Title" type="Label" parent="CenterContainer/VBox" unique_id=2018558912]
 layout_mode = 2
-theme_override_font_sizes/font_size = 56
+theme_override_font_sizes/font_size = 40
 text = "RESULT"
 horizontal_alignment = 1
 
 [node name="Stars" type="Label" parent="CenterContainer/VBox" unique_id=334906420]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 26
 horizontal_alignment = 1
 
 [node name="Score" type="Label" parent="CenterContainer/VBox" unique_id=1626836086]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 18
 text = "Final Score: 0"
 horizontal_alignment = 1
 
 [node name="Best" type="Label" parent="CenterContainer/VBox" unique_id=1588772818]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 15
 horizontal_alignment = 1
 
 [node name="HighScore" type="Label" parent="CenterContainer/VBox" unique_id=1093956876]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 15
 text = "High Score: 0"
 horizontal_alignment = 1
 
-[node name="ButtonRow" type="HBoxContainer" parent="CenterContainer/VBox" unique_id=1611893252]
+[node name="ButtonRow" type="GridContainer" parent="CenterContainer/VBox" unique_id=1611893252]
 layout_mode = 2
-theme_override_constants/separation = 12
-alignment = 1
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+columns = 4
 
 [node name="NextButton" type="Button" parent="CenterContainer/VBox/ButtonRow" unique_id=1497436321]
-custom_minimum_size = Vector2(150, 56)
+custom_minimum_size = Vector2(150, 52)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "Next Level"
 
 [node name="RetryButton" type="Button" parent="CenterContainer/VBox/ButtonRow" unique_id=1961453363]
-custom_minimum_size = Vector2(130, 56)
+custom_minimum_size = Vector2(150, 52)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "Retry"
 
 [node name="LevelSelectButton" type="Button" parent="CenterContainer/VBox/ButtonRow" unique_id=1808464748]
-custom_minimum_size = Vector2(170, 56)
+custom_minimum_size = Vector2(150, 52)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "Level Select"
 
 [node name="MenuButton" type="Button" parent="CenterContainer/VBox/ButtonRow" unique_id=1644321172]
-custom_minimum_size = Vector2(130, 56)
+custom_minimum_size = Vector2(150, 52)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "Menu"
 
 [connection signal="pressed" from="CenterContainer/VBox/ButtonRow/NextButton" to="." method="_on_next_pressed"]

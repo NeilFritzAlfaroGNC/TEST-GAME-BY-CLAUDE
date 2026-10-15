@@ -5,6 +5,8 @@ WAV files in res://audio/. Pure standard library, no dependencies.
 Run from anywhere:  python tools/generate_audio.py
 Re-run any time to regenerate the sounds.
 """
+# Offline asset generator for the WAV files consumed by scripts/Audio.gd.
+# Running this intentionally overwrites matching files in the project's audio/ folder.
 import math
 import os
 import random

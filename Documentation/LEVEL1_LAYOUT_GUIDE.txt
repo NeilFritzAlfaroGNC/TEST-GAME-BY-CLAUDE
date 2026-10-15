@@ -1,0 +1,65 @@
+FOOD HEROES — LEVEL 1 GAMEPLAY LAYOUT NOTES
+===========================================
+
+Purpose and reference
+--------------------
+This guide describes gameplay layout changes and enemy scene wiring made while retaining the existing Main scene, supplied hero/enemy animation frames, belt manager, food scene, and HUD.
+
+Inspected project files
+-----------------------
+- res://scenes/Main.tscn — gameplay scene, camera, Hero, HUD, overlays, and background TextureRect.
+- res://scripts/Main.gd — level setup, enemy spawns, hero, HUD, and resize-derived world layout.
+- res://scripts/BeltManager.gd — procedural bottom belt, food spawning, food row positions, and needed-group guarantee.
+- res://scripts/Food.gd and res://scenes/Food.tscn — draggable food scene, visual card, sprite and physics pickup shape.
+- res://scripts/Enemy.gd and res://scenes/Enemy.tscn — enemy movement, animation, and collision shape.
+- res://scripts/GameData.gd — reference viewport and visible world/belt measurements.
+- res://assets/background/level 1 background.png — original 1536 × 1024 courtyard art.
+- res://assets/generated/Hero/frame_000.png through frame_005.png and Spaghetti animation frames — existing animation artwork.
+- res://assets/food/*.png — existing food sprites.
+- res://project.godot — 956 × 440 base viewport; canvas_items stretch and expand aspect.
+
+Changed files
+-------------
+- res://scripts/Main.gd: moved world ground placement from the middle of the play field to the actual rendered grass landmark; hero sprite scale was increased in several follow-up adjustments (currently 1.1); characters use separate hero and monster lane offsets; background TextureRect is explicitly refit after viewport resize; enemies spawn in the hero's horizontal ground lane. Enemy2 is wired as the level 2+ alternate enemy.
+- res://scripts/Enemy.gd: original enemies preserve their grass-aligned horizontal ground lane, play their one-shot attack animation on reaching the hero, and apply damage when it finishes.
+- res://scripts/Enemy2.gd and res://scenes/Enemy2.tscn: wired the existing candy monster art into the enemy behavior contract. Enemy2 is introduced from level 2 onward, alternating with Enemy to guarantee both appear in level batches/waves. The boss continues to use Enemy.tscn.
+- res://scenes/Main.tscn: Background TextureRect now starts without stretched anchors; runtime layout owns its size and location. Existing courtyard image path remains unchanged.
+- res://scripts/GameData.gd: belt lane height increased from 96 to 112 world pixels; comments clarify how the responsive viewport rect is used.
+- res://scripts/BeltManager.gd: food slots are inset safely from both screen edges and spacing compresses when fewer pixels are available; all existing foods remain in inventory and retain their draggable nodes.
+- res://scripts/Food.gd: food sprite uses a uniform fit scale, and card visual/label/collision dimensions are fitted to the belt lane. A per-instance copy of the collision shape prevents changing a shared scene resource.
+
+Ground placement and character scale
+------------------------------------
+Main.gd uses _grass_ground_y(view), which converts the grass landmark (GRASS_SOURCE_Y) from the courtyard texture into world coordinates using the same centered aspect-cover scale as Background. _ground_y_for_sprite() inspects the current animation frame's non-transparent bottom row and offsets each character root so visible pixel feet meet that ground line. The existing world art is not replaced. Hero position is on the right via HERO_RIGHT_INSET; enemy positions begin at SPAWN_LEFT_INSET on the hero lane. Enemy.gd keeps its lane_y while walking horizontally.
+
+HERO_SPRITE_SCALE in Main.gd is now 1.1 (was 1.0 in the prior adjustment). CHARACTER_LANE_RAISE shifts the hero's visible feet 22 world pixels above the computed grass landmark. MONSTER_LANE_RAISE offsets regular enemies and bosses an additional 12 pixels upward from the hero lane; it does not move the hero. Keep X and Y scale equal to preserve proportions. HERO_COLLISION_SIZE and HERO_COLLISION_OFFSET describe the hero's gameplay overlap area relative to the same Area2D root; Main.gd duplicates the RectangleShape2D before resizing to avoid modifying shared resources. If sprite scale changes, recheck visible alpha-foot alignment and food overlap in the running scene. Animation artwork already uses consistent transparent frame canvases, so the existing SpriteFrames resource remains intact.
+
+Background scaling and positioning
+----------------------------------
+The Background TextureRect remains on BackgroundLayer (CanvasLayer layer -1), behind gameplay and HUD. Main.gd's _update_background_rect() gives it a top-left anchor, positions it at the current visible world rect, and sizes it to that rect. TextureRect.STRETCH_KEEP_ASPECT_COVERED preserves image proportions and crops excess edges. The belt is drawn by BeltManager at the bottom on a higher CanvasItem layer. On other aspect ratios the same cover mode avoids blank uncovered background; the visible grass location follows the centered artwork crop.
+
+Conveyor and food containment
+-----------------------------
+GameData.BELT_H defines belt height. GameData.belt_top() and belt_y() derive the belt's top and center from the visible world rect's bottom, so the conveyor remains at the screen bottom as the viewport expands. BeltManager._update_geometry() sizes its drawn belt to the full visible width. Food centers are assigned by BeltManager._layout() between FOOD_ROW_INSET at each side, with MIN_SLOT_SPACING reduced as needed on narrow viewports. MAX_FOODS and the needed-food solvability guarantee remain unchanged; hidden/offscreen queueing remains part of the existing belt behavior rather than deleting food items.
+
+Food.tscn defines a 130 × 80 card and matching collision area. Food.gd adjusts card height to fit the belt, and copies then resizes the collision shape to stay aligned. The food-art Sprite2D is scaled uniformly to no more than 116 × 62 pixels, retaining source aspect ratio. Names remain on the label layer. BeltManager's dynamically created food instances remain under Main/Foods because Main and PauseMenu use that existing container contract. While dragging, Food follows global mouse position and is raised above the belt.
+
+HUD and mission text
+--------------------
+The existing HUD CanvasLayer remains unchanged. Level/score/high score stay upper left, Pause/Lives upper right, and TargetLabel/HintLabel remain upper middle. The game still computes the text and food category from the selected level; this layout change does not alter food classification or scoring.
+
+How to add or adjust foods
+--------------------------
+Add a food PNG under res://assets/food/ named with the lowercase food name and underscores, then include its display name in the correct GameData.FOODS group and add its nutrient to GameData.FOOD_NUTRIENTS. The existing slug lookup in Food.gd finds the corresponding image. Do not increase Food.tscn's card size independently of its collision shape and belt row spacing. If card width changes, update the visual/label offsets, FoodShape, sprite fit area, and BeltManager.MIN_SLOT_SPACING together.
+
+Testing and maintenance
+----------------------
+- Run res://scenes/Main.tscn directly to inspect the real gameplay scene; no replacement screenshot scene was created.
+- Run res://tools/smoke_test.gd with Godot's `-s` command to check campaign calculations and database behavior.
+- Drag a visible correct-group card from Belt to the Hero and check score, hit effect, and consumption. Drag a wrong-group card to confirm rejection and return-to-slot behavior. The interactive drag path should also be checked manually because headless screenshots alone cannot reliably prove pointer dragging.
+- Resize the game window to a wider and a taller landscape aspect; check full background coverage, hero feet, upper HUD, and belt placement.
+- Check the Pause button, lives changes from a monster arrival, and a correct-food score after layout edits.
+
+Verification record for this change
+----------------------------------
+Godot 4.7.1 run_scene preview of res://scenes/Main.tscn completed with no reported runtime errors after correcting the background TextureRect's anchor preset. For the Enemy2 addition, an isolated Level 2 runtime check forced the second spawn and confirmed the group contained both res://scenes/Enemy.tscn and res://scenes/Enemy2.tscn. A fresh Main.tscn run also parsed and ran without reported runtime errors. The screenshot visibly shows the courtyard art, a bottom belt fully inside the viewport, and the hero/enemy aligned to one near-ground lane. The preview uses a runtime-spawned first enemy. The provided reference uses a 1680 × 945 image while the project's design viewport is 956 × 440; their different aspect ratios mean exact pixel-for-pixel composition is not possible without changing project settings, which was avoided. A manual successful food drag, resize at alternate aspect ratios, and full score/lives/pause interaction verification have not yet been established by this preview.

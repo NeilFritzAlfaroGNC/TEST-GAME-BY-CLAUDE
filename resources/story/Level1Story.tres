@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StoryCollection" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://resources/story/StoryCollection.gd" id="1_collection"]
+[ext_resource type="Resource" path="res://resources/story/Level1Sequence1.tres" id="2_sequence_1"]
+[ext_resource type="Resource" path="res://resources/story/Level1Sequence2.tres" id="3_sequence_2"]
+
+[resource]
+script = ExtResource("1_collection")
+sequences = [ExtResource("2_sequence_1"), ExtResource("3_sequence_2")]

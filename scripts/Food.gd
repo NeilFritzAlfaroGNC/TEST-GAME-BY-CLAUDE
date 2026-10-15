@@ -3,13 +3,15 @@ extends Area2D
 ## the right. Drag one onto the Hero to feed him. Once visible it lasts LIFETIME
 ## seconds if left untouched, then blinks and disappears. Picking it up PAUSES
 ## the clock and the blink; releasing it resumes the countdown.
+## Main assigns category and food name, then handles accepted drops. The static
+## texture cache uses assets/food/<lowercase_name_with_underscores>.png.
 
 const LIFETIME := 3.0        # max seconds a food stays on the belt if untouched
 const BLINK_AT := 2.0        # start blinking this many seconds in (warns it's leaving)
 const BELT_SPEED := 130.0    # left -> right belt speed (px/s)
-const SPAWN_X := -90.0       # just off the left edge
+const SPAWN_X := -90.0       # just off the left edge of the visible area
 const RETURN_TIME := 0.22    # seconds to glide back to the grab slot after a non-feeding drop
-# The belt lane Y comes from the shared layout consts: GameData.BELT_Y.
+# The belt lane Y comes from GameData.belt_y() (bottom of the visible area).
 
 @export var food_group: String = "Go"
 
@@ -29,9 +31,19 @@ static var _tex_cache: Dictionary = {}
 @onready var label: Label = $Label
 
 func _ready() -> void:
+	z_index = 2
+	# Keep both the visible card and its physics pickup/drop area the same size.
+	var card_shape: RectangleShape2D = $CollisionShape2D.shape.duplicate() as RectangleShape2D
+	card_shape.size = Vector2(130.0, minf(80.0, GameData.BELT_H - 20.0))
+	$CollisionShape2D.shape = card_shape
 	input_pickable = true
 	input_event.connect(_on_input_event)
-	position = Vector2(SPAWN_X, GameData.BELT_Y)
+	position = Vector2(GameData.view_world_rect().position.x + SPAWN_X, GameData.belt_y())
+	var card_height: float = minf(80.0, GameData.BELT_H - 20.0)
+	rect.position = Vector2(-65.0, -card_height * 0.5)
+	rect.size = Vector2(130.0, card_height)
+	label.position = Vector2(-65.0, -card_height * 0.5)
+	label.size = Vector2(130.0, card_height)
 	# Art layer over the gray box: shows a sprite when art exists, else stays hidden.
 	_sprite = Sprite2D.new()
 	_sprite.z_index = 1
@@ -58,7 +70,9 @@ func _apply_sprite(food_name: String) -> void:
 		_sprite.texture = tex
 		var sz: Vector2 = tex.get_size()
 		if sz.x > 0.0 and sz.y > 0.0:
-			_sprite.scale = Vector2(130.0 / sz.x, 70.0 / sz.y)   # fit inside the 150x90 box
+			# Scale uniformly to fit the art inside its card; never distort food.
+			var fit_scale: float = minf(116.0 / sz.x, 62.0 / sz.y)
+			_sprite.scale = Vector2.ONE * fit_scale
 		_sprite.visible = true
 	else:
 		_sprite.texture = null
@@ -72,7 +86,7 @@ static func _load_food_texture(slug: String):
 	var tex = null
 	var path := "res://assets/food/%s.png" % slug
 	if ResourceLoader.exists(path):
-		var res = load(path)
+		var res: Resource = load(path)
 		if res is Texture2D:
 			tex = res
 	_tex_cache[slug] = tex
@@ -93,6 +107,9 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 		modulate.a = 1.0      # cancel any mid-blink transparency
 
 func _process(delta: float) -> void:
+	# Keep pinned belt foods aligned when the expanding visible world rect changes.
+	if not dragging and not returning:
+		position.y = GameData.belt_y()
 	if dragging:
 		# Held: the lifetime clock AND the blink pause — a held food never expires
 		# in the player's hand. Just follow the mouse (or finger on Android).
@@ -141,7 +158,7 @@ func cancel_drag() -> void:
 	dragging = false
 	z_index = 0
 	modulate.a = 1.0
-	position.y = GameData.BELT_Y
+	position.y = GameData.belt_y()
 
 func _drop() -> void:
 	dragging = false
@@ -164,7 +181,7 @@ func _drop() -> void:
 	# it by target_x — so it drops right back into place with no reshuffle.
 	returning = true
 	_return_tween = create_tween()
-	_return_tween.tween_property(self, "position", Vector2(target_x, GameData.BELT_Y), RETURN_TIME)
+	_return_tween.tween_property(self, "position", Vector2(target_x, GameData.belt_y()), RETURN_TIME)
 	_return_tween.tween_callback(func(): returning = false)
 
 # Stop an in-progress glide-back (e.g. the food was grabbed again mid-return).

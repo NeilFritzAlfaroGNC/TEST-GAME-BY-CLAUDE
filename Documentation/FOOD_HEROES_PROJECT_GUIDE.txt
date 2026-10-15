@@ -1,0 +1,204 @@
+FOOD HEROES PROJECT GUIDE
+=========================
+
+This guide describes the inspected Food Heroes project as it currently exists. It is a learning and maintenance reference, not a promise that every feature has been play-tested. In particular, the Guess the Food scene exists, but its drag interaction has not been verified as working and should be treated as unfinished until tested successfully.
+
+A. PROJECT OVERVIEW
+-------------------
+Food Heroes is a 2D educational game about sorting foods into Go, Glow, and Grow groups. In the main campaign, foods travel along a conveyor belt. The player drags a food onto the Hero; the correct group defeats an enemy, while a wrong group is rejected. Enemies approach the Hero, and each arrival costs a life. The campaign includes six regular level definitions and a balanced-meal boss every fifth level.
+
+Godot: 4.7.1 was reported by the project/editor environment.
+Main scene: res://scenes/MainMenu.tscn
+Reference viewport: 956 x 440, canvas_items stretch, aspect expand.
+Autoload singletons: DB (Database.gd), GameData (GameData.gd), Audio (Audio.gd).
+
+The project has separate scenes for its major screens. Dynamic campaign systems such as the belt and effects manager are created by Main.gd at runtime. The project also contains SQLite extension code and binaries under addons/godot-sqlite.
+
+B. FOLDER AND FILE GUIDE
+------------------------
+Root files
+- project.godot: main-scene setting, viewport/stretch configuration, autoloads and feature settings. Change settings through Project Settings/editor when possible.
+- Documentation/: project guides and maintenance notes.
+- Icon Game.png: project icon.
+- .gitignore: excludes Godot caches and platform/temp files from version control.
+
+@MyFolder/
+- GuessTheFood.tscn and GuessTheFood.gd: separate experimental food-sort mini-game. Menu entry is in MainMenu. Runtime launch works, but physical drag/drop is not confirmed; do not rely on it as finished gameplay.
+- GuessTheFood.tscn and GuessTheFood.gd: separate experimental food-sort mini-game. Menu entry is in MainMenu. Runtime launch works, but physical drag/drop is not confirmed; do not rely on it as finished gameplay.
+
+scenes/
+- MainMenu.tscn: entry/menu screen.
+- SplashScreen.tscn: short transition after Play.
+- HowToPlay.tscn: instructions/tutorial choice.
+- LevelSelect.tscn: difficulty and campaign level selection.
+- Main.tscn: active campaign gameplay.
+- Food.tscn and Enemy.tscn: reusable instances spawned in Main.
+- ResultScreen.tscn: campaign win/loss summary.
+- 
+scripts/
+- Main.gd, GameData.gd, Database.gd, Audio.gd: central game logic and autoloads.
+- BeltManager.gd and FxManager.gd: runtime-created campaign support systems.
+- Food.gd and Enemy.gd: spawned gameplay entities.
+- MainMenu.gd, SplashScreen.gd, HowToPlay.gd, LevelSelect.gd, PauseMenu.gd, ResultScreen.gd: screen flow and navigation.
+
+assets/
+- food/: 28 individual food PNGs. Dynamic slug convention: lower-case food name with spaces replaced by underscores.
+- generated/: Hero, enemy, menu, background and other image assets, including animation frames. The Codex book icon is archived under removed/Codex/assets/.
+- images/: additional logos/backgrounds.
+- ui/: button textures and other interface art; assets/ui/menu_theme.tres is the shared theme.
+
+audio/: WAV sound effects and music, loaded by Audio.gd using their filename without extension.
+addons/godot-sqlite/: SQLite GDExtension source/configuration and platform binaries required by Database.gd.
+tools/: smoke_test.gd tests pure campaign calculations and a throwaway SQLite database; test.ps1 runs test workflows; generate_audio.py is an asset utility.
+Documentation/: project guides and maintenance notes.
+
+C. SCENE GUIDE
+---------------
+
+Codex removal/update: Codex scenes, scripts, data, icon art, navigation helper and the rebuild utility are archived under res://removed/Codex/. The active menu and pause UI no longer expose Codex, and Guess the Food no longer links to it or writes Codex unlock flags. The archive is not part of active game flow and is kept as project history.
+MainMenu.tscn — res://scenes/MainMenu.tscn
+Purpose: game entry, Play, Sound, Guess the Food, Quit.
+Important nodes: Background, TitlePanel, MenuPanel/Buttons, Hero. MainMenu.gd handles button actions. Play chooses tutorial or campaign via DB setting, then loads SplashScreen. The mini-game button changes to @MyFolder/GuessTheFood.tscn. Open from FileSystem or run the project.
+
+SplashScreen.tscn — res://scenes/SplashScreen.tscn
+Purpose: brief fade/branding transition after Play. SplashScreen.gd fits the splash texture and routes to Main.tscn for tutorial or LevelSelect.tscn otherwise.
+
+HowToPlay.tscn — res://scenes/HowToPlay.tscn
+Purpose: instructions with tutorial and Back actions. HowToPlay.gd connects these to tutorial gameplay or MainMenu.
+
+LevelSelect.tscn — res://scenes/LevelSelect.tscn
+Purpose: choose Easy/Medium/Hard and an unlocked campaign level. LevelSelect.gd builds the grid from GameData and DB progress, then opens Main.tscn.
+
+Main.tscn — res://scenes/Main.tscn
+Purpose: campaign gameplay. Main.gd expects Hero/Sprite, Camera2D, HUD labels and PauseButton, Timer, Foods, LessonPopup/Root and PausePopup/Root. It references Food.tscn and Enemy.tscn through exported PackedScenes. BeltManager and FxManager are made in code. Food.gd and Enemy.gd call back to Main.gd for feeding/arrival events.
+
+Food.tscn — res://scenes/Food.tscn
+Purpose: Area2D food item. Food.gd expects ColorRect, Label, CollisionShape2D. It creates its optional sprite in code and obtains group/name from GameData.
+
+Enemy.tscn — res://scenes/Enemy.tscn
+Purpose: enemy instance. Enemy.gd expects SpaghettiSprite; its looping walk animation is configured in the scene. Main sets its movement speed and group membership.
+
+Pause UI — embedded under Main.tscn/PausePopup/Root
+Purpose: pause gameplay, resume, retry, return to level select, or leave. PauseMenu.gd depends on Main's game_active and foods_container references.
+
+ResultScreen.tscn — res://scenes/ResultScreen.tscn
+Purpose: show campaign result, stars, score, high score, and next/retry/navigation choices. ResultScreen.gd reads GameData and DB.
+
+GuessTheFood.tscn — res://@MyFolder/GuessTheFood.tscn
+Purpose: separate, experimental food sorting round, connected from MainMenu. Its script constructs UI and reads existing foods/images. It has three basket UI panels, but mouse/touch drag submissions, scoring and question advance remain UNVERIFIED and were observed not to advance during attempted live inputs. Treat as incomplete. No touch-device test was available.
+
+D. SCRIPT GUIDE
+----------------
+res://scripts/GameData.gd
+Owns the canonical FOODS classifications, FOOD_NUTRIENTS, level definitions, difficulty modifiers, boss settings, layout values and current attempt state. start_tutorial()/start_level() initialize state; record_result() writes campaign results through DB; helpers choose foods, colors and labels. Safely tune levels, lives, speed/spawn/score multipliers and boss cadence here. When adding a food, update its category list and FOOD_NUTRIENTS together.
+
+res://scripts/Main.gd
+Campaign state machine and scene coordinator. _ready() connects scene nodes, creates BeltManager/FxManager and starts a level. _start_level(), _spawn_enemy(), food_dropped_on_hero(), enemy_reached_hero(), wave/boss helpers, _level_complete() and _game_over() control gameplay. POINTS_PER_ENEMY, BASE_ENEMY_SPEED, spawn interval, layout insets and TUTORIAL_PAGES are tuning points. Keep its callback names and expected node paths consistent with Food.gd, Enemy.gd and PauseMenu.gd.
+
+res://scripts/Food.gd
+One draggable conveyor food. set_food(group) chooses a name from GameData and applies the matching image. _process() handles movement, lifetime/blink and held drag; _drop() calls Main for a Hero overlap or tweens the item to its slot. LIFETIME, BLINK_AT, BELT_SPEED and RETURN_TIME are safe behavior tuning values. Images use res://assets/food/<slug>.png.
+
+res://scripts/BeltManager.gd
+Runtime conveyor visuals/spawn/stack logic. setup() receives Food.tscn, Main's Foods container and a needed-category Callable. start()/stop() control timer operation. _ensure_needed() maintains a solvability guarantee by supplying required food groups. Spawn cap and layout constants are at the top. Do not move food nodes out of Main's Foods container without updating PauseMenu and callbacks.
+
+res://scripts/Enemy.gd
+Moves an enemy toward Main's Hero using speed * delta, plays/stops walk animation, and calls Main.enemy_reached_hero() inside a 45-pixel threshold. Main owns hit/life consequences.
+
+res://scripts/FxManager.gd
+Visual/audio effects for Go zap, Glow heal, Grow slam, nutrient popups and camera shake. Main supplies Hero and Camera2D with setup(). It does not decide damage or score.
+
+res://scripts/Database.gd
+DB autoload opens user://foodheroes.db through godot-sqlite. Stores integer meta settings (including mute/tutorial flags), high score and per-level bests/completion. It fails loudly if SQLite cannot open. Do not delete or overwrite the user's database when testing.
+
+res://scripts/Audio.gd
+Audio autoload loads res://audio/<name>.wav, pools simultaneous effects, loops music and saves mute state through DB. Add a sound by placing/importing the file and requesting its matching base name.
+
+res://scripts/MainMenu.gd
+Menu button handlers. _on_play_pressed() enters level selection; _on_guess_food_pressed() opens the experimental mini-game. Button node connections are in MainMenu.tscn.
+
+res://scripts/SplashScreen.gd, HowToPlay.gd, LevelSelect.gd, PauseMenu.gd, ResultScreen.gd
+Handle the transitions and actions described in the Scene Guide. Their scene node paths and pressed-signal connections are dependencies; check the matching TSCN if a button stops responding.
+
+Codex implementation files and scene resources are archived, inactive, under res://removed/Codex/.
+
+res://@MyFolder/GuessTheFood.gd
+Experimental mini-game. ROUND_QUESTIONS and FEEDBACK_SECONDS are tuning values. _build_food_pool() derives candidate images and categories from GameData; _start_round() shuffles and takes up to ten unique items; _submit_answer() updates score and counter; _basket_at() checks panel rectangles. Important limitation: live attempts did not demonstrate reliable pointer movement/release submission. Do not treat these code paths as validated gameplay.
+
+res://tools/smoke_test.gd
+Headless test script for GameData pure logic and Database against user://smoke_test.db, not the real save. tools/test.ps1 is a convenience runner. Inspect its invocation before using on a different machine.
+
+E. GAMEPLAY SYSTEMS (ACTUAL STATE)
+----------------------------------
+Campaign controls: drag a food from the bottom belt and release over the Hero. The tutorial says the right group defeats the closest enemy. Food.gd detects Area2D overlap on release and calls Main.food_dropped_on_hero(). Wrong foods remain and glide back. There is no keyboard movement control; the Hero is positioned by the layout code and performs effects/animation on accepted feeds.
+
+Food classification: GameData.FOODS defines 8 Go, 10 Glow, and 10 Grow foods (28 total). GameData.FOOD_NUTRIENTS assigns each its popup text. Belt food labels, sprite slugs and colors derive from those names/groups. Do not infer classification from sprite appearance.
+
+Enemies/combat: Enemy.gd moves toward Hero. A correct feed removes the nearest normal enemy and adds POINTS_PER_ENEMY times difficulty score multiplier. Enemy arrival removes one life. Go uses zap, Glow uses heal/pulse, Grow uses slam/shake effects. Boss appears every BOSS_EVERY level after BOSS_WAVES; it needs one food from each of Go, Grow and Glow.
+
+Persistence: Database.gd stores campaign progress and generic integer settings in the local SQLite user://foodheroes.db. GameData.record_result() is called on campaign result. Tutorial completion and mute are settings. Do not assume Codex card state is saved/displayed: the shipped Codex entries list is empty, and the experimental mini-game's card code is not integrated into Codex.gd loading.
+
+Codex: removed from active game flow. Its content files remain archived under res://removed/Codex/ for reference.
+
+Guess the Food: a separate experimental scene is connected from MainMenu and draws existing food textures/category labels. It intends to use mouse/touch drag to submit only when released over a basket, score correct answers, and advance. During attempted automated live drags, pointer movement did not visibly move the sprite and the counter did not advance. Therefore drag, scoring, wrong-answer feedback, outside-drop recovery, round completion and return flow must all be considered unverified. Touch and portrait layout are also untested. Do not advertise it as fully playable.
+
+F. HOW TO CHANGE THE GAME
+-------------------------
+1. Change a food category:
+   Edit the food's placement in GameData.gd, constant FOODS. Update neither nutrient text nor other logic unless its nutrient data also needs correction. Verify it remains in exactly the intended group and FOOD_NUTRIENTS contains that name.
+
+2. Add a food and its image:
+   a. Put a valid PNG at res://assets/food/<slug>.png, where slug is lowercase and spaces become underscores (example: Sweet Potato -> sweet_potato.png).
+   b. Add the exact display name to one list in GameData.FOODS.
+   c. Add a FOOD_NUTRIENTS mapping for the same exact display name.
+   d. Let Godot import the PNG, then confirm Food.gd._load_food_texture() can load it and run Main.tscn to view it.
+
+3. Change campaign player/enemy pace, lives or score:
+   - Difficulty lives/speed/spawn/enemy bonus/score multiplier: GameData.gd DIFFICULTIES.
+   - Base enemy speed, score points, spawn interval, and tutorial constants: Main.gd and GameData.gd constants.
+   - Enemy movement checks its public speed value in Enemy.gd. Main assigns it after instancing.
+   Make one adjustment at a time and test Easy/Medium/Hard.
+
+4. Change campaign levels/boss:
+   Edit GameData.gd LEVELS for required group, enemy count and lesson. Boss frequency/group/wave-size values are BOSS_EVERY, BOSS_WAVES, BOSS_WAVE_SIZE and BOSS_MEAL_GROUPS. Keep group names exactly Go, Glow, Grow.
+
+5. Change mini-game round length or points:
+   In @MyFolder/GuessTheFood.gd, ROUND_QUESTIONS sets the maximum question count, FEEDBACK_SECONDS sets feedback delay, and _submit_answer() currently awards one point per correct answer. First fix and verify pointer dragging before modifying or relying on game rules. Candidate pool is limited by valid GameData foods with existing texture files.
+
+7. Change UI:
+   Open the relevant independent TSCN (MainMenu, LevelSelect, Main, ResultScreen, HowToPlay or GuessTheFood). Scene-script node paths and signal connections must remain consistent. MainMenu button positions/order are controlled in MainMenu.tscn; most mini-game widgets are constructed in GuessTheFood.gd.
+
+8. Add a major screen:
+   Create a new independent .tscn and matching controller script. Add a button/signal to the correct existing menu, then route with change_scene_to_file(). Preserve existing return/navigation behavior and check scene paths. Do not embed a complete major screen inside another screen.
+
+G. HOW TO RUN AND TEST
+----------------------
+1. Open Godot 4.7.1 and import the project folder containing project.godot.
+2. Main scene is MainMenu.tscn (also set as run/main_scene). Press F6 to run the current scene or F5 to run the project.
+3. Open individual TSCNs through FileSystem and use F6 for HowToPlay, LevelSelect, Main, ResultScreen or the experimental mini-game. A direct Main.tscn run uses the current GameData defaults; menu flow provides normal setup.
+4. Check the Script editor diagnostics and bottom Output/Debugger panels for parser/runtime/resource errors. Reimport missing image/audio assets via the FileSystem dock or project scan.
+5. Run tools/test.ps1 only after checking its contents/paths, or invoke tools/smoke_test.gd as documented in its header. Its database is a throwaway smoke_test.db, not the user's foodheroes.db.
+6. For gameplay, use a separate test account/profile or make a backup of user://foodheroes.db before a session that could record campaign results. Do not delete that database to troubleshoot.
+7. Mini-game required tests still outstanding: drag image visibly during hold, release over each basket once, wrong/correct result and score, outside drop remains same question, click-only ignored, 10 unique questions, round end/Play Again, Codex persistence, touch, portrait. Current automated live attempt did not prove drag; report that as a blocker.
+8. To check save persistence safely, test on a copied project/user-data profile if possible. No visible-food-card persistence can currently be verified because the Codex registry is empty and its UI does not reload mini-game DB flags.
+
+H. DEPENDENCIES AND TROUBLESHOOTING
+-----------------------------------
+Required runtime extension: addons/godot-sqlite/gdsqlite.gdextension and matching platform binary. Database.gd uses the SQLite class through ClassDB. Do not remove this addon; DB autoload fails loudly without it.
+Other autoload references: DB, GameData and Audio must keep their project.godot paths/names. Many scenes/scripts rely on those singleton identifiers.
+Important dependencies: Main.tscn exports Enemy.tscn/Food.tscn; Enemy.tscn animation name must be walk; Food.tscn child paths must match Food.gd. Audio filenames should match the sound names requested by scripts. Codex assets are archived and have no active scene dependencies.
+
+If a node path error appears, compare the exact path in the script with the node tree in its scene. If a resource is missing, inspect its ext_resource/path and make sure Godot imported image/audio assets. If SQLite fails, verify the correct platform library and avoid deleting user://foodheroes.db. If the game launches to a scene but transitions fail, inspect button signal connections and path spelling.
+
+Earlier inspection reported a duplicate UID warning between the active Codex scene and a backup scene. Both Codex scenes are now archived under removed/Codex/. A headless --editor import attempt also printed temporary-library copy errors for sqlite and editor tooling DLLs, while the editor-based live scene launches subsequently ran without session errors. Treat these as machine/editor import output, not proof dependencies are unnecessary.
+
+Do not delete .godot/import metadata, active assets, main scenes, autoload scripts, SQLite binaries, or archived Codex files without reviewing their dependencies. Check references first. Preserve any editor-integration addon files that are present; they are separate from campaign content, and this task did not remove or modify them.
+
+I. CLEANUP AND CHANGE LOG
+-------------------------
+This maintenance pass added beginner-oriented script overview comments to core campaign, food, enemy, effects, database, audio, menu/navigation, level select, pause/result, and Codex data/UI scripts, plus the experimental mini-game overview. Existing gameplay statements and identifiers were intended to remain unchanged.
+
+Created this guide at the project root. No food data, artwork, scene structure or save database was intentionally changed by the documentation/comment task. No files were deleted.
+
+Project text search: no obsolete assistant/editor attribution was found in active scripts, scenes, resources, or documentation. Generated caches and third-party addon contents were not modified. Required editor integration and dependency files were retained.
+
+Known unresolved items: Guess the Food drag-and-drop has not been demonstrated working; touch and portrait layouts are untested. Codex implementation remains archived, and its former menu/pause/minigame entry points are removed.

@@ -15,6 +15,8 @@ extends Node
 ## `quit()` only takes effect at the end of the frame, so every query helper
 ## also guards `_db == null` and public methods return safe defaults instead
 ## of crashing while the quit is pending.
+## DB stores campaign progress and integer settings in user://foodheroes.db.
+## Do not test destructive schema changes against the player's real save file.
 
 const DB_PATH := "user://foodheroes.db"
 

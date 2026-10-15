@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="StorySequence" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/story/StorySequence.gd" id="1_sequence"]
+[ext_resource type="Texture2D" path="res://assets/story/level 1/Story 1.png" id="2_background"]
+
+[resource]
+script = ExtResource("1_sequence")
+background = ExtResource("2_background")
+dialogue_entries = PackedStringArray("....................................................................................................................................................................................................................")

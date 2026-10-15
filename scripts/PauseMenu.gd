@@ -4,6 +4,8 @@ extends Control
 ## working while the tree is paused — everything else in the level (enemies,
 ## spawn timers, belt foods, camera shake) freezes via get_tree().paused.
 ## Leaving mid-level records NO result: progress only saves on a win/lose.
+## The scene connects HUD pause, resume, retry, level-select and menu buttons
+## to these handlers; pause mode is set in the scene so the overlay keeps processing.
 
 func _ready() -> void:
 	visible = false
@@ -24,15 +26,18 @@ func _on_pause_button_pressed() -> void:
 	_toggle()
 
 func _toggle() -> void:
+	var main: Node = get_tree().current_scene
+	if main != null and bool(main.get("_tutorial_overlay_active")):
+		return
 	if get_tree().paused:
 		_resume()
 	else:
 		_pause()
 
 func _pause() -> void:
-	# Never pause over the lesson popup or after the run has already ended.
+	# The tutorial owns the tree pause while its overlay is active.
 	var main = get_tree().current_scene
-	if main == null or not main.game_active:
+	if main == null or not main.game_active or bool(main.get("_tutorial_overlay_active")):
 		return
 	# Return any held food to the belt first: a mouse release during the pause
 	# would otherwise complete the drop (and could feed the Hero) on resume.
@@ -57,10 +62,12 @@ func _on_retry_pressed() -> void:
 
 func _on_level_select_pressed() -> void:
 	Audio.play("click")
+	GameData.tutorial_mode = false
 	_leave("res://scenes/LevelSelect.tscn", false)
 
 func _on_menu_pressed() -> void:
 	Audio.play("click")
+	GameData.tutorial_mode = false
 	_leave("res://scenes/MainMenu.tscn", false)
 
 # Quitting out of a paused level: the tree MUST be unpaused first or the next

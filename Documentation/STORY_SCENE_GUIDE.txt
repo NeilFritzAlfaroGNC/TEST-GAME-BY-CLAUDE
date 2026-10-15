@@ -1,0 +1,49 @@
+FOOD HEROES STORY SCENE GUIDE
+
+Purpose
+-------
+StoryScene is one reusable, standalone visual-novel scene. It presents an ordered StoryCollection and signals story_completed after every sequence and dialogue entry has been advanced. Choosing Level 1 in Level Select primes the selected run, then opens this scene. Only after the story completes does it change to the existing Main gameplay scene. Levels other than Level 1 keep their existing direct route.
+
+Scene and script hierarchy
+--------------------------
+scenes/StoryScene.tscn
+  StoryScene (Control; scripts/StoryScene.gd)
+    Background (TextureRect; fills the available window, preserves image proportions, and crops excess edges as needed)
+    DialoguePanel (PanelContainer)
+      Margin (MarginContainer)
+        Content (VBoxContainer)
+          Dialogue (Label; wraps long text)
+          ContinuePrompt (Label)
+
+StoryScene.gd owns presentation, input, sequence/dialogue indices, the typewriter effect, and the completion signal. It does not instantiate gameplay entities. The caller is LevelSelect.gd; the existing gameplay scene is loaded only after the story ends.
+
+Data files and initial images
+-----------------------------
+Sequence data is in resources/story/Level1Story.tres. Each Sequence resource contains its independently editable background and ordered dialogue_entries array.
+Sequence 1 uses: res://assets/story/level 1/Story 1.png
+Sequence 2 uses: res://assets/story/level 1/Story 2.png
+Both PNGs were confirmed loadable in Godot at 1536 x 1024 pixels.
+
+Editing dialogue
+----------------
+Open Level1Sequence1.tres or Level1Sequence2.tres and edit dialogue_entries in the Inspector. Each array item is one complete dialogue entry; do not split text on punctuation. Add another string item to add a later entry. You can edit the two sequences independently. Each currently contains one complete placeholder string of periods.
+
+Changing an image
+-----------------
+In the corresponding sequence resource, replace the Background Texture2D assignment in the Inspector. The story scene reads each image from its sequence data, so no image path is hardcoded in the presentation script.
+
+Adding another sequence
+-----------------------
+Create a new StorySequence resource, assign its background and dialogue entries, then append it to sequences in Level1Story.tres. StoryScene iterates the collection; it does not have Story 1/Story 2 branching. A future level can use a different StoryCollection resource by assigning that resource to StoryScene's story_data before opening it.
+
+Progression and completion
+--------------------------
+The background TextureRect uses Keep Aspect Covered: it fills the window without distorting the illustration, cropping excess image edges rather than leaving gaps. The bottom dialogue panel is positioned in the window and overlays the art. A configurable typewriter effect reveals characters at typewriter_characters_per_second; set it to 0 to display entries immediately. Story input is captured at the Control _input stage so mouse clicks still reach the story when the pointer is over UI controls. A left mouse click or ui_accept input reveals the rest of an unfinished entry and does not advance it. A separate later input advances a fully visible entry. Input is enabled after a rendered frame so the level-select click cannot skip the opening line; ui_accept echoes are ignored. The last entry of a sequence advances automatically to the first entry of the next sequence, without a blank scene or a separate confirmation. Advancing the final entry emits story_completed once and routes Level 1 to Main.tscn. No timer advances dialogue.
+
+Testing
+-------
+Run scenes/StoryScene.tscn directly to inspect the default two-sequence presentation; without a gameplay flow active it emits completion but remains in the preview scene. To test the full menu flow, run the project, choose Play, choose Level 1, let the typewriter reveal the entry or click once to reveal it immediately, then use a separate input to continue. Confirm Story 1 transitions to Story 2 and Main gameplay appears only after the final advance. Level selection sets GameData's run values but does not instantiate Main until the story scene finishes.
+
+Verification record
+-------------------
+The direct StoryScene runtime preview was run in Godot 4.7.1 with no runtime errors. Visual inspection confirmed both image coverage and the bottom dialogue overlay. The Level 1 gameplay background in Main.tscn now references res://assets/background/level 1 background.png; a Main.tscn runtime preview showed this artwork filling the play area behind the HUD, characters, and food belt. A test click on the dialogue panel revealed the text but did not advance the entry. The automated test runner cannot execute the existing SceneTree-style tools/story_flow_test.gd or tools/smoke_test.gd because it instantiates them as Node tests; use the documented direct Godot script harness for those instead. Full title-menu-to-gameplay interactive verification remains to be completed.

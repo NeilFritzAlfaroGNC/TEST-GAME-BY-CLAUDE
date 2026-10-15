@@ -1,6 +1,5 @@
 extends Control
-## How to Play screen (from the Main Menu). Static instructions plus a button
-## to (re)play the guided tutorial at any time.
+## Optional How to Play access from the menu; Level 1 now uses its in-game overlay.
 
 func _ready() -> void:
 	Audio.play_music("music")
