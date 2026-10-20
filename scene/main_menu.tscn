@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://jwworo8q41gf"]
+
+[ext_resource type="Theme" uid="uid://cqedq7y85h75j" path="res://assets/Title Screen/menu_theme.tres" id="1_faqpa"]
+[ext_resource type="Script" uid="uid://dwww1et8u00yo" path="res://scripts/title_menu.gd" id="2_5dk12"]
+[ext_resource type="Texture2D" uid="uid://d0pdl7ku6jjdy" path="res://assets/Title Screen/title_screen/Go, Grow, Glow.png" id="3_vvfmj"]
+
+[sub_resource type="StyleBoxFlat" id="menu_plate"]
+bg_color = Color(0.02, 0.045, 0.07, 0.78)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.84, 0.67, 0.22, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 5
+
+[node name="MainMenu" type="Control" unique_id=275894434]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_faqpa")
+script = ExtResource("2_5dk12")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1885430704]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_vvfmj")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="MenuPanel" type="Panel" parent="." unique_id=990062206]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.29
+anchor_right = 0.3
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_right = -2.0
+offset_bottom = -8.0
+theme_override_styles/panel = SubResource("menu_plate")
+
+[node name="Buttons" type="VBoxContainer" parent="MenuPanel" unique_id=1695099299]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = 5.0
+offset_right = -7.0
+offset_bottom = -45.0
+theme_override_constants/separation = 0
+
+[node name="PlayButton" type="Button" parent="MenuPanel/Buttons" unique_id=1283937954]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Play"
+
+[node name="SoundButton" type="Button" parent="MenuPanel/Buttons" unique_id=120059695]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Sound: ON"
+
+[node name="GuessFoodButton" type="Button" parent="MenuPanel/Buttons" unique_id=1336605726]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Guess the Food"
+
+[node name="QuitButton" type="Button" parent="MenuPanel/Buttons" unique_id=1885641202]
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Quit"
+
+[connection signal="pressed" from="MenuPanel/Buttons/PlayButton" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="MenuPanel/Buttons/SoundButton" to="." method="_on_sound_pressed"]
+[connection signal="pressed" from="MenuPanel/Buttons/GuessFoodButton" to="." method="_on_guess_food_pressed"]
+[connection signal="pressed" from="MenuPanel/Buttons/QuitButton" to="." method="_on_quit_pressed"]

@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://dwmk46p4a84lf" path="res://assets/BattleScene/GNCI School Courtyard Pavilion.png" id="1_bg"]
+
+[node name="BattleBackground" type="CanvasLayer" unique_id=1133761031]
+layer = -1
+
+[node name="CourtyardTexture" type="TextureRect" parent="." unique_id=1267456284]
+texture_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_bg")
+expand_mode = 1
+stretch_mode = 6

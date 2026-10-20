@@ -1,0 +1,107 @@
+[gd_scene format=3 uid="uid://vw3hpboil3ot"]
+
+[ext_resource type="Texture2D" uid="uid://bmi70iftgnur4" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_000.png" id="1_ui01n"]
+[ext_resource type="Script" uid="uid://bkiwemci7f3vy" path="res://scripts/enemy_1.gd" id="1_wx8ev"]
+[ext_resource type="Texture2D" uid="uid://dye6vhrxvqvrc" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_001.png" id="2_c36qr"]
+[ext_resource type="Texture2D" uid="uid://k2xneqbn60k2" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_002.png" id="3_wx8ev"]
+[ext_resource type="Texture2D" uid="uid://b77desiyhifi3" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_003.png" id="4_fvhgw"]
+[ext_resource type="Texture2D" uid="uid://cri1g6ycn8hip" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_004.png" id="5_mrnml"]
+[ext_resource type="Texture2D" uid="uid://rjp75lrxtjxo" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_005.png" id="6_78ftk"]
+[ext_resource type="Texture2D" uid="uid://ifp1s3yjnw34" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_006.png" id="7_eelnk"]
+[ext_resource type="Texture2D" uid="uid://c46fftl2fhm1v" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_000.png" id="8_01838"]
+[ext_resource type="Texture2D" uid="uid://c606fpehq14gd" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_001.png" id="9_8qxug"]
+[ext_resource type="Texture2D" uid="uid://ck45w72cqw17f" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_002.png" id="10_gicow"]
+[ext_resource type="Texture2D" uid="uid://bvunlrhc6no7b" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_003.png" id="11_djdl4"]
+[ext_resource type="Texture2D" uid="uid://be3ss2yc5jt00" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_004.png" id="12_yakgq"]
+[ext_resource type="Texture2D" uid="uid://b1oxwc0jmciyu" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_005.png" id="13_pscj3"]
+[ext_resource type="Texture2D" uid="uid://c0m4txd0l30p0" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_006.png" id="14_oydw7"]
+[ext_resource type="Texture2D" uid="uid://c75v4pnwbod0o" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_007.png" id="15_o5g8e"]
+[ext_resource type="PackedScene" uid="uid://ddky22wdxkgwe" path="res://scene/claw_animation.tscn" id="16_impact_scene"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_ui01n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_c36qr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_wx8ev")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_fvhgw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_mrnml")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_78ftk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_eelnk")
+}],
+"loop": 0,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_01838")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_8qxug")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_gicow")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_djdl4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_yakgq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_pscj3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_oydw7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_o5g8e")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7vi72"]
+radius = 12.0
+height = 112.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7vi72"]
+size = Vector2(76, 112)
+
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=836091117]
+collision_layer = 2
+script = ExtResource("1_wx8ev")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1403443425]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"attack"
+frame_progress = 0.17332312
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=696048934]
+shape = SubResource("CapsuleShape2D_7vi72")
+
+[node name="ImpactEffect" parent="." unique_id=50763473 instance=ExtResource("16_impact_scene")]
+position = Vector2(70, 0)
+
+[node name="DetectionArea" type="Area2D" parent="." unique_id=1563068459]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=469023482]
+position = Vector2(17, 0)
+shape = SubResource("RectangleShape2D_7vi72")

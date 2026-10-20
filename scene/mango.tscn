@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://ltajjbixojjy"]
+
+[ext_resource type="Texture2D" uid="uid://b8bld54innrtv" path="res://assets/Foods/mango sprite.png" id="1_knwej"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_svdv1"]
+atlas = ExtResource("1_knwej")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_whsnt"]
+atlas = ExtResource("1_knwej")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6kgsf"]
+atlas = ExtResource("1_knwej")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_svdv1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_whsnt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6kgsf")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=574865204]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+frame_progress = 0.8419714

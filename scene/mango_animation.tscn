@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://cgmpwmy2wwuoa"]
+
+[ext_resource type="Texture2D" uid="uid://b8bld54innrtv" path="res://assets/Foods/mango sprite.png" id="1_qhq8v"]
+[ext_resource type="Script" uid="uid://btt4vgc14orhx" path="res://scripts/food_throw.gd" id="2_throw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y4qb3"]
+atlas = ExtResource("1_qhq8v")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3u4cb"]
+atlas = ExtResource("1_qhq8v")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crsp2"]
+atlas = ExtResource("1_qhq8v")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qhq8v"]
+atlas = ExtResource("1_qhq8v")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y4qb3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3u4cb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crsp2")
+}],
+"loop": 0,
+"name": &"animation",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qhq8v")
+}],
+"loop": 1,
+"name": &"static",
+"speed": 5.0
+}]
+
+[node name="MangoAnimation" type="Node2D" unique_id=986792957]
+script = ExtResource("2_throw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2097607963]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"static"
+
+[node name="StaticHitbox" type="Area2D" parent="." unique_id=365054334]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticHitbox" unique_id=1246589225]
+polygon = PackedVector2Array(-30, 8, -17, -20, -10, -31, -1, -38, 9, -38, 26, -29, 32, -10, 32, 5, 25, 19, 18, 26, -2, 35, -18, 35, -25, 32, -32, 24)
+
+[node name="SplashHitbox" type="Area2D" parent="." unique_id=1784443954]
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="SplashHitbox" unique_id=1845658767]
+polygon = PackedVector2Array(-54, -17, -42, -37, -41, -38, 5, -49, 7, -49, 41, -48, 46, -46, 47, -45, 50, -33, 54, -13, 54, 37, 53, 38, 34, 42, -14, 46, -15, 46, -34, 37, -52, 22, -54, -13)

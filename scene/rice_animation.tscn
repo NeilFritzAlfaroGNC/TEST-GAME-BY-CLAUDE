@@ -1,0 +1,67 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://dpdlmg67s7328" path="res://assets/Foods/Rice sprite.png" id="1_qhq8v"]
+[ext_resource type="Script" path="res://scripts/food_throw.gd" id="2_throw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y4qb3"]
+atlas = ExtResource("1_qhq8v")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3u4cb"]
+atlas = ExtResource("1_qhq8v")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crsp2"]
+atlas = ExtResource("1_qhq8v")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qhq8v"]
+atlas = ExtResource("1_qhq8v")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y4qb3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3u4cb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crsp2")
+}],
+"loop": false,
+"name": &"animation",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qhq8v")
+}],
+"loop": 1,
+"name": &"static",
+"speed": 5.0
+}]
+
+[node name="RiceAnimation" type="Node2D"]
+script = ExtResource("2_throw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"static"
+
+[node name="StaticHitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticHitbox"]
+polygon = PackedVector2Array(-48, 16, -35, -12, -23, -30, -5, -43, 5, -43, 23, -30, 35, -12, 48, 16, 48, 28, 40, 40, 19, 44, -19, 44, -40, 40, -48, 28)
+
+[node name="SplashHitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="SplashHitbox"]
+polygon = PackedVector2Array(-58, 22, -50, -26, -21, -55, -16, -55, 45, -46, 46, -45, 58, -17, 58, -12, 50, 45, 49, 46, 30, 53, -29, 53, -56, 28, -58, 26)

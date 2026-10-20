@@ -1,0 +1,26 @@
+[gd_resource type="Theme" format=3 uid="uid://cqedq7y85h75j"]
+
+[ext_resource type="Texture2D" uid="uid://cklus5jvxe2dn" path="res://assets/Title Screen/ui/button_blue_normal.png" id="1_norm"]
+[ext_resource type="Texture2D" uid="uid://df8c27cw30y4q" path="res://assets/Title Screen/ui/button_blue_hover.png" id="2_hov"]
+[ext_resource type="Texture2D" uid="uid://byne8yeejhjiy" path="res://assets/Title Screen/ui/button_blue_pressed.png" id="3_press"]
+
+[sub_resource type="StyleBoxEmpty" id="sb_focus"]
+
+[sub_resource type="StyleBoxTexture" id="sb_hover"]
+texture = ExtResource("2_hov")
+
+[sub_resource type="StyleBoxTexture" id="sb_normal"]
+texture = ExtResource("1_norm")
+
+[sub_resource type="StyleBoxTexture" id="sb_pressed"]
+texture = ExtResource("3_press")
+
+[resource]
+default_font_size = 20
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/styles/focus = SubResource("sb_focus")
+Button/styles/hover = SubResource("sb_hover")
+Button/styles/normal = SubResource("sb_normal")
+Button/styles/pressed = SubResource("sb_pressed")

@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://cxwsle026e6dy"]
+
+[ext_resource type="Script" uid="uid://cm3g7lwdnrjre" path="res://scripts/conveyor_belt.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cjqfgdlgorjx8" path="res://assets/ConveyerBelt/conveyor_belt_no_red_circle.png" id="2_belt"]
+
+[sub_resource type="AtlasTexture" id="Belt_0"]
+atlas = ExtResource("2_belt")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_1"]
+atlas = ExtResource("2_belt")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_2"]
+atlas = ExtResource("2_belt")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_3"]
+atlas = ExtResource("2_belt")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_4"]
+atlas = ExtResource("2_belt")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_5"]
+atlas = ExtResource("2_belt")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_6"]
+atlas = ExtResource("2_belt")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_7"]
+atlas = ExtResource("2_belt")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_8"]
+atlas = ExtResource("2_belt")
+region = Rect2(1024, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_9"]
+atlas = ExtResource("2_belt")
+region = Rect2(1152, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_10"]
+atlas = ExtResource("2_belt")
+region = Rect2(1280, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Belt_11"]
+atlas = ExtResource("2_belt")
+region = Rect2(1408, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="BeltFrames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Belt_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("Belt_11")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 12.0
+}]
+
+[node name="ConveyorBelt" type="Node2D" unique_id=1615203032]
+script = ExtResource("1_script")
+
+[node name="BeltSprite" type="AnimatedSprite2D" parent="." unique_id=1167016584]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("BeltFrames")
+animation = &"run"
+autoplay = "run"
+frame_progress = 0.91957533
+
+[node name="StartPoint" type="Marker2D" parent="." unique_id=1484239689]
+position = Vector2(110, -18)
+
+[node name="EndPoint" type="Marker2D" parent="." unique_id=1249768354]
+position = Vector2(-110, -18)
+
+[node name="FoodSlot" type="Node2D" parent="." unique_id=599122801]

@@ -1,0 +1,346 @@
+FOOD HEROES (HandsOn) - PROJECT REPAIR REPORT
+Date: 2026-10-20
+Engine used for validation: Godot 4.7.1 stable (D:\Godot\Godot_v4.7.1-stable_win64_console.exe)
+Project root: C:\Users\Percy\Desktop\Capstone\Godot\GodotProject\hands-on  (project.godot found here)
+
+======================================================================
+0. BACKUP
+======================================================================
+Full copy of the project as it was BEFORE any change (everything except the
+regenerable .godot cache folder; 237 files, count verified identical):
+
+  C:\Users\Percy\Desktop\Capstone\Godot\GodotProject\hands-on_BACKUP_2026-10-20_pre-repair
+
+Every file modified or deleted below still exists in its original form there.
+To roll back completely: close Godot, delete hands-on, copy the backup folder
+back as hands-on, then open it in Godot (it rebuilds .godot itself).
+
+Note: the user-home folder is a git repository that contains this project only
+as untracked files, so git could not be used as a backup.
+
+======================================================================
+1. ORIGINAL STATE / PROBLEMS DISCOVERED
+======================================================================
+Original top level: .editorconfig .gitattributes .gitignore addons/ assets/
+  enemy_1.gd mainchar.gd generated/ icon.svg project.godot scene/ scenes/ (EMPTY)
+  scripts/ wtf/
+
+Root cause: all scenes live in res://scene/, but scenes and scripts still
+referred to res://scenes/ (an empty folder), and several assets/scripts had
+been copied (not moved) so two files shared one UID.
+
+A. Broken paths (file does not exist):
+   - scene/main.tscn (the MAIN SCENE): boundary, mainchar, enemy1, camera all
+     pointed at res://scenes/... (Godot was only recovering them via UID).
+   - scene/enemy1.tscn: claw ImpactEffect -> res://scenes/effects/claw_animation.tscn
+   - scripts/enemy_spawner.gd: preload("res://scenes/enemy1.tscn")
+       -> parse/load failure of the spawner script when the UID cache is cold.
+   - scripts/title_menu.gd: Play -> res://scenes/level_map_screen.tscn,
+       Guess the Food -> res://scenes/main.tscn  (buttons did nothing; the script
+       only pushes a "destination scene is missing" warning)
+   - scripts/level_map.gd: level -> res://scenes/main.tscn,
+       Back -> res://scenes/title_screen.tscn  (both broken)
+   - scripts/splash_screen.gd: next -> res://scenes/title_screen.tscn (broken)
+   - scene/mango.tscn, scene/animated_sprite_2d.tscn: res://assets/foods/...
+       (real folder is "Foods" - case mismatch; breaks in exported builds)
+   - scene/mainchar.tscn: res://assets/MainChar/... (real folder is "mainchar")
+
+B. Wrong / invalid UIDs:
+   - scene/mainchar.tscn: the 8 "idle/frame_00X.png" entries carried UIDs that
+     actually belong to the 8 direction stills (west.png, south-west.png, ...).
+     Godot trusts the UID first, so the player's "default" animation showed
+     the wrong images. The 7 "throwing" UIDs were unknown (stale).
+   - scene/splash_screen.tscn: logo UID was not a valid Godot UID
+     (uid://c578d6ab71b7c2d0b17b08be22a244ad).
+   - scene/title_screen.tscn: script UID uid://cyvg0qvkobr5h unknown.
+   - scene/mango.tscn: texture UID uid://dij8mhskvmkay unknown.
+
+C. UID collisions (two files claiming the same UID) - 23 in total:
+   - res://enemy_1.gd  and res://scripts/enemy_1.gd   (uid://bkiwemci7f3vy)
+   - res://mainchar.gd and res://scripts/mainchar.gd  (uid://ccukjv3n5y5cq)
+   - 15 frames in assets/enemy1/ vs assets/Enemy/spaghetti-monster/
+   - 6 images in generated/ vs assets/AttackAnimation/
+   The script collision was functionally dangerous: enemy_1.gd detects the
+   player by comparing body.get_script() with preload("res://scripts/mainchar.gd").
+   A player using the root copy (mainchar1.tscn did) would never be detected.
+
+D. Scene composition bug:
+   - scene/level_map.tscn: LevelSelectControls (Easy/Medium/Hard/Back panel)
+     was ordered BEFORE the full-screen MapTexture, so it was drawn underneath
+     the map and invisible. Confirmed with a rendered screenshot.
+
+======================================================================
+2. DUPLICATES FOUND AND HOW THEY WERE RESOLVED
+======================================================================
+Every pair was compared by content (diff / md5), and references were searched
+by both path and UID before deleting anything.
+
+ Kept (canonical)                         Deleted duplicate              Why safe
+ ---------------------------------------  -----------------------------  --------------------------------------------
+ scripts/enemy_1.gd                        enemy_1.gd (+ .uid)            Byte-identical; same UID; only wtf/ copy referred
+                                                                          (by UID). scripts/ is the organized location.
+ scripts/mainchar.gd                       mainchar.gd (+ .uid)           Byte-identical; same UID; only mainchar1.tscn
+                                                                          used it (also deleted).
+ assets/Enemy/spaghetti-monster/*          assets/enemy1/ (15 png+import) All 15 md5-identical, same UIDs; only user was
+                                                                          wtf/character_body_2d.tscn (deleted).
+ assets/AttackAnimation/*                  generated/ (6 png+import)      All 6 md5-identical, same UIDs; only user was
+                                                                          noodle_whip_impact.tscn (re-pointed).
+ scene/enemy1.tscn                         wtf/character_body_2d.tscn     Same node tree/values as enemy1.tscn, but used
+                                                                          duplicate assets and a missing claw path;
+                                                                          unreferenced.
+ scene/camera.tscn                         scene/camera_2d.tscn           Identical except own UID; unreferenced.
+ scene/boundary.tscn                       scene/static_body_2d.tscn      Identical except own UID; unreferenced.
+ scene/mango.tscn                          scene/animated_sprite_2d.tscn  Identical mango sprite scene; unreferenced.
+ scene/level_map_controls.tscn             scene/LevelSelectControls.tscn Byte-identical; only used by MapLevel.tscn.
+ scene/level_map.tscn                      scene/MapLevel.tscn            Older subset of level_map.tscn (same map +
+                                                                          controls, no Level1-5 buttons); unreferenced.
+ scene/splash_screen.tscn                  scene/splash_screen2.tscn      Same scene minus the logo texture; unreferenced.
+ scene/main_menu.tscn                      scene/title_screen.tscn        Same nodes, labels, layout and signal
+                                                                          connections. title_screen had an invalid script
+                                                                          UID, no scene UID and an unused stylebox.
+                                                                          main_menu is the clean editor-saved copy. The
+                                                                          scripts that pointed to title_screen now point
+                                                                          to main_menu.
+ scene/mainchar.tscn                       scene/mainchar1.tscn           mainchar1 is mainchar.tscn re-saved after Godot
+                                                                          resolved the WRONG UIDs (paths rewritten to
+                                                                          west.png etc.) and attached the root duplicate
+                                                                          script. Unreferenced. (Backup keeps it.)
+
+Kept on purpose (not exact duplicates, may be intentional variants, unused):
+ - scene/level_map_controls2.tscn   (root "LevelMapControls", child "Column")
+ - scene/level_select_controls2.tscn (different height/spacing/font sizes,
+                                     text "Tap an open level to play.")
+ - scene/noodle_whip_impact.tscn, scene/mango.tscn, scene/splash_screen.tscn
+   (valid, unused by the current flow - left for you to wire in).
+
+No duplicate nodes inside a scene, duplicate signal connections or autoloads
+were found (there are no autoloads). Level-map buttons were verified to have
+exactly one connection each at runtime.
+
+======================================================================
+3. FILES MODIFIED (exact-string edits, each verified by count)
+======================================================================
+ scene/main.tscn            4 ext_resource paths res://scenes/ -> res://scene/
+                            (UIDs unchanged; they were already correct)
+ scene/enemy1.tscn          claw ImpactEffect path -> res://scene/claw_animation.tscn
+ scene/mainchar.tscn        path case MainChar -> mainchar (15);
+                            8 idle UIDs + 7 throwing UIDs set to the UIDs in
+                            the real idle/ and throwing/ .import files
+ scene/mango.tscn           texture -> res://assets/Foods/mango sprite.png, valid UID
+ scene/splash_screen.tscn   logo UID -> uid://bo0lgjylkvfb1 (gnc_logo_transparent.png)
+ scene/noodle_whip_impact.tscn  texture -> assets/AttackAnimation/burst/..., UID added
+ scene/level_map.tscn       moved LevelSelectControls node after MapTexture so the
+                            panel draws on top (no position/size/style changed)
+ scripts/enemy_spawner.gd   preload -> res://scene/enemy1.tscn
+ scripts/title_menu.gd      Play -> res://scene/level_map_screen.tscn,
+                            Guess the Food -> res://scene/main.tscn (same target
+                            as before, just the corrected folder)
+ scripts/level_map.gd       level -> res://scene/main.tscn, Back -> res://scene/main_menu.tscn
+ scripts/splash_screen.gd   next -> res://scene/main_menu.tscn
+
+project.godot  (follow-up, at your request) main scene changed from
+               uid://cfb2saerm1dlj (scene/main.tscn) to uid://uarop3lfytt6
+               (scene/splash_screen.tscn). The original value is in the backup.
+
+Not changed: all gameplay values (speeds, gravity, jump, spawn timing),
+all artwork, UI layout/colors/text, the ziva_agent addon, the .godot cache.
+No files were moved. Godot's headless import refreshed .godot itself.
+
+======================================================================
+4. TESTS PERFORMED (all actually run)
+======================================================================
+ a) Static audit script: every ext_resource path + UID in every .tscn/.tres,
+    every load/preload/scene-path string in .gd, and the main_scene UID.
+    Before: 34 problems + 23 UID collisions.  After: 0 and 0.
+ b) godot --headless --import: exit 0, no errors or warnings.
+ c) Headless harness (49 checks, 0 failures, no engine errors/warnings):
+    - all 15 remaining scenes load, instantiate and run 3 frames
+    - main scene UID resolves to res://scene/main.tscn
+    - player "default" anim = idle/frame_000.png, "attack" = throwing/frame_000.png
+    - enemy1 + mainchar placed together: enemy detects player and attacks
+    - EnemySpawner preloads scene/enemy1.tscn
+    - menu Play / Guess the Food and splash destinations exist
+    - Level map: Hard button sets difficulty, Level 3 opens main.tscn,
+      Back opens main_menu.tscn, Sound toggles "Sound: OFF", Play opens map
+    - each tested button has exactly one signal connection
+ d) Ran the configured main scene for 1200 frames (spawner active): no errors.
+ f) Follow-up: launched the configured main scene. Verified it goes
+    splash_screen -> main_menu (after the ~0.9 s fade) -> Play ->
+    level_map_screen; plain 300-frame run had no errors; 49-check harness
+    passed 3 runs in a row.
+ e) Rendered the level map in a real window before/after the panel fix and
+    visually confirmed the Easy/Medium/Hard/Back panel now appears.
+
+======================================================================
+5. REMAINING ISSUES / NOT REPAIRED (need your decision)
+======================================================================
+ 1. RESOLVED (follow-up): main scene is now scene/splash_screen.tscn, so the
+    game starts splash -> main menu -> level map -> level (main.tscn).
+    To play the gameplay scene directly, open main.tscn and press F6.
+ 2. Level map: the Level1-5 click areas do not line up with the flower markers
+    in MapLevel.png (e.g. "Level 5" label floats right of the top marker).
+    This is layout/design, so I did not move them.
+ 3. Selected level and difficulty are not passed to main.tscn (every level
+    loads the same scene). Pre-existing design gap.
+ 4. mainchar.gd never switches animations, so the player always plays the
+    looping "attack" (throwing) animation that was set in the editor. Pre-existing.
+ 5. Enemies always walk right (direction = 1.0) and attacks deal no damage;
+    there is no health/lives system. Pre-existing.
+ 6. "Guess the Food" button opens the same gameplay scene (main.tscn); no
+    separate minigame scene exists.
+ 7. addons/ziva_agent/bin/windows_x86_64/ contains leftover Windows temp files
+    (~libziva_agent...dll, ...~RF*.TMP). Not touched (addon); safe to delete
+    by hand with Godot closed.
+ 8. The empty folder scenes/ was left in place (harmless). Delete it if you like.
+ 9. A sibling folder ..\hands-on2 exists. It was not inspected or touched.
+
+FEATURES REQUESTED FOR TESTING THAT DO NOT EXIST IN THIS PROJECT
+ (searched all .gd/.tscn; nothing to repair or test):
+ questions / food classification, codex rewards, save/load or any persistent
+ data (no user:// writes), story, tutorial, health/lives/energy/score,
+ sound/audio (the Sound button only toggles its label; there are no audio
+ files), autoload singletons. If these exist in another copy (e.g. hands-on2
+ or a GodotRar backup), they were not part of this folder.
+
+MANUAL TESTS STILL RECOMMENDED
+ - Open the project in the Godot editor and let it finish importing.
+ - Play main.tscn: move with arrow keys, jump with Space/Enter, watch enemies
+   spawn and play attack when they reach you.
+ - Run splash_screen.tscn and click through menu -> map -> a level -> Back.
+ - Look at mainchar idle frames in the SpriteFrames editor to confirm they
+   are the images you intended (they now come from assets/mainchar/idle/).
+
+======================================================================
+6. FINAL STRUCTURE AND CONNECTIONS
+======================================================================
+ hands-on/
+   project.godot          main_scene -> scene/splash_screen.tscn
+   addons/ziva_agent/     (untouched)
+   assets/
+     AttackAnimation/     burst/, claw/ (png + shader), whip attack/
+     Enemy/spaghetti-monster/  spaghetti-attack/, spaghetti-walk/
+     Foods/  GNCLogo/  MapLevel/  Title Screen/ (menu_theme.tres, ui/, title_screen/)
+     mainchar/            direction stills, idle/, throwing/
+   scene/                 all .tscn files (15)
+   scripts/               enemy_1.gd enemy_spawner.gd level_map.gd
+                          mainchar.gd splash_screen.gd title_menu.gd
+   scenes/                (empty)
+
+ Scene -> script / dependencies
+   splash_screen.tscn (MAIN) -> scripts/splash_screen.gd  -> main_menu.tscn
+   main_menu.tscn      -> scripts/title_menu.gd, menu_theme.tres
+                          Play -> level_map_screen.tscn ; Guess the Food -> main.tscn
+   level_map_screen.tscn -> scripts/level_map.gd, instances level_map.tscn
+       level_map.tscn  -> MapLevel.png, instances level_map_controls.tscn
+                          Level1-5 -> main.tscn ; Back -> main_menu.tscn
+   main.tscn (gameplay) -> boundary.tscn, mainchar.tscn, enemy1.tscn, camera.tscn,
+                          EnemySpawner node (scripts/enemy_spawner.gd -> enemy1.tscn)
+   mainchar.tscn       -> scripts/mainchar.gd, assets/mainchar/idle + throwing
+   enemy1.tscn         -> scripts/enemy_1.gd (preloads scripts/mainchar.gd),
+                          assets/Enemy/spaghetti-monster/*, instances claw_animation.tscn
+   claw_animation.tscn -> claw_scratch.png, claw_reveal.gdshader
+   noodle_whip_impact.tscn -> AttackAnimation/burst/Retro Pixel Explosion Burst.png (unused)
+   mango.tscn          -> Foods/mango sprite.png (unused)
+
+======================================================================
+7. FOLLOW-UP CHANGES (2026-10-20 / 21)
+======================================================================
+ - scripts/enemy_1.gd: enemy attack now plays the claw effect
+   ($ImpactEffect/AnimationPlayer "attack") each time an attack starts.
+ - NEW scene/battlescene.tscn: courtyard background
+   (assets/BattleScene/GNCI School Courtyard Pavilion.png) on CanvasLayer -1,
+   scaled to cover the window, with scene/main.tscn instanced as "Battle"
+   (editable children). Only override: Battle/Camera2D y -324 -> -234 so the
+   ground line sits on the grass. Gameplay itself is still edited in main.tscn.
+ - scripts/level_map.gd: picking Level 1-5 now opens res://scene/battlescene.tscn
+   (was main.tscn). "Guess the Food" in the menu still opens main.tscn.
+ - Verified: level map -> Level 1 -> battlescene with background, camera and
+   enemy spawning; 49-check harness passes.
+ - Split: NEW scene/battle_background.tscn (CanvasLayer "BattleBackground",
+   layer -1, child CourtyardTexture). scene/battlescene.tscn now instances it as
+   "Background" plus main.tscn as "Battle". Edit each scene on its own.
+ - NOTE: CourtyardTexture offsets (773, -753) saved from the editor were carried
+   over unchanged; they push the image entirely off-screen in the game (verified
+   by screenshot). Reset with Layout > Full Rect if that was not intended.
+ - At user request, those offsets were reset to 0 (full rect); verified by
+   screenshot that the courtyard fills the screen again.
+ - Restructured at user request (scene roles):
+     scene/battlescene.tscn       battle mechanics only: boundary, player, enemy,
+                                  Camera2D (y -234), EnemySpawner. No background.
+     scene/battle_background.tscn background only.
+     scene/main.tscn              composes both: BattleBackground + BattleScene.
+   The gameplay nodes were moved from main.tscn into battlescene.tscn unchanged
+   (same positions/values, same unique_ids). Level 1-5 now open main.tscn again.
+   Verified: level map -> Level 1 -> main.tscn with background, camera and
+   enemies spawning (screenshot); 49-check harness passes.
+ - scene/mainchar.tscn: SpriteFrames animation "default" (the 8 idle frames)
+   renamed to "idle"; AnimatedSprite2D now starts on "idle" with autoplay
+   (it previously sat on a static "attack" frame). Verified it plays in main.tscn.
+ - NEW scene/conveyor_belt.tscn + scripts/conveyor_belt.gd (class ConveyorBelt):
+   AnimatedSprite2D "BeltSprite" (16-frame "run" loop, 12 fps, autoplay),
+   FoodSlot node (default child: corn icon) that moves from StartPoint (right)
+   to EndPoint (left) at food_speed px/s, then loops (loop_food) and emits
+   food_reached_end. stop_belt()/start_belt() pause/resume both.
+ - NEW asset assets/ConveyerBelt/conveyor_belt_frames.png, generated from the
+   existing "Red Pixel Conveyor Belt Sprite Sheet.png" (left untouched): that
+   sheet has no alpha channel (checkerboard baked in), so the checkerboard
+   connected to the frame edges was made transparent and the 16 frames were
+   cropped into one bottom-centre-aligned strip of 387x111 frames.
+   Verified: belt animates, food moves right->left and loops, signal fires.
+ - Conveyor belt recreated from the user's new sheet
+   assets/ConveyerBelt/food_heroes_conveyor_belt_16x4_centered.png (left untouched;
+   64 frames = the same 12-frame loop repeated). NEW
+   assets/ConveyerBelt/conveyor_belt_no_red_circle.png: frames 0-11 with the red
+   oval that travels across the belt removed (filled from the same frame one belt
+   square = 17 px over) and both roller rings held steady as in frame 0.
+   scene/conveyor_belt.tscn rebuilt on it (12 frames, 12 fps, BeltSprite scale 3).
+   Verified: no oval in any frame (zoomed review), belt plays, food moves
+   right->left and loops, food_reached_end fires.
+ - At user request, the red rings around both rollers were also removed from
+   conveyor_belt_no_red_circle.png (all 12 frames): ring pixels within ~10 px of
+   each roller centre, between the top and bottom casing bands, repainted with
+   the nearest dark belt colour. Casing, outlines and grey rollers kept.
+   Verified by zoomed review and an in-engine render; harness passes.
+ - Food on the conveyor (user request):
+   NEW scene/food_item.tscn + scripts/food_item.gd (class FoodItem, Area2D,
+   mask = Player layer 2): drag with mouse/touch; dropped on a body that has
+   play_attack() -> calls it, emits fed, food is removed; dropped elsewhere ->
+   returns to the belt row. Uses event positions converted through the canvas
+   transform (works with the camera and on touch screens).
+   scripts/conveyor_belt.gd rewritten: spawns a random food from food_textures
+   (bread, corn, mango) every min..max (1-5) s at StartPoint inside FoodSlot,
+   moves foods right->left, frees them at EndPoint (food_reached_end), relays
+   food_fed. FoodSlot offset in conveyor_belt.tscn set to (0,0).
+   scripts/mainchar.gd: play_attack() plays "attack" once then returns to
+   "idle"; mainchar.tscn "attack" animation set to loop = false.
+   Verified in main.tscn: 7-8 random foods per 25 s with 1.5-4.8 s gaps; a
+   simulated drag onto the player triggered attack, removed the food, fired
+   food_fed, and returned to idle after 1.6 s; a drop in empty space returned
+   the food to the belt. 49-check harness passes.
+ - Mango toss (user request), built on the user's scene/mango_animation.tscn:
+   added script scripts/mango_throw.gd (class MangoThrow), StaticHitbox
+   (CollisionPolygon2D traced from the whole-mango cell) and SplashHitbox
+   (polygon traced from the burst + juice cells, enabled only during the
+   splash); "animation" set to play once. Flies a ballistic arc (gravity 980)
+   with spin; on touching an enemy -> enemy.hit_by_food() removes it and the
+   splash plays; if nothing is hit it splashes at the target point. Enemies
+   inside the splash are removed too. Frees itself when the splash ends.
+   scripts/mainchar.gd: receive_food(name) plays attack; foods listed in
+   `throwables` (mango) are tossed after throw_delay at the nearest enemy in
+   group "enemies", leading its walking speed. scripts/enemy_1.gd: joins group
+   "enemies", new hit_by_food(). scripts/food_item.gd calls receive_food().
+   Verified in main.tscn with 2 enemies side by side: drag mango onto player ->
+   attack -> arc (333,-75) up to y -236 down to (-335,-76) -> direct hit removed
+   one enemy, splash removed the other, mango freed. Harness passes.
+ - All foods throwable (user request): scripts/mango_throw.gd renamed to
+   scripts/food_throw.gd (class FoodThrow); mango_animation.tscn updated.
+   NEW bread/corn/potato/rice/oats_animation.tscn built like the mango scene
+   (static + one-shot animation from each sheet), each with its own
+   StaticHitbox/SplashHitbox polygons traced from that food's art.
+   mainchar.throwables lists all six; conveyor food_textures now also has
+   Potato, Rice, oats; food_name is lowercased. ("Pick up rice.png", a
+   7-frame strip with a different layout, is not used.)
+   Verified each food in main.tscn: thrown with its own scene, arc, direct hit
+   removes an enemy, splash plays, scene freed. The splash also removed a 2nd
+   enemy 45 px away for corn/mango/rice (larger burst art), not for
+   bread/potato/oats (smaller burst art = smaller splash). Harness passes.

@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://cfb2saerm1dlj"]
+
+[ext_resource type="PackedScene" path="res://scene/battle_background.tscn" id="1_bg"]
+[ext_resource type="PackedScene" uid="uid://cqcrvx2ovlo0e" path="res://scene/battlescene.tscn" id="2_battle"]
+[ext_resource type="PackedScene" uid="uid://cxwsle026e6dy" path="res://scene/conveyor_belt.tscn" id="3_wp4xf"]
+
+[node name="Main" type="Node2D" unique_id=12398029]
+
+[node name="BattleBackground" parent="." unique_id=1133761031 instance=ExtResource("1_bg")]
+
+[node name="BattleScene" parent="." unique_id=2119277449 instance=ExtResource("2_battle")]
+
+[node name="ConveyorBelt" parent="." unique_id=1879524850 instance=ExtResource("3_wp4xf")]
+position = Vector2(383, 47)

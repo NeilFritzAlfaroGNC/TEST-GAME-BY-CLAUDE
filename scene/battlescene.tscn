@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://cqcrvx2ovlo0e"]
+
+[ext_resource type="PackedScene" uid="uid://bfuu0su7x8wt1" path="res://scene/boundary.tscn" id="1_v0l8b"]
+[ext_resource type="PackedScene" uid="uid://bjuljaqebw3lv" path="res://scene/mainchar.tscn" id="2_v0l8b"]
+[ext_resource type="PackedScene" uid="uid://vw3hpboil3ot" path="res://scene/enemy1.tscn" id="2_wp4xf"]
+[ext_resource type="PackedScene" uid="uid://cc8m0yvwr2aj4" path="res://scene/camera.tscn" id="4_brvut"]
+[ext_resource type="Script" uid="uid://ugxd6jttficr" path="res://scripts/enemy_spawner.gd" id="5_spawner"]
+
+[node name="BattleScene" type="Node2D" unique_id=2116417615]
+
+[node name="boundary" parent="." unique_id=467220926 instance=ExtResource("1_v0l8b")]
+
+[node name="CharacterBody2D" parent="." unique_id=1666880598 instance=ExtResource("2_v0l8b")]
+position = Vector2(353, -46)
+
+[node name="CharacterBody2D2" parent="." unique_id=836091117 instance=ExtResource("2_wp4xf")]
+position = Vector2(-529, -57)
+
+[node name="Camera2D" parent="." unique_id=357213821 instance=ExtResource("4_brvut")]
+position = Vector2(0, -234)
+
+[node name="EnemySpawner" type="Node2D" parent="." unique_id=2001370375]
+position = Vector2(-529, 0)
+script = ExtResource("5_spawner")
+spawn_duration = 20.0
+spawn_x_range = Vector2(-500, -550)
