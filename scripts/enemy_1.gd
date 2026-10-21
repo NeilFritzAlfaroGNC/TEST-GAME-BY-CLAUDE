@@ -29,7 +29,7 @@ func _physics_process(delta: float) -> void:
 ################################################################################
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var detection_area: Area2D = $DetectionArea
-@onready var claw_player: AnimationPlayer = $ImpactEffect/AnimationPlayer #Claw Effect
+@onready var claw: ClawAttack = $ImpactEffect #Claw effect; its hitbox hurts the MainChar
 const MAIN_CHAR_SCRIPT: Script = preload("res://scripts/mainchar.gd")
 var main_char_detected: bool = false
 var is_attacking: bool = false #Attack Animation Status
@@ -51,7 +51,7 @@ func _on_animation_finished() -> void:
 		if main_char_detected:
 			is_attacking = true
 			sprite.play("attack")
-			_pop_claw()
+			_strike()
 		else:
 			is_attacking = false
 			sprite.play("walk")
@@ -64,15 +64,18 @@ func _on_body_entered(body: Node2D) -> void:
 		is_attacking = true
 		# Play the enemy's attack animation.
 		sprite.play("attack")
-		_pop_claw()
+		_strike()
 
-# Show the claw scratch effect in front of the enemy each time an attack starts.
-func _pop_claw() -> void:
-	claw_player.stop()
-	claw_player.play("attack")
+# Each attack: swing the claw. The enemy itself does no damage; the claw
+# hurts the MainChar only if its hitbox actually touches them (claw_attack.gd).
+func _strike() -> void:
+	claw.attack()
 
 # Called when a thrown food (e.g. the mango) hits this enemy: remove it from the game.
 func hit_by_food() -> void:
+	if is_queued_for_deletion():
+		return #Already defeated (e.g. hit by the food and its splash in the same frame)
+	get_tree().call_group("battle", "on_enemy_defeated") #Counted on the battle end panel
 	queue_free()
 
 #Not needed but just in case

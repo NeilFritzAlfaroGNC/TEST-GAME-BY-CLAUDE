@@ -344,3 +344,57 @@ MANUAL TESTS STILL RECOMMENDED
    removes an enemy, splash plays, scene freed. The splash also removed a 2nd
    enemy 45 px away for corn/mango/rice (larger burst art), not for
    bread/potato/oats (smaller burst art = smaller splash). Harness passes.
+ - Battle timer (user request): NEW scripts/battle_scene.gd on the BattleScene
+   root (battle_duration = 20 s, also sets EnemySpawner.spawn_duration) and NEW
+   scene/battle_hud.tscn (CanvasLayer, process always: TimerLabel countdown +
+   hidden EndPanel "Time's up!", enemies defeated, Back to Map / Main Menu).
+   At 0 s the tree is paused and the panel shown; buttons unpause and change
+   scene. enemy_1.gd hit_by_food() reports defeats via group "battle" (once).
+   Verified: label starts "Time: 20", ends at 0 -> paused, panel shows
+   "Enemies defeated: 1", enemies frozen, Back to Map -> level map unpaused.
+ - Win / fail and star rating (user request):
+   enemy_1.gd: each attack (claw pop, every 1.4 s while touching) calls
+   take_hit() on the MainChar. mainchar.gd take_hit(): reports to group
+   "battle" and flashes red. battle_scene.gd: timer reaching 0 = WIN
+   ("Level Complete!", stars = 3 - hits: 0 hits 3, 1 hit 2, 2 hits 1);
+   max_hits (3) = FAILED at once ("Game Over", 0 stars). Signals battle_won(stars)
+   / battle_failed. battle_hud.tscn: HitsLabel "Hits: n / 3", 3 StarIcon
+   (scripts/star_icon.gd, drawn in code), Retry (reloads battle), Back to Map,
+   Main Menu. Stars are not saved (no save system exists).
+   Verified: real enemy beside player hit at 0 / 1.4 / 2.8 s -> Game Over,
+   0 stars, paused; Retry -> fresh unpaused battle; wins with 0/1/2 hits ->
+   3/2/1 stars. Harness passes.
+ - Level progression (user request):
+   NEW autoload GameProgress (scripts/game_progress.gd, registered in
+   project.godot [autoload]): current_level, unlocked_level, best stars per
+   level, saved to user://progress.cfg. Winning level N unlocks N+1 (5 levels).
+   level_map.gd: locked levels are disabled, dimmed, labelled "Locked" with a
+   tooltip; picking a level sets GameProgress.current_level.
+   battle_scene.gd: a win calls complete_level(level, stars); end panel shows
+   "Level N Complete!"; NextButton (above Retry) only after a win when a next
+   level exists, so on failure Retry is the top button; Next Level reloads the
+   battle with level + 1. Level 5 win shows "All levels complete!". HUD shows
+   "Level N   Time: s". All levels still use the same battle content.
+   Verified with a separate test save: fresh map has only Level 1 open;
+   locked button does nothing; L1 win -> [Next Level, Retry, Back to Map, Main
+   Menu], unlocked 2, stars saved; Next -> Level 2; fail -> [Retry, ...];
+   map then shows Level 2 open, 3-5 locked; progress reloads from file; L5 win
+   has no Next. Test save deleted; real save untouched. Harness updated
+   (plays Level 1; checks locked Level 3) and passes.
+ - Level map stars (user request): level_map.gd adds a row of 3 StarIcon
+   (22 px, built in code as child "Stars" of each LevelN button, centred just
+   below the marker) showing GameProgress best stars: gold per star earned,
+   dark for the rest; hidden until the level is won. Best result is kept
+   (a worse replay does not lower it). Verified with a test save
+   (L1=2, L2=3, L3=1 -> 2/3/1 gold, L4 open no stars, L5 locked); the user's
+   own save (Level 1 = 3 stars) was left untouched.
+ - Claw deals the damage (user request): NEW scripts/claw_attack.gd
+   (class ClawAttack) on claw_animation.tscn root + Hitbox Area2D
+   (CollisionPolygon2D traced from claw_scratch.png at the sprite's 0.5
+   scale, mask = Player layer). attack() plays the claw; while the claw
+   sprite is visible the hitbox calls take_hit() on an overlapping body, at
+   most once per swing (hit_landed signal). enemy_1.gd no longer calls
+   take_hit(); _strike() just runs claw.attack().
+   Verified: player in front -> 3 swings, 3 claw hits (0.1/1.5/2.9 s), Game
+   Over; player behind the enemy (inside its detection area, outside the
+   claw) -> 3 swings, 0 hits. Harness passes; user save untouched.

@@ -30,6 +30,14 @@ func play_attack() -> void:
 	sprite.play("attack")
 
 
+# Called by an enemy each time its attack lands: report it to the battle and flash red.
+func take_hit() -> void:
+	get_tree().call_group("battle", "on_player_hit")
+	var flash: Tween = create_tween()
+	sprite.modulate = Color(1, 0.35, 0.35)
+	flash.tween_property(sprite, "modulate", Color.WHITE, 0.3)
+
+
 # Called by food_item.gd. Every food plays the attack; throwable foods
 # (the mango) are also tossed at the nearest enemy.
 func receive_food(food_name: String) -> void:

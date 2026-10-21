@@ -5,8 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://vw3hpboil3ot" path="res://scene/enemy1.tscn" id="2_wp4xf"]
 [ext_resource type="PackedScene" uid="uid://cc8m0yvwr2aj4" path="res://scene/camera.tscn" id="4_brvut"]
 [ext_resource type="Script" uid="uid://ugxd6jttficr" path="res://scripts/enemy_spawner.gd" id="5_spawner"]
+[ext_resource type="Script" path="res://scripts/battle_scene.gd" id="6_battle"]
+[ext_resource type="PackedScene" path="res://scene/battle_hud.tscn" id="7_hud"]
 
 [node name="BattleScene" type="Node2D" unique_id=2116417615]
+script = ExtResource("6_battle")
 
 [node name="boundary" parent="." unique_id=467220926 instance=ExtResource("1_v0l8b")]
 
@@ -24,3 +27,5 @@ position = Vector2(-529, 0)
 script = ExtResource("5_spawner")
 spawn_duration = 20.0
 spawn_x_range = Vector2(-500, -550)
+
+[node name="BattleHUD" parent="." instance=ExtResource("7_hud")]
