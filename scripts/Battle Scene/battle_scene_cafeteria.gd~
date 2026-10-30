@@ -1,0 +1,17 @@
+extends Control
+
+var conveyor_belt: AnimatedSprite2D
+var food_spawn: Marker2D
+
+func _ready() -> void:
+	food_spawn = get_node("FoodSpawn")
+	conveyor_belt = get_node("Conveyer Belt") as AnimatedSprite2D
+
+	if conveyor_belt.sprite_frames == null:
+		push_warning("Conveyor belt has no SpriteFrames resource.")
+		return
+
+	if conveyor_belt.sprite_frames.has_animation("rotation"):
+		conveyor_belt.play("rotation")
+	else:
+		push_warning("Conveyor belt animation 'rotation' was not found.")

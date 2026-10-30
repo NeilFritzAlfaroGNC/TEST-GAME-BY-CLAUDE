@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://b5x8l7vj5ifac"]
+
+[ext_resource type="Script" uid="uid://cayiiajxrxhsi" path="res://scripts/Foods/food_throw.gd" id="1_w50jw"]
+[ext_resource type="PackedScene" uid="uid://ltajjbixojjy" path="res://scenes/Foods/mango.tscn" id="2_chrri"]
+[ext_resource type="PackedScene" uid="uid://bv6f0mssw7358" path="res://scenes/Foods/potato.tscn" id="3_3ijcq"]
+[ext_resource type="PackedScene" uid="uid://bk68vb36vu0c6" path="res://scenes/Foods/rice.tscn" id="4_opttj"]
+
+[node name="FoodThrow" type="Node2D" unique_id=2036884084]
+script = ExtResource("1_w50jw")
+mango_damage = 20
+potato_damage = 10
+rice_damage = 20
+
+[node name="mango" parent="." unique_id=574865204 instance=ExtResource("2_chrri")]
+
+[node name="potato" parent="." unique_id=562682845 instance=ExtResource("3_3ijcq")]
+animation = &"attack"
+
+[node name="rice" parent="." unique_id=551792381 instance=ExtResource("4_opttj")]
+animation = &"attack"

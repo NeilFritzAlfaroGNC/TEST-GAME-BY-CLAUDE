@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://didbcqbnlf4il"]
+
+[node name="VBoxContainer" type="VBoxContainer" unique_id=1398227216]
+custom_minimum_size = Vector2(280, 190)
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 10

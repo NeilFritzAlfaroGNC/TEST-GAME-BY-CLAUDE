@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://uarop3lfytt6"]
+
+[ext_resource type="Texture2D" uid="uid://bo0lgjylkvfb1" path="res://assets/LaunchScreen/gnc_logo_transparent.png" id="1_tjwap"]
+[ext_resource type="Script" uid="uid://daq8b0ivpdprs" path="res://scripts/Launch Screen/launch_screen.gd" id="2_y84gt"]
+
+[sub_resource type="GDScript" id="GDScript_y84gt"]
+script/source = "extends Control
+## Standalone splash transition; configure the destination scene in the Inspector.
+@export_file(\"*.tscn\") var next_scene_path: String = \"res://scene/main_menu.tscn\"
+const DISPLAY_DURATION: float = 0.5
+const FADE_DURATION: float = 0.18
+
+@onready var splash_texture: TextureRect = $SplashTexture
+
+var transition_started: bool = false
+
+func _ready() -> void:
+	_fit_logo_to_viewport()
+	get_viewport().size_changed.connect(_fit_logo_to_viewport)
+	modulate.a = 0.0
+	splash_texture.modulate.a = 1.0
+	var fade_in: Tween = create_tween()
+	fade_in.tween_property(self, \"modulate:a\", 1.0, FADE_DURATION)
+	fade_in.tween_interval(DISPLAY_DURATION)
+	fade_in.tween_property(self, \"modulate:a\", 0.0, FADE_DURATION)
+	fade_in.finished.connect(_on_splash_finished)
+
+func _fit_logo_to_viewport() -> void:
+	if splash_texture.texture == null:
+		return
+	var viewport_size: Vector2 = get_viewport_rect().size
+	var image_size: Vector2 = splash_texture.texture.get_size()
+	var fit_scale: float = minf(viewport_size.x / image_size.x, viewport_size.y / image_size.y)
+	var fitted_size: Vector2 = image_size * fit_scale
+	splash_texture.offset_left = -fitted_size.x * 0.25
+	splash_texture.offset_top = -fitted_size.y * 0.25
+	splash_texture.offset_right = fitted_size.x * 0.25
+	splash_texture.offset_bottom = fitted_size.y * 0.25
+
+func _on_splash_finished() -> void:
+	if transition_started:
+		return
+	transition_started = true
+	get_tree().change_scene_to_file(next_scene_path)
+"
+
+[node name="LaunchScreen" type="Control" unique_id=800233627]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_y84gt")
+
+[node name="WhiteBackground" type="ColorRect" parent="." unique_id=1847490391]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SplashTexture" type="TextureRect" parent="." unique_id=673420772]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -220.0
+offset_right = 220.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_tjwap")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("2_y84gt")

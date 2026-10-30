@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://dq178ogolcjv3"]
+
+[ext_resource type="Texture2D" uid="uid://10l7l51dpbd6" path="res://assets/BattleScene/GNCI Cafeteria.png" id="1_sg7fo"]
+[ext_resource type="Script" uid="uid://c43apuv12pft8" path="res://scripts/Battle Scene/battle_scene_cafeteria.gd" id="1_ximnc"]
+[ext_resource type="PackedScene" uid="uid://d3yegafy67sjs" path="res://scenes/Conveyer Belt/conveyer_belt.tscn" id="2_cyr5n"]
+[ext_resource type="PackedScene" uid="uid://b5sot0lwe7v0a" path="res://scenes/Main Character/main_char.tscn" id="3_ximnc"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wb6sh"]
+
+[node name="BattleScene" type="Control" unique_id=1451651748]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 65.0
+offset_bottom = 47.0
+script = ExtResource("1_ximnc")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1182470010]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_sg7fo")
+
+[node name="Conveyer Belt" parent="." unique_id=2084871955 instance=ExtResource("2_cyr5n")]
+position = Vector2(705, 411)
+scale = Vector2(0.14101124, 0.12086778)
+frame = 7
+frame_progress = 0.9064217
+
+[node name="main_character" parent="." unique_id=449091310 instance=ExtResource("3_ximnc")]
+position = Vector2(787, 335)
+
+[node name="FoodTarget" type="Area2D" parent="main_character" unique_id=1234567890]
+position = Vector2(0, 0)
+collision_mask = 1
+collision_layer = 1
+
+[node name="FoodItems" type="Node2D" parent="." unique_id=1839276456]
+position = Vector2(0, 0)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1728979765]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=2058293818]
+position = Vector2(454, 380)
+shape = SubResource("WorldBoundaryShape2D_wb6sh")
+
+[node name="FoodSpawn" type="Marker2D" parent="." unique_id=203430058]
+position = Vector2(468, 412)

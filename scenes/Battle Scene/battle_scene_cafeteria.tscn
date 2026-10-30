@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://dq178ogolcjv3"]
+
+[ext_resource type="Texture2D" uid="uid://10l7l51dpbd6" path="res://assets/BattleScene/GNCI Cafeteria.png" id="1_sg7fo"]
+[ext_resource type="Script" uid="uid://c43apuv12pft8" path="res://scripts/Battle Scene/battle_scene_cafeteria.gd" id="1_ximnc"]
+[ext_resource type="PackedScene" uid="uid://d3yegafy67sjs" path="res://scenes/Conveyer Belt/conveyer_belt.tscn" id="2_cyr5n"]
+[ext_resource type="PackedScene" uid="uid://b5sot0lwe7v0a" path="res://scenes/Main Character/main_char.tscn" id="3_ximnc"]
+[ext_resource type="Script" uid="uid://i0u4ty5gep3i" path="res://scripts/Enemy Spawn/enemy_spawn.gd" id="4_griro"]
+[ext_resource type="Script" uid="uid://bw4j3x0cxy5sl" path="res://scripts/Food Spawn/food_spawn.gd" id="4_hacct"]
+[ext_resource type="PackedScene" uid="uid://ltajjbixojjy" path="res://scenes/Foods/mango.tscn" id="6_r5api"]
+[ext_resource type="PackedScene" uid="uid://bv6f0mssw7358" path="res://scenes/Foods/potato.tscn" id="7_hcgwu"]
+[ext_resource type="PackedScene" uid="uid://bk68vb36vu0c6" path="res://scenes/Foods/rice.tscn" id="8_rvjh4"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wb6sh"]
+
+[node name="BattleScene" type="Control" unique_id=1451651748]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 65.0
+offset_bottom = 47.0
+script = ExtResource("1_ximnc")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1182470010]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_sg7fo")
+
+[node name="Conveyer Belt" parent="." unique_id=2084871955 instance=ExtResource("2_cyr5n")]
+position = Vector2(705, 411)
+scale = Vector2(0.14101124, 0.12086778)
+frame = 7
+frame_progress = 0.9064217
+queue_right_margin = 180.0
+
+[node name="EnemySpawn" type="Marker2D" parent="." unique_id=49369584]
+position = Vector2(114, 329)
+script = ExtResource("4_griro")
+
+[node name="EnemyItems" type="Node2D" parent="." unique_id=1179757828]
+
+[node name="FoodSpawn" type="Marker2D" parent="." unique_id=203430058]
+position = Vector2(468, 412)
+script = ExtResource("4_hacct")
+available_foods = Array[PackedScene]([ExtResource("6_r5api"), ExtResource("7_hcgwu"), ExtResource("8_rvjh4")])
+
+[node name="FoodItems" type="Node2D" parent="." unique_id=1839276456]
+
+[node name="main_character" parent="." unique_id=449091310 instance=ExtResource("3_ximnc")]
+position = Vector2(768, 331)
+
+[node name="Floor Mechanic" type="StaticBody2D" parent="." unique_id=1728979765]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor Mechanic" unique_id=2058293818]
+position = Vector2(768, 380)
+shape = SubResource("WorldBoundaryShape2D_wb6sh")

@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://dx2es5wk2hq45"]
+
+[ext_resource type="Texture2D" uid="uid://bh7gxj8a3nrxi" path="res://assets/StoryScene/GNCI Cafeteria Scene.jpg" id="1_6r2l2"]
+[ext_resource type="Script" uid="uid://bvq725jp34tf6" path="res://scripts/Story Scene/cafeteria_story_scene.gd" id="1_jy6aa"]
+
+[node name="StoryScene" type="Control" unique_id=215233824]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_jy6aa")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1421221126]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 956.0
+offset_bottom = 440.0
+texture = ExtResource("1_6r2l2")
+expand_mode = 1
+
+[node name="DialogueBox" type="Panel" parent="." unique_id=608761254]
+layout_mode = 0
+offset_top = 389.0
+offset_right = 956.0
+offset_bottom = 440.0
+
+[node name="SpeakerName" type="Label" parent="DialogueBox" unique_id=831154698]
+layout_mode = 0
+offset_top = -25.0
+offset_right = 47.0
+
+[node name="DialogueText" type="RichTextLabel" parent="DialogueBox" unique_id=1090524784]
+layout_mode = 0
+offset_right = 956.0
+offset_bottom = 51.0
+vertical_alignment = 2

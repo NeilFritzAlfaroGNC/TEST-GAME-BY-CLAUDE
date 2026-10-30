@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://df1uyrrdbbkto"]
+
+[node name="main_menu_panel" type="Panel" unique_id=2005684378]
+custom_minimum_size = Vector2(280, 190)
+offset_right = 132.0
+offset_bottom = 145.0
