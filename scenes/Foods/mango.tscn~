@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://durjadfuy1x07"]
+
+[ext_resource type="Texture2D" uid="uid://dakrnsp0hpf8e" path="res://assets/Foods/mango/Eating mango.png" id="1_h7rus"]
+[ext_resource type="Texture2D" uid="uid://b8bld54innrtv" path="res://assets/Foods/mango/mango sprite.png" id="2_c04hu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7rus"]
+atlas = ExtResource("1_h7rus")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c04hu"]
+atlas = ExtResource("1_h7rus")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5lykd"]
+atlas = ExtResource("1_h7rus")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eiatd"]
+atlas = ExtResource("1_h7rus")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nr1ed"]
+atlas = ExtResource("2_c04hu")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i8cfo"]
+atlas = ExtResource("2_c04hu")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sip6q"]
+atlas = ExtResource("2_c04hu")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d6qco"]
+atlas = ExtResource("2_c04hu")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jtevl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h7rus")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c04hu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5lykd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eiatd")
+}],
+"loop": 1,
+"name": &"eating",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nr1ed")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i8cfo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sip6q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d6qco")
+}],
+"loop": 1,
+"name": &"mango_explode",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2brfn"]
+radius = 36.0
+height = 82.0
+
+[node name="StaticBody2D" type="StaticBody2D" unique_id=1229375927]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=196016929]
+sprite_frames = SubResource("SpriteFrames_jtevl")
+animation = &"eating"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1578003107]
+shape = SubResource("CapsuleShape2D_2brfn")

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dop0rxq1sq2vu"]
+
+[ext_resource type="Script" uid="uid://1w72uv4aj544" path="res://scripts/Difficulty/level_difficulty_setting.gd" id="1_k2g5l"]
+[ext_resource type="Resource" path="C:/Users/Percy/Desktop/Capstone/Godot/GodotCapstone/plsworkver1.2/resources/Difficulty/normal_cafeteria_level_1.tres" id="2_irlxq"]
+
+[node name="LevelDifficultySetting" type="Node" unique_id=296372107]
+script = ExtResource("1_k2g5l")
+normal_settings = ExtResource("2_irlxq")

@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://bv6f0mssw7358"]
+
+[ext_resource type="Texture2D" uid="uid://b3gnis3m6344n" path="res://assets/Foods/Go/potato/Potato sprite.png" id="1_gakbj"]
+[ext_resource type="Script" uid="uid://be7p7sl51jmuc" path="res://scripts/Foods/food_data.gd" id="2_gqdbh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y4wwx"]
+atlas = ExtResource("1_gakbj")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oqw6m"]
+atlas = ExtResource("1_gakbj")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_afx33"]
+atlas = ExtResource("1_gakbj")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wq80e"]
+atlas = ExtResource("1_gakbj")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y4wwx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oqw6m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_afx33")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wq80e")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jtevl"]
+radius = 31.68317
+height = 68.435646
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=562682845]
+position = Vector2(1.4551915e-11, -1.1920929e-07)
+scale = Vector2(0.70703125, 0.70703125)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"attack"
+script = ExtResource("2_gqdbh")
+food_name = "potato"
+
+[node name="Area2D" type="Area2D" parent="." unique_id=412088753 groups=["food"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=298346411]
+shape = SubResource("CapsuleShape2D_jtevl")

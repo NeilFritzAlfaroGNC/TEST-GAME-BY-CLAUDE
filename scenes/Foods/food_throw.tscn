@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://b5x8l7vj5ifac"]
+
+[ext_resource type="Script" uid="uid://cayiiajxrxhsi" path="res://scripts/Foods/food_throw.gd" id="1_w50jw"]
+[ext_resource type="PackedScene" uid="uid://ltajjbixojjy" path="res://scenes/Foods/glow/apple.tscn" id="2_chrri"]
+[ext_resource type="PackedScene" uid="uid://bv6f0mssw7358" path="res://scenes/Foods/go/potato.tscn" id="3_3ijcq"]
+[ext_resource type="PackedScene" uid="uid://bk68vb36vu0c6" path="res://scenes/Foods/go/rice.tscn" id="4_opttj"]
+[ext_resource type="PackedScene" uid="uid://1m3ty8vnn8yh" path="res://scenes/Foods/glow/mango.tscn" id="4_wfjpp"]
+[ext_resource type="PackedScene" uid="uid://il8e6bk63bvh" path="res://scenes/Foods/glow/banana.tscn" id="5_opttj"]
+[ext_resource type="PackedScene" uid="uid://xyv7qaxg47y3" path="res://scenes/Foods/glow/papaya.tscn" id="5_r0kp0"]
+[ext_resource type="PackedScene" uid="uid://b8sxped5gaefi" path="res://scenes/Foods/grow/egg.tscn" id="7_2livx"]
+
+[node name="FoodThrow" type="Node2D" unique_id=2036884084]
+script = ExtResource("1_w50jw")
+
+[node name="banana" parent="." unique_id=941647430 instance=ExtResource("5_opttj")]
+burn_duration = 3.0
+
+[node name="apple" parent="." unique_id=574865204 instance=ExtResource("2_chrri")]
+burn_duration = 3.0
+
+[node name="mango" parent="." unique_id=898539790 instance=ExtResource("4_wfjpp")]
+burn_duration = 3.0
+
+[node name="papaya" parent="." unique_id=288374380 instance=ExtResource("5_r0kp0")]
+
+[node name="potato" parent="." unique_id=562682845 instance=ExtResource("3_3ijcq")]
+burn_duration = 3.0
+
+[node name="rice" parent="." unique_id=551792381 instance=ExtResource("4_opttj")]
+burn_duration = 3.0
+
+[node name="egg" parent="." unique_id=1673824790 instance=ExtResource("7_2livx")]
+burn_duration = 3.0

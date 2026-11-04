@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="LevelDifficultyConfig" format=3 uid="uid://ckltnykqyo61k"]
+
+[ext_resource type="PackedScene" uid="uid://svgj8f314168" path="res://scenes/Enemy/hamburger_enemy.tscn" id="1_wapr0"]
+[ext_resource type="Script" uid="uid://dr0f8s1pvp6e6" path="res://scripts/Difficulty/enemy_stat_override.gd" id="2_elc6f"]
+[ext_resource type="Script" uid="uid://cngl3l8pva28c" path="res://scripts/Difficulty/level_difficulty_config.gd" id="3_qutru"]
+
+[sub_resource type="Resource" id="Resource_b54bb"]
+script = ExtResource("2_elc6f")
+enemy_scene = ExtResource("1_wapr0")
+override_health = true
+health = 10
+override_attack = true
+attack = 1
+metadata/_custom_type_script = "uid://dr0f8s1pvp6e6"
+
+[resource]
+script = ExtResource("3_qutru")
+max_active_enemies = 3
+available_enemies = Array[PackedScene]([ExtResource("1_wapr0")])
+enemy_stat_overrides = Array[ExtResource("2_elc6f")]([SubResource("Resource_b54bb")])
+metadata/_custom_type_script = "uid://cngl3l8pva28c"

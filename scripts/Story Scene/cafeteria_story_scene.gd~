@@ -1,0 +1,126 @@
+
+extends Control
+
+@export var typing_speed: float = 0.04
+
+const CAFETERIA_BATTLE_SCENE_PATH: String = "res://scenes/Battle Screen/cafeteria_battle_background.tscn"
+
+@onready var speaker_name: Label = $DialogueBox/SpeakerName
+@onready var dialogue_text: RichTextLabel = $DialogueBox/DialogueText
+
+var dialogue_lines: Array[Dictionary] = [
+	{
+		"speaker": "Narrator",
+		"text": "It was just another normal day at school. Nothing unusual. Nothing dangerous. And definitely nothing that could possibly go wrong."
+	},
+	{
+		"speaker": "Student 1",
+		"text": "Uh... guys? Is my lunch supposed to be moving"
+	},
+	{
+		"speaker": "Student 2",
+		"text": "Stop messing around and eat"
+	},
+	{
+		"speaker": "Student 1",
+		"text": "Wait... IT MOVED AGAIN!"
+	},
+]
+
+var current_line: int = 0
+var is_typing: bool = false
+var is_transitioning: bool = false
+var typing_generation: int = 0
+
+
+func _ready() -> void:
+	show_dialogue(0)
+
+
+func _input(event: InputEvent) -> void:
+	if is_transitioning:
+		return
+
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			_advance_dialogue()
+
+	elif event is InputEventScreenTouch:
+		if event.pressed:
+			_advance_dialogue()
+
+
+func _advance_dialogue() -> void:
+	if is_transitioning:
+		return
+
+	if is_typing:
+		# Show the entire current sentence immediately.
+		typing_generation += 1
+		dialogue_text.visible_characters = -1
+		is_typing = false
+		return
+
+	if current_line < dialogue_lines.size() - 1:
+		show_dialogue(current_line + 1)
+	else:
+		_go_to_battle()
+
+
+func show_dialogue(line_index: int) -> void:
+	if line_index >= dialogue_lines.size():
+		return
+
+	current_line = line_index
+	typing_generation += 1
+
+	var this_generation: int = typing_generation
+	var line: Dictionary = dialogue_lines[current_line]
+
+	speaker_name.text = str(line["speaker"])
+	dialogue_text.text = str(line["text"])
+	dialogue_text.visible_characters = 0
+
+	is_typing = true
+
+	for character_index in range(dialogue_text.get_total_character_count()):
+		if this_generation != typing_generation:
+			return
+
+		dialogue_text.visible_characters = character_index + 1
+
+		await get_tree().create_timer(typing_speed).timeout
+
+		if not is_inside_tree():
+			return
+
+	if this_generation != typing_generation:
+		return
+
+	dialogue_text.visible_characters = -1
+	is_typing = false
+
+
+func _go_to_battle() -> void:
+	if is_transitioning:
+		return
+
+	if not ResourceLoader.exists(CAFETERIA_BATTLE_SCENE_PATH):
+		push_error(
+			"Cafeteria battle scene not found: "
+			+ CAFETERIA_BATTLE_SCENE_PATH
+		)
+		return
+
+	is_transitioning = true
+
+	var error: Error = get_tree().change_scene_to_file(
+		CAFETERIA_BATTLE_SCENE_PATH
+	)
+
+	if error != OK:
+		is_transitioning = false
+		push_error(
+			"Failed to load cafeteria battle scene. Error: "
+			+ str(error)
+		)

@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://b8sxped5gaefi"]
+
+[ext_resource type="Texture2D" uid="uid://cic7kcub42qhl" path="res://assets/Foods/Grow/Egg/Egg sprite.png" id="1_wythw"]
+[ext_resource type="Texture2D" uid="uid://dgywh8ju2vmwe" path="res://assets/Foods/Grow/Egg/Eating egg.png" id="2_h7kp1"]
+[ext_resource type="Script" uid="uid://be7p7sl51jmuc" path="res://scripts/Foods/food_data.gd" id="3_byaxo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wfoyf"]
+atlas = ExtResource("1_wythw")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_le74s"]
+atlas = ExtResource("1_wythw")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2eqjk"]
+atlas = ExtResource("1_wythw")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jjdoi"]
+atlas = ExtResource("1_wythw")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a7i50"]
+atlas = ExtResource("2_h7kp1")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_byyai"]
+atlas = ExtResource("2_h7kp1")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jkrl3"]
+atlas = ExtResource("2_h7kp1")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w54ue"]
+atlas = ExtResource("2_h7kp1")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wfoyf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_le74s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2eqjk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jjdoi")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a7i50")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_byyai")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jkrl3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w54ue")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7vi72"]
+radius = 31.790852
+height = 80.313736
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=574865204]
+position = Vector2(0, -5.9604645e-08)
+scale = Vector2(0.5976562, 0.5976562)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"attack"
+script = ExtResource("3_byaxo")
+food_name = "egg"
+normal_category = 2
+
+[node name="Area2D" type="Area2D" parent="." unique_id=898989592 groups=["food"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=920594844]
+shape = SubResource("CapsuleShape2D_7vi72")

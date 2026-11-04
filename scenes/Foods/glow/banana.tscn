@@ -1,0 +1,92 @@
+[gd_scene format=3 uid="uid://il8e6bk63bvh"]
+
+[ext_resource type="Texture2D" uid="uid://bix2fuvgrhlcc" path="res://assets/Foods/Glow/banana/Banana sprite.png" id="1_agm21"]
+[ext_resource type="Texture2D" uid="uid://dlus4pxb8nn63" path="res://assets/Foods/Glow/banana/Eating banana.png" id="2_8hk2v"]
+[ext_resource type="Script" uid="uid://be7p7sl51jmuc" path="res://scripts/Foods/food_data.gd" id="3_8hk2v"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_841k1"]
+atlas = ExtResource("1_agm21")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r5lig"]
+atlas = ExtResource("1_agm21")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r2xoh"]
+atlas = ExtResource("1_agm21")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0h6w2"]
+atlas = ExtResource("1_agm21")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6vgey"]
+atlas = ExtResource("2_8hk2v")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqvm8"]
+atlas = ExtResource("2_8hk2v")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijoag"]
+atlas = ExtResource("2_8hk2v")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_op104"]
+atlas = ExtResource("2_8hk2v")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_841k1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r5lig")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r2xoh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0h6w2")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6vgey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gqvm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijoag")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_op104")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_agm21"]
+points = PackedVector2Array(-42, 27, -42, 43, -8, 47, 32, 35, 52, -51, -11, -53, -31, -3)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=941647430]
+scale = Vector2(0.5859375, 0.5859375)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"attack"
+script = ExtResource("3_8hk2v")
+food_name = "banana"
+normal_category = 1
+enable_knockback = true
+knockback_strength = 150.0
+
+[node name="Area2D" type="Area2D" parent="." unique_id=424008117 groups=["food"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1865166765]
+shape = SubResource("ConvexPolygonShape2D_agm21")

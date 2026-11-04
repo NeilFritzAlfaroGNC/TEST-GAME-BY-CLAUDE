@@ -1,0 +1,112 @@
+[gd_scene format=3 uid="uid://cx4etmtwsi5h0"]
+
+[ext_resource type="PackedScene" uid="uid://csjajco3ej070" path="res://scenes/Level Map/difficulty_setting.tscn" id="1_ec2hq"]
+[ext_resource type="Texture2D" uid="uid://cf2h6pkw3l5l3" path="res://assets/MapLevel/MapLevel.png" id="1_jggh4"]
+[ext_resource type="Script" uid="uid://cxgol1yjhqddi" path="res://scripts/Level Map/map_enlargement.gd" id="2_pu7l8"]
+[ext_resource type="Script" uid="uid://cj805sk4kxs5g" path="res://scripts/Level Map/entrance.gd" id="3_uknuq"]
+[ext_resource type="Script" uid="uid://t1sfpbbxh5fy" path="res://scripts/Level Map/cafeteria.gd" id="4_m7776"]
+[ext_resource type="PackedScene" uid="uid://iqtlx7nwren" path="res://scenes/UI/level_stars.tscn" id="6_j2ts8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j2ts8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5njr8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uep26"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0d1px"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oqork"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7vi72"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uknuq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m7776"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ec2hq"]
+
+[node name="level_map" type="Control" unique_id=1959214827]
+custom_minimum_size = Vector2(956.04, 440)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DifficultySetting" parent="." unique_id=798250863 instance=ExtResource("1_ec2hq")]
+layout_mode = 0
+offset_right = 478.0
+offset_bottom = 440.0
+
+[node name="MapClip" type="Control" parent="." unique_id=1791456234]
+clip_children = 1
+clip_contents = true
+anchors_preset = 0
+offset_left = 478.0
+offset_right = 956.0
+offset_bottom = 440.0
+
+[node name="Map" type="TextureRect" parent="MapClip" unique_id=710602756]
+custom_minimum_size = Vector2(478, 440)
+layout_mode = 0
+offset_right = 478.0
+offset_bottom = 440.0
+mouse_filter = 0
+texture = ExtResource("1_jggh4")
+expand_mode = 1
+script = ExtResource("2_pu7l8")
+
+[node name="enlarging_entrance" type="Button" parent="MapClip/Map" unique_id=132732706]
+layout_mode = 0
+offset_left = 289.0
+offset_top = 368.0
+offset_right = 390.0
+offset_bottom = 421.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j2ts8")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_5njr8")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_uep26")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_0d1px")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_oqork")
+
+[node name="Entrance" type="Button" parent="MapClip/Map" unique_id=787544438]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.836
+anchor_top = 0.94400007
+anchor_right = 0.836
+anchor_bottom = 0.94400007
+offset_left = -110.608
+offset_top = -33.360016
+offset_right = -9.608002
+offset_bottom = 5.639984
+theme_override_font_sizes/font_size = 16
+text = "Entrance"
+icon_alignment = 1
+script = ExtResource("3_uknuq")
+
+[node name="enlarging_cafeteria" type="Button" parent="MapClip/Map" unique_id=622689834]
+layout_mode = 0
+offset_left = 143.0
+offset_top = 94.0
+offset_right = 237.0
+offset_bottom = 125.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7vi72")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_uknuq")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_m7776")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ec2hq")
+
+[node name="Cafeteria" type="Button" parent="MapClip/Map" unique_id=630625233]
+layout_mode = 0
+offset_left = 143.0
+offset_top = 94.0
+offset_right = 237.0
+offset_bottom = 125.0
+text = "Cafeteria"
+icon_alignment = 1
+script = ExtResource("4_m7776")
+
+[node name="CafeteriaStars" parent="MapClip/Map" unique_id=253707697 instance=ExtResource("6_j2ts8")]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 54.0
+offset_right = 250.0
+offset_bottom = 94.0

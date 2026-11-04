@@ -1,0 +1,213 @@
+[gd_scene format=3 uid="uid://csjajco3ej070"]
+
+[ext_resource type="Script" uid="uid://dxpjbly3xiouh" path="res://scripts/Level Map/difficulty_setting.gd" id="1_qglxq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hoc6m"]
+bg_color = Color(0.33333334, 0.72156864, 0.3529412, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yaru7"]
+bg_color = Color(0.14117648, 0.49019608, 0.23137255, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1mc8e"]
+bg_color = Color(0.27058825, 0.7607843, 0.40392157, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qglxq"]
+bg_color = Color(0.2627451, 0.5568628, 0.85882354, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8m1qu"]
+bg_color = Color(0.14117648, 0.3529412, 0.6, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v2chk"]
+bg_color = Color(0.27450982, 0.56078434, 0.89411765, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1er6"]
+bg_color = Color(1, 0.007843138, 0, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t3rre"]
+bg_color = Color(0.38431373, 0.41960785, 0.45882353, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7bjs3"]
+bg_color = Color(1, 0.9607843, 0.07058824, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qkx5v"]
+bg_color = Color(0.38431373, 0.41960785, 0.45882353, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8eine"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7pajp"]
+bg_color = Color(0.38431373, 0.41960785, 0.45882353, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vi72"]
+bg_color = Color(0.2627451, 0.5568628, 0.85882354, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h6uet"]
+bg_color = Color(0.14117648, 0.3529412, 0.6, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1lg0i"]
+bg_color = Color(0.27450982, 0.56078434, 0.89411765, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="DifficultySetting" type="Control" unique_id=798250863]
+custom_minimum_size = Vector2(478, 440)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_qglxq")
+
+[node name="Background" type="Panel" parent="." unique_id=1767008628]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margins" type="MarginContainer" parent="Background" unique_id=1980443985]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+
+[node name="Content" type="VBoxContainer" parent="Background/Margins" unique_id=104363040]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Background/Margins/Content" unique_id=2143505502]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "SELECT DIFFICULTY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EasyButton" type="Button" parent="Background/Margins/Content" unique_id=380198101]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_hoc6m")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_yaru7")
+theme_override_styles/hover = SubResource("StyleBoxFlat_1mc8e")
+text = "EASY
+"
+
+[node name="NormalButton" type="Button" parent="Background/Margins/Content" unique_id=1607887659]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_qglxq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_8m1qu")
+theme_override_styles/hover = SubResource("StyleBoxFlat_v2chk")
+text = "NORMAL"
+
+[node name="HardButton" type="Button" parent="Background/Margins/Content" unique_id=894265351]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_p1er6")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_t3rre")
+text = "🔒"
+
+[node name="MiniGamesButton" type="Button" parent="Background/Margins/Content" unique_id=1518189504]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_7bjs3")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_qkx5v")
+text = "🔒"
+
+[node name="EndlessButton" type="Button" parent="Background/Margins/Content" unique_id=597439089]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_8eine")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_7pajp")
+text = "🔒"
+
+[node name="InfoLabel" type="Label" parent="Background/Margins/Content" unique_id=870152223]
+custom_minimum_size = Vector2(0, 55)
+layout_mode = 2
+text = "Earn stars to unlock new levels,
+rewards, and game modes!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MenuSeparator" type="HSeparator" parent="Background/Margins/Content" unique_id=265927823]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+
+[node name="MainMenuButton" type="Button" parent="Background/Margins/Content" unique_id=1842452797]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_7vi72")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_h6uet")
+theme_override_styles/hover = SubResource("StyleBoxFlat_1lg0i")
+text = "MAIN MENU"
+icon_alignment = 1

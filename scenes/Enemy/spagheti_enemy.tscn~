@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://dmohyycohswdi"]
+
+[ext_resource type="Texture2D" uid="uid://bmi70iftgnur4" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_000.png" id="1_lkiyc"]
+[ext_resource type="Texture2D" uid="uid://dye6vhrxvqvrc" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_001.png" id="2_ksa1x"]
+[ext_resource type="Texture2D" uid="uid://k2xneqbn60k2" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_002.png" id="3_rkdpi"]
+[ext_resource type="Texture2D" uid="uid://b77desiyhifi3" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_003.png" id="4_xmacw"]
+[ext_resource type="Texture2D" uid="uid://cri1g6ycn8hip" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_004.png" id="5_5d61p"]
+[ext_resource type="Texture2D" uid="uid://rjp75lrxtjxo" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_005.png" id="6_d8oxu"]
+[ext_resource type="Texture2D" uid="uid://ifp1s3yjnw34" path="res://assets/Enemy/spaghetti-monster/spaghetti-attack/frame_006.png" id="7_i8fr3"]
+[ext_resource type="Texture2D" uid="uid://c46fftl2fhm1v" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_000.png" id="8_pp2d5"]
+[ext_resource type="Texture2D" uid="uid://c606fpehq14gd" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_001.png" id="9_2joyp"]
+[ext_resource type="Texture2D" uid="uid://ck45w72cqw17f" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_002.png" id="10_e53my"]
+[ext_resource type="Texture2D" uid="uid://bvunlrhc6no7b" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_003.png" id="11_hyn5k"]
+[ext_resource type="Texture2D" uid="uid://be3ss2yc5jt00" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_004.png" id="12_tkf08"]
+[ext_resource type="Texture2D" uid="uid://b1oxwc0jmciyu" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_005.png" id="13_fnvo6"]
+[ext_resource type="Texture2D" uid="uid://c0m4txd0l30p0" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_006.png" id="14_ds4ow"]
+[ext_resource type="Texture2D" uid="uid://c75v4pnwbod0o" path="res://assets/Enemy/spaghetti-monster/spaghetti-walk/frame_007.png" id="15_giy0v"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_lkiyc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ksa1x")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_rkdpi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_xmacw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_5d61p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_d8oxu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_i8fr3")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_pp2d5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_2joyp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_e53my")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_hyn5k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_tkf08")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_fnvo6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_ds4ow")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_giy0v")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jtevl"]
+size = Vector2(98, 108)
+
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1513022159]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=354446305]
+position = Vector2(0, -1)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"walk"
+frame_progress = 0.26246762
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1260222020]
+position = Vector2(27, 0)
+shape = SubResource("RectangleShape2D_jtevl")
