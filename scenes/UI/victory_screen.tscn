@@ -1,0 +1,110 @@
+[gd_scene format=3 uid="uid://d0d0yw4483oiw"]
+
+[ext_resource type="PackedScene" uid="uid://iqtlx7nwren" path="res://scenes/UI/level_stars.tscn" id="1_3ktt3"]
+[ext_resource type="Script" uid="uid://cj2f8uyjbt1vx" path="res://scripts/UI/victory_screen.gd" id="1_gmvrw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ktt3"]
+bg_color = Color(0.21176471, 0.65882355, 0.32156864, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gmvrw"]
+bg_color = Color(0.14117648, 0.49019608, 0.23137255, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kr8nu"]
+bg_color = Color(0.27058825, 0.7607843, 0.40392157, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jtevl"]
+bg_color = Color(0.20392157, 0.47058824, 0.7882353, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_brt1f"]
+bg_color = Color(0.14117648, 0.3529412, 0.6, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lbhmu"]
+bg_color = Color(0.27450982, 0.56078434, 0.89411765, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="VictoryScreen" type="Control" unique_id=419475667]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gmvrw")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1732990347]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.09019608, 0.09019608, 0.16862746, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="ColorRect" unique_id=890308080]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/CenterContainer" unique_id=1050308077]
+layout_mode = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="VictoryLabel" type="Label" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=1182913239]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.83137256, 0.36078432, 1)
+theme_override_font_sizes/font_size = 56
+text = "VICTORY!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelStars" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=253707697 instance=ExtResource("1_3ktt3")]
+layout_mode = 2
+show_current_run = true
+
+[node name="NextLevelButton" type="Button" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=984680284]
+custom_minimum_size = Vector2(260, 60)
+layout_mode = 2
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_3ktt3")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_gmvrw")
+theme_override_styles/hover = SubResource("StyleBoxFlat_kr8nu")
+text = "NEXT LEVEL"
+
+[node name="MapButton" type="Button" parent="ColorRect/CenterContainer/VBoxContainer" unique_id=975779417]
+custom_minimum_size = Vector2(260, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_jtevl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_brt1f")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lbhmu")
+text = "MAP"
+icon_alignment = 1

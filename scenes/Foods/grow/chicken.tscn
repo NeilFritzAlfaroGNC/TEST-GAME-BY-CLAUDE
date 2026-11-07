@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://cco83kfmg8q8d"]
+
+[ext_resource type="Texture2D" uid="uid://tcikwpw1inmk" path="res://assets/Foods/Grow/chicken/Eating chicken.png" id="1_epksx"]
+[ext_resource type="Script" uid="uid://be7p7sl51jmuc" path="res://scripts/Foods/food_data.gd" id="2_y6ccl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y6ccl"]
+atlas = ExtResource("1_epksx")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_75fsu"]
+atlas = ExtResource("1_epksx")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y7x0k"]
+atlas = ExtResource("1_epksx")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t36kd"]
+atlas = ExtResource("1_epksx")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y6ccl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_75fsu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y7x0k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t36kd")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7vi72"]
+radius = 31.790852
+height = 80.313736
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=574865204]
+position = Vector2(0, -5.9604645e-08)
+scale = Vector2(0.5976562, 0.5976562)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"eaten"
+script = ExtResource("2_y6ccl")
+food_name = "chicken"
+normal_category = 2
+grow_enable_stun = true
+grow_stun_duration = 3.0
+grow_enable_flopping = null
+grow_flop_max_hits = null
+grow_flop_bounce_range = null
+grow_flop_bounce_duration = null
+grow_flop_bounce_height = null
+grow_flop_random_fallback = null
+
+[node name="Area2D" type="Area2D" parent="." unique_id=898989592 groups=["food"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=920594844]
+position = Vector2(11.7124195, -6.692811)
+shape = SubResource("CapsuleShape2D_7vi72")
