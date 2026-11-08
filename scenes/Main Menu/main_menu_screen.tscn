@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://ck88lcehcsurn"]
+
+[ext_resource type="Texture2D" uid="uid://d0pdl7ku6jjdy" path="res://assets/MainMenu/Screen/Go, Grow, Glow.png" id="1_0ad5b"]
+[ext_resource type="PackedScene" uid="uid://df1uyrrdbbkto" path="res://scenes/Main Menu/main_menu_panel.tscn" id="2_e7tdj"]
+[ext_resource type="Script" uid="uid://bouepm5t5onop" path="res://scripts/Main Menu/main_menu_panel.gd" id="3_763m4"]
+[ext_resource type="PackedScene" uid="uid://didbcqbnlf4il" path="res://scenes/Main Menu/main_menu_button_container.tscn" id="3_bviqh"]
+[ext_resource type="PackedScene" uid="uid://bdtkiyloan2yp" path="res://scenes/Main Menu/main_menu_button.tscn" id="4_8c2eu"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_aucow"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_7vi72"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_2brfn"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_wb6sh"]
+font_size = 24
+
+[node name="main_menu" type="Control" unique_id=708690249]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="border" type="TextureRect" parent="." unique_id=481550662]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 956.0
+offset_bottom = 440.0
+texture = ExtResource("1_0ad5b")
+expand_mode = 1
+
+[node name="main_menu_panel" parent="." unique_id=2005684378 instance=ExtResource("2_e7tdj")]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 240.0
+offset_right = 300.0
+offset_bottom = 429.0
+script = ExtResource("3_763m4")
+
+[node name="main_menu_button_container" parent="main_menu_panel" unique_id=1398227216 instance=ExtResource("3_bviqh")]
+layout_mode = 0
+offset_right = 280.0
+offset_bottom = 190.0
+
+[node name="Play" parent="main_menu_panel/main_menu_button_container" unique_id=112778582 instance=ExtResource("4_8c2eu")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="main_menu_panel/main_menu_button_container/Play" unique_id=221019466]
+custom_minimum_size = Vector2(280, 0)
+custom_maximum_size = Vector2(-1, 40)
+layout_mode = 0
+offset_right = 280.0
+offset_bottom = 34.0
+text = "Play"
+label_settings = SubResource("LabelSettings_aucow")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Reset" parent="main_menu_panel/main_menu_button_container" unique_id=1514277673 instance=ExtResource("4_8c2eu")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="main_menu_panel/main_menu_button_container/Reset" unique_id=1488552252]
+custom_minimum_size = Vector2(280, 40)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Reset"
+label_settings = SubResource("LabelSettings_7vi72")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sound" parent="main_menu_panel/main_menu_button_container" unique_id=1830827671 instance=ExtResource("4_8c2eu")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="main_menu_panel/main_menu_button_container/Sound" unique_id=1722013372]
+custom_minimum_size = Vector2(280, 40)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Sound: ON"
+label_settings = SubResource("LabelSettings_2brfn")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Quit" parent="main_menu_panel/main_menu_button_container" unique_id=1090894894 instance=ExtResource("4_8c2eu")]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="main_menu_panel/main_menu_button_container/Quit" unique_id=1530929152]
+custom_minimum_size = Vector2(280, 40)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Quit"
+label_settings = SubResource("LabelSettings_wb6sh")
+horizontal_alignment = 1
+vertical_alignment = 1
