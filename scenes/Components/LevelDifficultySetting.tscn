@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dop0rxq1sq2vu"]
+
+[ext_resource type="Script" uid="uid://1w72uv4aj544" path="res://scripts/Difficulty/level_difficulty_setting.gd" id="1_k2g5l"]
+
+[node name="LevelDifficultySetting" type="Node" unique_id=296372107]
+script = ExtResource("1_k2g5l")
