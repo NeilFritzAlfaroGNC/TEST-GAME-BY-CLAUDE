@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://t2uye31dbf27"]
+
+[ext_resource type="Texture2D" uid="uid://10l7l51dpbd6" path="res://assets/BattleScene/GNCI Cafeteria.png" id="1_a2alf"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=441557375]
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1311793820]
+custom_minimum_size = Vector2(956, 440)
+offset_right = 956.0
+offset_bottom = 440.0
+texture = ExtResource("1_a2alf")
+expand_mode = 1

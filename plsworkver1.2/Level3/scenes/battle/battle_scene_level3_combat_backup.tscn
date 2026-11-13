@@ -1,0 +1,108 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Level3/scripts/battle/level3_battle_controller.gd" id="1_7rtby"]
+[ext_resource type="Texture2D" uid="uid://10l7l51dpbd6" path="res://assets/BattleScene/GNCI Cafeteria.png" id="1_sg7fo"]
+[ext_resource type="PackedScene" uid="uid://d3yegafy67sjs" path="res://scenes/Conveyer Belt/conveyer_belt.tscn" id="2_cyr5n"]
+[ext_resource type="Script" uid="uid://b05fvja7hvgi6" path="res://scripts/UI/food_inspector.gd" id="2_lgj46"]
+[ext_resource type="PackedScene" uid="uid://b5sot0lwe7v0a" path="res://scenes/Main Character/main_char.tscn" id="3_ximnc"]
+[ext_resource type="Script" uid="uid://i0u4ty5gep3i" path="res://scripts/Enemy Spawn/enemy_spawn.gd" id="4_griro"]
+[ext_resource type="Script" uid="uid://bw4j3x0cxy5sl" path="res://scripts/Food Spawn/food_spawn.gd" id="4_hacct"]
+[ext_resource type="PackedScene" uid="uid://dop0rxq1sq2vu" path="res://scenes/Components/LevelDifficultySetting.tscn" id="4_hcgwu"]
+[ext_resource type="Resource" path="res://Level3/resources/difficulty/easy_level3.tres" id="5_rvjh4"]
+[ext_resource type="Resource" path="res://Level3/resources/difficulty/normal_level3.tres" id="6_82jy8"]
+[ext_resource type="PackedScene" path="res://scenes/Foods/Cafeteria/apple_cafeteria.tscn" id="7_rvjh4"]
+[ext_resource type="Resource" path="res://Level3/resources/difficulty/hard_level3.tres" id="10_7rtby"]
+[ext_resource type="PackedScene" path="res://scenes/Foods/Cafeteria/bread_cafeteria.tscn" id="11_lgj46"]
+[ext_resource type="PackedScene" path="res://scenes/Foods/Cafeteria/bean_cafeteria.tscn" id="13_xafti"]
+[ext_resource type="Script" uid="uid://bnx66avucit4q" path="res://scripts/Nutrition System/nutrition_system.gd" id="15_7rtby"]
+[ext_resource type="Script" uid="uid://bs8wmtc5nk18u" path="res://scripts/Nutrition System/nutrition_ui.gd" id="16_lgj46"]
+[ext_resource type="Script" uid="uid://cbcoyp7peqpjk" path="res://scripts/Nutrition System/item_throw_controller.gd" id="17_kskjv"]
+[ext_resource type="Script" uid="uid://ncrm7n3buolh" path="res://scripts/Nutrition System/nutrition_food_bridge.gd" id="18_mmrna"]
+[ext_resource type="Script" uid="uid://bxot6odvviv0j" path="res://scripts/Nutrition System/throw_charge_system.gd" id="19_throw_charge"]
+[ext_resource type="Script" uid="uid://bfu0hv6asfrx" path="res://scripts/Nutrition System/cafeteria_level_1_controller.gd" id="20_level1"]
+[ext_resource type="Script" uid="uid://dx1ubuxi6q26u" path="res://scripts/Nutrition System/throw_charge_ui.gd" id="21_charge_ui"]
+[ext_resource type="PackedScene" path="res://scenes/Foods/cafeteria_item_projectile.tscn" id="22_item_projectile"]
+[ext_resource type="Script" path="res://scripts/Nutrition System/cafeteria_combination_settings.gd" id="23_combo_settings"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wb6sh"]
+
+[node name="BattleScene" type="Control" unique_id=1451651748]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 65.0
+offset_bottom = 47.0
+script = ExtResource("1_7rtby")
+go_inspector_script = ExtResource("2_lgj46")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1182470010]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_sg7fo")
+
+[node name="Conveyer Belt" parent="." unique_id=2084871955 instance=ExtResource("2_cyr5n")]
+position = Vector2(705, 411)
+scale = Vector2(0.14101124, 0.12086778)
+frame = 7
+frame_progress = 0.9064217
+flip_h = true
+queue_right_margin = 25.0
+
+[node name="LevelDifficultySetting" parent="." unique_id=296372107 instance=ExtResource("4_hcgwu")]
+easy_settings = ExtResource("5_rvjh4")
+normal_settings = ExtResource("6_82jy8")
+hard_settings = ExtResource("10_7rtby")
+
+[node name="EnemySpawn" type="Marker2D" parent="." unique_id=49369584]
+position = Vector2(114, 329)
+script = ExtResource("4_griro")
+enemy_items_path = NodePath("../EnemyItems")
+
+[node name="EnemyItems" type="Node2D" parent="." unique_id=1179757828]
+
+[node name="FoodSpawn" type="Marker2D" parent="." unique_id=203430058]
+position = Vector2(468, 412)
+script = ExtResource("4_hacct")
+available_foods = Array[PackedScene]([ExtResource("7_rvjh4"), ExtResource("11_lgj46"), ExtResource("13_xafti")])
+max_spawn_time = 3.0
+
+[node name="FoodItems" type="Node2D" parent="." unique_id=1839276456]
+
+[node name="main_character" parent="." unique_id=449091310 instance=ExtResource("3_ximnc")]
+position = Vector2(768, 331)
+cafeteria_nutrition_mode = true
+
+[node name="Floor Mechanic" type="StaticBody2D" parent="." unique_id=1728979765]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor Mechanic" unique_id=2058293818]
+position = Vector2(768, 380)
+shape = SubResource("WorldBoundaryShape2D_wb6sh")
+
+[node name="NutritionSystem" type="Node" parent="." unique_id=421413012]
+script = ExtResource("15_7rtby")
+
+[node name="NutritionUI" type="CanvasLayer" parent="." unique_id=1160990488]
+script = ExtResource("16_lgj46")
+
+[node name="ThrowChargeSystem" type="Node" parent="." unique_id=573119679]
+script = ExtResource("19_throw_charge")
+
+[node name="ItemThrowController" type="Node2D" parent="." unique_id=1416605242]
+script = ExtResource("17_kskjv")
+projectile_scene = ExtResource("22_item_projectile")
+
+[node name="NutritionFoodBridge" type="Node" parent="." unique_id=1046598449]
+script = ExtResource("18_mmrna")
+enable_player_food_buffs = true
+enable_food_name_presets = false
+
+[node name="CafeteriaLevel1Controller" type="Node" parent="." unique_id=275122542]
+script = ExtResource("20_level1")
+
+[node name="ThrowChargeUI" type="CanvasLayer" parent="." unique_id=256699494]
+script = ExtResource("21_charge_ui")
+
+[node name="CafeteriaCombinationSettings" type="Node" parent="."]
+script = ExtResource("23_combo_settings")

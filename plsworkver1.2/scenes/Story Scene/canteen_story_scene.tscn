@@ -1,0 +1,279 @@
+[gd_scene format=3 uid="uid://cmansebgnrvd6"]
+
+[ext_resource type="Script" uid="uid://bjojyu4kmijg1" path="res://scripts/Story Scene/canteen_story_scene.gd" id="1_plsk8"]
+[ext_resource type="Script" uid="uid://b485ccrv6aek7" path="res://scripts/Story Scene/story_page.gd" id="2_nkbwn"]
+[ext_resource type="Script" uid="uid://cybnke0g05xtl" path="res://scripts/Story Scene/story_dialogue.gd" id="3_epbym"]
+[ext_resource type="Texture2D" uid="uid://c4ujkut3iulub" path="res://assets/StoryScene/Scene 2 Canteen/start 0.png" id="4_b1g1o"]
+[ext_resource type="Texture2D" uid="uid://c0flj7d4a8r21" path="res://assets/StoryScene/Scene 2 Canteen/scene 1.png" id="5_e2aju"]
+[ext_resource type="Texture2D" uid="uid://bdodqhdm3ys11" path="res://assets/StoryScene/Scene 2 Canteen/scene 2.png" id="6_vh26w"]
+[ext_resource type="Texture2D" uid="uid://b2obias7741tc" path="res://assets/StoryScene/Scene 2 Canteen/scene 3.png" id="7_sumn6"]
+[ext_resource type="Texture2D" uid="uid://bmtp2ujlwsmgl" path="res://assets/StoryScene/Scene 2 Canteen/scene 4.png" id="8_si2e1"]
+[ext_resource type="Texture2D" uid="uid://msfwf7mw7u31" path="res://assets/StoryScene/Scene 2 Canteen/scene 5.png" id="9_nkbwn"]
+
+[sub_resource type="Resource" id="Resource_p6h5k"]
+script = ExtResource("3_epbym")
+speaker_name = "Narrator"
+dialogue_line = "With the food monsters defeated, peace finally returned to the school canteen. But the Food Hero's adventure wasn't over yet. A new danger was waiting outside..."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_guhub"]
+script = ExtResource("2_nkbwn")
+story_image = ExtResource("4_b1g1o")
+dialogues = Array[ExtResource("3_epbym")]([SubResource("Resource_p6h5k")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_sle5x"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Finally, some fresh air!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_3l0jj"]
+script = ExtResource("3_epbym")
+speaker_name = "SFX"
+dialogue_line = "RUMBLE... RUMBLE..."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_a6r2x"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Huh? What's that sound?"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_8vgdg"]
+script = ExtResource("3_epbym")
+speaker_name = "Pizza "
+dialogue_line = "Monster: \"PIZZA TIME!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_2l4gy"]
+script = ExtResource("3_epbym")
+speaker_name = "French Fries Monster"
+dialogue_line = "Hehehe! Look who's here!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_8semt"]
+script = ExtResource("3_epbym")
+speaker_name = "Pink Donut Monster"
+dialogue_line = "Ready for another snack attack?"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_6ky7g"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Oh no... more food monsters?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_8hk2v"]
+script = ExtResource("2_nkbwn")
+story_image = ExtResource("5_e2aju")
+dialogues = Array[ExtResource("3_epbym")]([SubResource("Resource_sle5x"), SubResource("Resource_3l0jj"), SubResource("Resource_a6r2x"), SubResource("Resource_8vgdg"), SubResource("Resource_2l4gy"), SubResource("Resource_8semt"), SubResource("Resource_6ky7g")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_x5m8v"]
+script = ExtResource("3_epbym")
+speaker_name = "Pizza Monster"
+dialogue_line = "PIZZA CHARGE!!!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_ufcse"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Whoa! It's coming right at me!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_7y1he"]
+script = ExtResource("3_epbym")
+speaker_name = "French Fries Monster"
+dialogue_line = "Get him, Pizza!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_u03m8"]
+script = ExtResource("3_epbym")
+speaker_name = "Pink Donut Monster"
+dialogue_line = "He won't escape this time! Hehehe!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_35mkh"]
+script = ExtResource("3_epbym")
+speaker_name = "SFX"
+dialogue_line = "WHOOSH! THUD! THUD!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_duw7w"]
+script = ExtResource("2_nkbwn")
+story_image = ExtResource("6_vh26w")
+dialogues = Array[ExtResource("3_epbym")]([SubResource("Resource_x5m8v"), SubResource("Resource_ufcse"), SubResource("Resource_7y1he"), SubResource("Resource_u03m8"), SubResource("Resource_35mkh")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_lvivc"]
+script = ExtResource("3_epbym")
+speaker_name = "Pizza Monster"
+dialogue_line = "YOU CAN'T ESCAPE MY PIZZA CHARGE!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_pbddd"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Not today! HYAH!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_cnrob"]
+script = ExtResource("3_epbym")
+speaker_name = "SFX"
+dialogue_line = "WHOOSH! CRASH! CLATTER!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_bah5o"]
+script = ExtResource("3_epbym")
+speaker_name = "Pizza Monster"
+dialogue_line = "OW! WHO PUT THAT BENCH THERE?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_etgie"]
+script = ExtResource("3_epbym")
+speaker_name = "French Fries Monster"
+dialogue_line = "Nice try, Pizza! My turn now!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_s1tjf"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Oh, great! Another one?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_y4ty0"]
+script = ExtResource("2_nkbwn")
+story_image = ExtResource("7_sumn6")
+dialogues = Array[ExtResource("3_epbym")]([SubResource("Resource_lvivc"), SubResource("Resource_pbddd"), SubResource("Resource_cnrob"), SubResource("Resource_bah5o"), SubResource("Resource_etgie"), SubResource("Resource_s1tjf")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_uh2ab"]
+script = ExtResource("3_epbym")
+speaker_name = "French Fries Monster"
+dialogue_line = "MY TURN! FRYING HIGH!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_gevae"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Wait—you're jumping at me?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_w03k7"]
+script = ExtResource("3_epbym")
+speaker_name = "SFX"
+dialogue_line = "BOING! WHOOSH!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_j150f"]
+script = ExtResource("3_epbym")
+speaker_name = "Pink Donut Monster"
+dialogue_line = "Look out below! Hehehe!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_j6t40"]
+script = ExtResource("3_epbym")
+speaker_name = "Pizza Monster"
+dialogue_line = "Get him while I'm recovering!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_tn0x7"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "I've got to dodge this one, too!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_gnw1j"]
+script = ExtResource("2_nkbwn")
+story_image = ExtResource("8_si2e1")
+dialogues = Array[ExtResource("3_epbym")]([SubResource("Resource_uh2ab"), SubResource("Resource_gevae"), SubResource("Resource_w03k7"), SubResource("Resource_j150f"), SubResource("Resource_j6t40"), SubResource("Resource_tn0x7")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_leqnw"]
+script = ExtResource("3_epbym")
+speaker_name = "French Fries Monster"
+dialogue_line = "FRIES FALL!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_epbym"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Not this time! HYAH!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_d2gal"]
+script = ExtResource("3_epbym")
+speaker_name = "SFX"
+dialogue_line = "WHOOSH! BOING! THUD!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_2yerp"]
+script = ExtResource("3_epbym")
+speaker_name = "French Fries Monster"
+dialogue_line = "Hey! You dodged me?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_v8844"]
+script = ExtResource("3_epbym")
+speaker_name = "Pizza Monster"
+dialogue_line = "Get back up! We're not finished!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_t2b3w"]
+script = ExtResource("3_epbym")
+speaker_name = "Pink Donut Monster"
+dialogue_line = "Hehehe! This is going to be fun!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_2q7ui"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "You three won't get past me! Let's do this!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_cdw12"]
+script = ExtResource("3_epbym")
+speaker_name = "SFX"
+dialogue_line = "BATTLE START!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_gtodm"]
+script = ExtResource("2_nkbwn")
+story_image = ExtResource("9_nkbwn")
+dialogues = Array[ExtResource("3_epbym")]([SubResource("Resource_leqnw"), SubResource("Resource_epbym"), SubResource("Resource_d2gal"), SubResource("Resource_2yerp"), SubResource("Resource_v8844"), SubResource("Resource_t2b3w"), SubResource("Resource_2q7ui"), SubResource("Resource_cdw12")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[node name="CanteenStoryScene" type="Control" unique_id=215233824]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_plsk8")
+story_pages = Array[ExtResource("2_nkbwn")]([SubResource("Resource_guhub"), SubResource("Resource_8hk2v"), SubResource("Resource_duw7w"), SubResource("Resource_y4ty0"), SubResource("Resource_gnw1j"), SubResource("Resource_gtodm")])
+
+[node name="Background" type="TextureRect" parent="." unique_id=194364716]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 948.0
+offset_bottom = 438.0
+expand_mode = 1
+
+[node name="DialoguePanel" type="Panel" parent="." unique_id=1779529413]
+layout_mode = 0
+offset_top = 344.0
+offset_right = 956.0
+offset_bottom = 440.0
+
+[node name="SpeakerName" type="Label" parent="DialoguePanel" unique_id=170593270]
+layout_mode = 0
+offset_top = -23.0
+offset_right = 74.0
+vertical_alignment = 2
+
+[node name="DialogueText" type="RichTextLabel" parent="DialoguePanel" unique_id=1213251921]
+layout_mode = 0
+offset_right = 956.0
+offset_bottom = 96.0
