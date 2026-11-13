@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Level3/scripts/ui/scene3_stars.gd" id="1_stars"]
+
+[node name="Scene3Stars" type="Control"]
+offset_right = 66.0
+offset_bottom = 16.0
+mouse_filter = 2
+script = ExtResource("1_stars")
+
+[node name="Stars" type="Control" parent="."]
+mouse_filter = 2
+
+[node name="Star1" type="Label" parent="Stars"]
+mouse_filter = 2
+text = "☆"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Star2" type="Label" parent="Stars"]
+mouse_filter = 2
+text = "☆"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Star3" type="Label" parent="Stars"]
+mouse_filter = 2
+text = "☆"
+horizontal_alignment = 1
+vertical_alignment = 1

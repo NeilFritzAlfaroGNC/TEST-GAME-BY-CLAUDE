@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://bdo1ehwblvdtr"]
+
+[ext_resource type="Texture2D" uid="uid://kayqlmiofjiy" path="res://Level1/assets/student/frame_000.png" id="1_466pt"]
+[ext_resource type="Texture2D" uid="uid://kgio6cdaiqqh" path="res://Level1/assets/student/frame_001.png" id="2_vvcnd"]
+[ext_resource type="Texture2D" uid="uid://vj5211vv3juo" path="res://Level1/assets/student/frame_002.png" id="3_rfdge"]
+[ext_resource type="Texture2D" uid="uid://br0gyvwvfsuj0" path="res://Level1/assets/student/frame_003.png" id="4_lfqr5"]
+[ext_resource type="Texture2D" uid="uid://cb2lweuj3ot88" path="res://Level1/assets/student/frame_004.png" id="5_62cby"]
+[ext_resource type="Texture2D" uid="uid://h55nu1x4ge5n" path="res://Level1/assets/student/frame_005.png" id="6_rn74r"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_466pt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_vvcnd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_rfdge")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_lfqr5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_62cby")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_rn74r")
+}],
+"loop": 1,
+"name": &"running",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2brfn"]
+radius = 26.0
+height = 108.0
+
+[node name="Student" type="CharacterBody2D" unique_id=41922674]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1076034116]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"running"
+frame_progress = 0.2252266
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=69626302]
+shape = SubResource("CapsuleShape2D_2brfn")
