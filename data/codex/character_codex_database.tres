@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="CodexDatabase" format=3 uid="uid://crl8bqp64od6o"]
+
+[ext_resource type="Script" uid="uid://d112377gqx3gk" path="res://scripts/codex/CodexDatabase.gd" id="1_db"]
+[ext_resource type="Script" uid="uid://dllabu1sahq6v" path="res://scripts/codex/CodexEntryData.gd" id="1_sxgrj"]
+
+[resource]
+script = ExtResource("1_db")

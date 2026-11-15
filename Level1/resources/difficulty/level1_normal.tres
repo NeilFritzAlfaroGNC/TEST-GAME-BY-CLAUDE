@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Level1DifficultyProfile" format=3 uid="uid://dkwf1yl6dqjoe"]
+
+[ext_resource type="Script" uid="uid://nhbbxk7gv75w" path="res://Level1/scripts/battle/level1_difficulty_profile.gd" id="1"]
+[ext_resource type="Script" uid="uid://demnirkaxfodu" path="res://Level1/scripts/battle/level1_monster_spawn_config.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://d3cskcheicuhg" path="res://Level1/scenes/students/level1_student_soda.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://cxs6kgdsrkowx" path="res://Level1/scenes/enemies/donut_enemy.tscn" id="3_hagn7"]
+
+[sub_resource type="Resource" id="Monster"]
+script = ExtResource("2")
+monster_scene = ExtResource("3")
+monster_count = 10
+
+[sub_resource type="Resource" id="Resource_srdmq"]
+script = ExtResource("2")
+monster_scene = ExtResource("3_hagn7")
+monster_count = 10
+metadata/_custom_type_script = "uid://demnirkaxfodu"
+
+[resource]
+script = ExtResource("1")
+monsters = Array[ExtResource("2")]([SubResource("Monster"), SubResource("Resource_srdmq")])

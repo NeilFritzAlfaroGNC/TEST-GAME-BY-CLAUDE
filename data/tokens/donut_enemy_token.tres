@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="CodexTokenEntry" format=3 uid="uid://bugrmmdqgudk3"]
+
+[ext_resource type="Script" uid="uid://0iyra0hoevr4" path="res://scripts/character_codex/CodexTokenEntry.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://26yh1cih8hqs" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_000.png" id="2"]
+[ext_resource type="Script" uid="uid://dcel50qjorutl" path="res://scripts/character_codex/CodexAnimationData.gd" id="3"]
+[ext_resource type="SpriteFrames" path="res://data/tokens/donut_codex_frames.tres" id="4"]
+
+[sub_resource type="Resource" id="Attack"]
+script = ExtResource("3")
+sprite_frames = ExtResource("4")
+
+[sub_resource type="Resource" id="Special"]
+script = ExtResource("3")
+display_name = "Defeated"
+sprite_frames = ExtResource("4")
+animation_name = &"defeated"
+extra_token_copies_required = 2
+
+[resource]
+script = ExtResource("1")
+animations = Array[ExtResource("3")]([SubResource("Attack"), SubResource("Special")])
+id = &"donut_enemy"
+display_name = "Donut Enemy"
+category = &"junk_enemies"
+icon = ExtResource("2")
+large_image = ExtResource("2")
+description = "A sugary donut enemy."

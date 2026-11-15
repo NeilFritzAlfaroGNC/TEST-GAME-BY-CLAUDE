@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://Level1/assets/foods/Go/bread/Eating bread.png" id="1_tfdea"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_porc0"]
+atlas = ExtResource("1_tfdea")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wfld5"]
+atlas = ExtResource("1_tfdea")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cyvp6"]
+atlas = ExtResource("1_tfdea")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ebmi"]
+atlas = ExtResource("1_tfdea")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_porc0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wfld5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cyvp6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6ebmi")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hejb6"]
+size = Vector2(96, 86.5)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=551792381]
+position = Vector2(1.4551915e-11, 3.637979e-12)
+scale = Vector2(0.55078125, 0.55078125)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"eaten"
+[node name="Area2D" type="Area2D" parent="." unique_id=593886129]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1179799699]
+shape = SubResource("RectangleShape2D_hejb6")

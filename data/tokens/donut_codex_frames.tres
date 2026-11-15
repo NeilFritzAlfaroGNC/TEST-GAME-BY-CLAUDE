@@ -1,0 +1,128 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" uid="uid://n4jb3paoaeha" path="res://Level1/assets/enemies/donut-monster/donut attack/frame_000.png" id="2_md66j"]
+[ext_resource type="Texture2D" uid="uid://bq2s4rfrjq2rv" path="res://Level1/assets/enemies/donut-monster/donut attack/frame_001.png" id="3_bf8er"]
+[ext_resource type="Texture2D" uid="uid://dt4tr8kntpk4m" path="res://Level1/assets/enemies/donut-monster/donut attack/frame_002.png" id="4_bqlih"]
+[ext_resource type="Texture2D" uid="uid://c14ip83crkeso" path="res://Level1/assets/enemies/donut-monster/donut attack/frame_003.png" id="5_cpqe0"]
+[ext_resource type="Texture2D" uid="uid://d3qcl0v5abk34" path="res://Level1/assets/enemies/donut-monster/donut attack/frame_004.png" id="6_wiaft"]
+[ext_resource type="Texture2D" uid="uid://r4hrmdtd5gd1" path="res://Level1/assets/enemies/donut-monster/donut attack/frame_005.png" id="7_7h7f8"]
+[ext_resource type="Texture2D" uid="uid://duhk1w7134opv" path="res://Level1/assets/enemies/donut-monster/donut attack/frame_006.png" id="8_xeptd"]
+[ext_resource type="Texture2D" uid="uid://b4oajvuhgwyya" path="res://Level1/assets/enemies/donut-monster/donut attack/frame_007.png" id="9_gxl4c"]
+[ext_resource type="Texture2D" uid="uid://dnpdkf7xoyuj8" path="res://Level1/assets/enemies/donut-monster/donut attack/frame_008.png" id="10_ymkcp"]
+[ext_resource type="Texture2D" uid="uid://bqgq4gno0ueyq" path="res://Level1/assets/enemies/donut-monster/donut defeated/frame_000.png" id="11_bf8er"]
+[ext_resource type="Texture2D" uid="uid://dmo3fwxww5u7w" path="res://Level1/assets/enemies/donut-monster/donut defeated/frame_001.png" id="12_bqlih"]
+[ext_resource type="Texture2D" uid="uid://n1q8icwjhybl" path="res://Level1/assets/enemies/donut-monster/donut defeated/frame_002.png" id="13_cpqe0"]
+[ext_resource type="Texture2D" uid="uid://bldtvqqtnf0dh" path="res://Level1/assets/enemies/donut-monster/donut defeated/frame_003.png" id="14_wiaft"]
+[ext_resource type="Texture2D" uid="uid://cm1vn2injhml8" path="res://Level1/assets/enemies/donut-monster/donut defeated/frame_004.png" id="15_7h7f8"]
+[ext_resource type="Texture2D" uid="uid://diyulqfqlugjo" path="res://Level1/assets/enemies/donut-monster/donut defeated/frame_005.png" id="16_xeptd"]
+[ext_resource type="Texture2D" uid="uid://cta8o7d3ne5wn" path="res://Level1/assets/enemies/donut-monster/donut defeated/frame_006.png" id="17_gxl4c"]
+[ext_resource type="Texture2D" uid="uid://caawinkwsnb5j" path="res://Level1/assets/enemies/donut-monster/donut defeated/frame_007.png" id="18_ymkcp"]
+[ext_resource type="Texture2D" uid="uid://dcynhfkatym6m" path="res://Level1/assets/enemies/donut-monster/donut defeated/frame_008.png" id="19_ceg57"]
+[ext_resource type="Texture2D" uid="uid://26yh1cih8hqs" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_000.png" id="20_dip53"]
+[ext_resource type="Texture2D" uid="uid://c74joisd0egit" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_001.png" id="21_qt5jl"]
+[ext_resource type="Texture2D" uid="uid://2cde2nhjiyyy" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_002.png" id="22_igmlj"]
+[ext_resource type="Texture2D" uid="uid://bv4aj3xo6vs01" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_003.png" id="23_k5bo3"]
+[ext_resource type="Texture2D" uid="uid://cp1hirybf80q8" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_004.png" id="24_weax2"]
+[ext_resource type="Texture2D" uid="uid://b0npxlm61palx" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_005.png" id="25_7w7va"]
+[ext_resource type="Texture2D" uid="uid://b44kc3glsef5e" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_006.png" id="26_kuyrj"]
+[ext_resource type="Texture2D" uid="uid://cvm71ydy3e8o0" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_007.png" id="27_3qwbb"]
+[ext_resource type="Texture2D" uid="uid://c08g3em61bttl" path="res://Level1/assets/enemies/donut-monster/donut walk/frame_008.png" id="28_d687h"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_md66j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_bf8er")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_bqlih")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_cpqe0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_wiaft")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_7h7f8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_xeptd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_gxl4c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_ymkcp")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_bf8er")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_bqlih")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_cpqe0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_wiaft")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_7h7f8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_xeptd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_gxl4c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_ymkcp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_ceg57")
+}],
+"loop": 1,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_dip53")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_qt5jl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_igmlj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_k5bo3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_weax2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_7w7va")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_kuyrj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_3qwbb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_d687h")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]

@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[node name="DifficultyMenuButton" type="Button"]
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1.00000, 0.94510, 0.85490, 1.00000)
+theme_override_colors/font_hover_color = Color(1.00000, 1.00000, 1.00000, 1.00000)
+theme_override_colors/font_pressed_color = Color(1.00000, 0.94510, 0.85490, 1.00000)
+theme_override_colors/font_focus_color = Color(1.00000, 0.94510, 0.85490, 1.00000)
+theme_override_colors/font_disabled_color = Color(0.87451, 0.81569, 0.74118, 1.00000)
+theme_override_colors/font_outline_color = Color(0.14118, 0.09020, 0.06275, 1.00000)
+theme_override_constants/outline_size = 3

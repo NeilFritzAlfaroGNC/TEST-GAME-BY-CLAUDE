@@ -1,0 +1,167 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/character_codex/CodexPanel.gd" id="script"]
+[ext_resource type="Resource" path="res://data/codex/character_codex_database.tres" id="db"]
+[ext_resource type="Script" path="res://scripts/character_codex/CodexTokenEntry.gd" id="entry"]
+[ext_resource type="Resource" path="res://data/tokens/soda_enemy_token.tres" id="soda"]
+[ext_resource type="Resource" path="res://data/tokens/donut_enemy_token.tres" id="donut"]
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.22, 0.14, 0.13, 1)
+border_color = Color(0.73, 0.43, 0.23, 1)
+border_width_left = 2
+border_width_right = 2
+border_width_top = 2
+border_width_bottom = 2
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+
+[node name="Codex" type="Panel"]
+theme_override_styles/panel = SubResource("Panel")
+script = ExtResource("script")
+database = ExtResource("db")
+codex_entries = Array[ExtResource("entry")]([ExtResource("soda"), ExtResource("donut")])
+
+[node name="Details" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 420.0
+offset_top = 16.0
+offset_right = 916.0
+offset_bottom = 298.0
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 400.0
+offset_bottom = 40.0
+text = "CODEX"
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.9, 0.73, 1)
+
+[node name="Tabs" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 50.0
+offset_right = 400.0
+offset_bottom = 80.0
+theme_override_constants/separation = 6
+
+[node name="Tab0" type="Button" parent="Tabs"]
+text = "Healthy Foods"
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+
+[node name="Tab1" type="Button" parent="Tabs"]
+text = "Junk Enemies"
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+
+[node name="Tab2" type="Button" parent="Tabs"]
+text = "Sick Child"
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+
+[node name="Grid" type="GridContainer" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 97.0
+offset_right = 400.0
+offset_bottom = 260.0
+columns = 6
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+
+[node name="Previous" type="Button" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 271.0
+offset_right = 66.0
+offset_bottom = 302.0
+text = "<"
+
+
+[node name="Next" type="Button" parent="."]
+layout_mode = 0
+offset_left = 133.0
+offset_top = 271.0
+offset_right = 183.0
+offset_bottom = 302.0
+text = ">"
+
+
+[node name="Page" type="Label" parent="."]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 274.0
+offset_right = 131.0
+offset_bottom = 302.0
+text = ""
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1, 0.9, 0.73, 1)
+
+[node name="Title" type="Label" parent="Details"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 450.0
+offset_bottom = 41.0
+text = "Entry Details"
+theme_override_font_sizes/font_size = 19
+theme_override_colors/font_color = Color(1, 0.9, 0.73, 1)
+
+
+[node name="Scroll" type="ScrollContainer" parent="Details"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 48.0
+offset_right = 480.0
+offset_bottom = 265.0
+horizontal_scroll_mode = 0
+
+
+[node name="Content" type="VBoxContainer" parent="Details/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Name" type="Label" parent="Details/Scroll/Content"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 19
+
+[node name="AnimationTitle" type="Label" parent="Details/Scroll/Content"]
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.85, 0.6, 1)
+
+[node name="Art" type="TextureRect" parent="Details/Scroll/Content"]
+custom_minimum_size = Vector2(128, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Preview" type="AnimatedSprite2D" parent="Details/Scroll/Content/Art"]
+visible = false
+position = Vector2(64, 50)
+texture_filter = 1
+
+[node name="Stats" type="Label" parent="Details/Scroll/Content"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Text" type="Label" parent="Details/Scroll/Content"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Animations" type="VBoxContainer" parent="Details/Scroll/Content"]
+layout_mode = 2

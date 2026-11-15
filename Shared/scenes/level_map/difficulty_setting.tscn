@@ -1,0 +1,498 @@
+[gd_scene format=3 uid="uid://csjajco3ej070"]
+
+[ext_resource type="PackedScene" path="res://Shared/scenes/level_map/difficulty_menu_button.tscn" id="MenuButton"]
+[ext_resource type="Script" path="res://Shared/scripts/Level Map/difficulty_setting.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Shared/assets/MainChar/Idle/frame_000.png" id="Idle0"]
+[ext_resource type="Texture2D" path="res://Shared/assets/MainChar/Idle/frame_001.png" id="Idle1"]
+[ext_resource type="Texture2D" path="res://Shared/assets/MainChar/Idle/frame_002.png" id="Idle2"]
+[ext_resource type="Texture2D" path="res://Shared/assets/MainChar/Idle/frame_003.png" id="Idle3"]
+[ext_resource type="Texture2D" path="res://Shared/assets/MainChar/Idle/frame_004.png" id="Idle4"]
+[ext_resource type="Texture2D" path="res://Shared/assets/MainChar/Idle/frame_005.png" id="Idle5"]
+[ext_resource type="Texture2D" path="res://Shared/assets/MainChar/Idle/frame_006.png" id="Idle6"]
+[ext_resource type="Texture2D" path="res://Shared/assets/MainChar/Idle/frame_007.png" id="Idle7"]
+[ext_resource type="Texture2D" path="res://Shared/assets/MainChar/Idle/frame_008.png" id="Idle8"]
+
+[sub_resource type="StyleBoxFlat" id="Inset"]
+bg_color = Color(0.4078, 0.2275, 0.1882, 1)
+border_color = Color(0.8941, 0.5882, 0.3765, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[sub_resource type="StyleBoxFlat" id="MenuOverlay"]
+bg_color = Color(0.2235, 0.1255, 0.1373, 1)
+border_color = Color(0.7373, 0.4392, 0.2392, 1)
+border_width_left = 9
+content_margin_left = 0.0
+border_width_top = 9
+content_margin_top = 0.0
+border_width_right = 9
+content_margin_right = 0.0
+border_width_bottom = 9
+content_margin_bottom = 0.0
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_left = 14
+corner_radius_bottom_right = 14
+
+[sub_resource type="StyleBoxFlat" id="Section"]
+shadow_color = Color(0.4392, 0.251, 0.098, 0.3333)
+shadow_size = 3
+bg_color = Color(0.2980, 0.1608, 0.1490, 1)
+border_color = Color(0.9020, 0.5843, 0.3333, 1)
+border_width_left = 2
+content_margin_left = 5.0
+border_width_top = 2
+content_margin_top = 5.0
+border_width_right = 2
+content_margin_right = 5.0
+border_width_bottom = 2
+content_margin_bottom = 5.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Easy"]
+bg_color = Color(0.3451, 0.6196, 0.1098, 1)
+border_color = Color(0.6510, 0.8510, 0.3725, 1)
+border_width_left = 2
+content_margin_left = 0.0
+border_width_top = 2
+content_margin_top = 0.0
+border_width_right = 2
+content_margin_right = 0.0
+border_width_bottom = 2
+content_margin_bottom = 0.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="EasyHover"]
+bg_color = Color(0.4078, 0.6863, 0.1412, 1)
+border_color = Color(0.7608, 0.9216, 0.4745, 1)
+border_width_left = 2
+content_margin_left = 0.0
+border_width_top = 2
+content_margin_top = 0.0
+border_width_right = 2
+content_margin_right = 0.0
+border_width_bottom = 2
+content_margin_bottom = 0.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Normal"]
+bg_color = Color(0.8039, 0.5216, 0.0471, 1)
+border_color = Color(1.0000, 0.8039, 0.2706, 1)
+border_width_left = 2
+content_margin_left = 0.0
+border_width_top = 2
+content_margin_top = 0.0
+border_width_right = 2
+content_margin_right = 0.0
+border_width_bottom = 2
+content_margin_bottom = 0.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="NormalHover"]
+bg_color = Color(0.9059, 0.6039, 0.0471, 1)
+border_color = Color(1.0000, 0.8118, 0.3333, 1)
+border_width_left = 2
+content_margin_left = 0.0
+border_width_top = 2
+content_margin_top = 0.0
+border_width_right = 2
+content_margin_right = 0.0
+border_width_bottom = 2
+content_margin_bottom = 0.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Hard"]
+bg_color = Color(0.60000, 0.28627, 0.20000, 1.00000)
+border_color = Color(0.31373, 0.15294, 0.11373, 1.00000)
+border_width_left = 2
+content_margin_left = 0.0
+border_width_top = 2
+content_margin_top = 0.0
+border_width_right = 2
+content_margin_right = 0.0
+border_width_bottom = 2
+content_margin_bottom = 0.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Back"]
+bg_color = Color(0.6392, 0.2314, 0.1608, 1)
+border_color = Color(0.9294, 0.5216, 0.3137, 1)
+border_width_left = 2
+content_margin_left = 0.0
+border_width_top = 2
+content_margin_top = 0.0
+border_width_right = 2
+content_margin_right = 0.0
+border_width_bottom = 2
+content_margin_bottom = 0.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="BackHover"]
+bg_color = Color(0.7451, 0.3098, 0.2157, 1)
+border_color = Color(1.0000, 0.6118, 0.4118, 1)
+border_width_left = 2
+content_margin_left = 0.0
+border_width_top = 2
+content_margin_top = 0.0
+border_width_right = 2
+content_margin_right = 0.0
+border_width_bottom = 2
+content_margin_bottom = 0.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Title"]
+bg_color = Color(0.31765, 0.20784, 0.13333, 1.00000)
+border_color = Color(0.58431, 0.40000, 0.23529, 1.00000)
+border_width_left = 2
+content_margin_left = 0.0
+border_width_top = 2
+content_margin_top = 0.0
+border_width_right = 2
+content_margin_right = 0.0
+border_width_bottom = 2
+content_margin_bottom = 0.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="AtlasTexture" id="Preview0"]
+atlas = ExtResource("Idle0")
+region = Rect2(26, 23, 80, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Preview1"]
+atlas = ExtResource("Idle1")
+region = Rect2(26, 23, 80, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Preview2"]
+atlas = ExtResource("Idle2")
+region = Rect2(24, 22, 80, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Preview3"]
+atlas = ExtResource("Idle3")
+region = Rect2(22, 22, 80, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Preview4"]
+atlas = ExtResource("Idle4")
+region = Rect2(23, 22, 80, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Preview5"]
+atlas = ExtResource("Idle5")
+region = Rect2(24, 22, 80, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Preview6"]
+atlas = ExtResource("Idle6")
+region = Rect2(24, 21, 80, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Preview7"]
+atlas = ExtResource("Idle7")
+region = Rect2(24, 21, 80, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Preview8"]
+atlas = ExtResource("Idle8")
+region = Rect2(38, 37, 80, 96)
+filter_clip = true
+
+[sub_resource type="SpriteFrames" id="CharacterIdle"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": SubResource("Preview0")}, {"duration": 1.0, "texture": SubResource("Preview1")}, {"duration": 1.0, "texture": SubResource("Preview2")}, {"duration": 1.0, "texture": SubResource("Preview3")}, {"duration": 1.0, "texture": SubResource("Preview4")}, {"duration": 1.0, "texture": SubResource("Preview5")}, {"duration": 1.0, "texture": SubResource("Preview6")}, {"duration": 1.0, "texture": SubResource("Preview7")}, {"duration": 1.0, "texture": SubResource("Preview8")}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}]
+
+[node name="DifficultySetting" type="Control" unique_id=798250863]
+custom_minimum_size = Vector2(420, 440)
+layout_mode = 3
+offset_right = 478.0
+offset_bottom = 440.0
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="MenuPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 478.0
+offset_bottom = 440.0
+theme_override_styles/panel = SubResource("MenuOverlay")
+
+[node name="CharacterPanel" type="Panel" parent="MenuPanel"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 24.0
+offset_right = 466.0
+offset_bottom = 144.0
+theme_override_styles/panel = SubResource("Section")
+
+[node name="DifficultyPanel" type="Panel" parent="MenuPanel"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 153.0
+offset_right = 466.0
+offset_bottom = 310.0
+theme_override_styles/panel = SubResource("Section")
+
+[node name="DescriptionPanel" type="Panel" parent="MenuPanel"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 319.0
+offset_right = 466.0
+offset_bottom = 397.0
+theme_override_styles/panel = SubResource("Section")
+
+[node name="PreviewFrame" type="Panel" parent="MenuPanel/CharacterPanel"]
+layout_mode = 0
+offset_left = 159.0
+offset_top = 23.0
+offset_right = 295.0
+offset_bottom = 110.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Inset")
+
+[node name="CharacterPreview" type="Control" parent="MenuPanel/CharacterPanel"]
+layout_mode = 0
+offset_left = 159.0
+offset_top = 23.0
+offset_right = 295.0
+offset_bottom = 110.0
+clip_contents = true
+mouse_filter = 1
+
+[node name="CharacterSprite" type="AnimatedSprite2D" parent="MenuPanel/CharacterPanel/CharacterPreview"]
+texture_filter = 1
+position = Vector2(68, 38)
+scale = Vector2(0.64, 0.64)
+sprite_frames = SubResource("CharacterIdle")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="CharacterButton" type="Button" parent="MenuPanel/CharacterPanel/CharacterPreview"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+flat = true
+mouse_default_cursor_shape = 2
+
+[node name="EasyButton" parent="MenuPanel/DifficultyPanel" instance=ExtResource("MenuButton")]
+layout_mode = 0
+offset_left = 117.0
+offset_top = 20.0
+offset_right = 337.0
+offset_bottom = 49.0
+text = "Easy"
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("Easy")
+theme_override_styles/hover = SubResource("EasyHover")
+theme_override_styles/pressed = SubResource("Easy")
+
+[node name="NormalButton" parent="MenuPanel/DifficultyPanel" instance=ExtResource("MenuButton")]
+layout_mode = 0
+offset_left = 117.0
+offset_top = 54.0
+offset_right = 337.0
+offset_bottom = 83.0
+text = "Normal"
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("Normal")
+theme_override_styles/hover = SubResource("NormalHover")
+theme_override_styles/pressed = SubResource("Normal")
+
+[node name="HardButton" parent="MenuPanel/DifficultyPanel" instance=ExtResource("MenuButton")]
+layout_mode = 0
+offset_left = 117.0
+offset_top = 88.0
+offset_right = 337.0
+offset_bottom = 117.0
+text = "Hard (Locked)"
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("Hard")
+theme_override_styles/hover = SubResource("Hard")
+theme_override_styles/pressed = SubResource("Hard")
+disabled = true
+
+[node name="EndlessButton" parent="MenuPanel/DifficultyPanel" instance=ExtResource("MenuButton")]
+layout_mode = 0
+offset_left = 117.0
+offset_top = 122.0
+offset_right = 337.0
+offset_bottom = 151.0
+text = "Endless (Locked)"
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("Back")
+theme_override_styles/hover = SubResource("Back")
+theme_override_styles/pressed = SubResource("Back")
+disabled = true
+
+[node name="MainMenuButton" parent="MenuPanel" instance=ExtResource("MenuButton")]
+layout_mode = 0
+offset_left = 154.0
+offset_top = 404.0
+offset_right = 324.0
+offset_bottom = 433.0
+text = "Main Menu"
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("Back")
+theme_override_styles/hover = SubResource("BackHover")
+theme_override_styles/pressed = SubResource("Back")
+
+[node name="DescriptionFrame" type="Panel" parent="MenuPanel/DescriptionPanel"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 19.0
+offset_right = 442.0
+offset_bottom = 72.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Inset")
+
+[node name="DescriptionLabel" type="Label" parent="MenuPanel/DescriptionPanel"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 23.0
+offset_right = 436.0
+offset_bottom = 71.0
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1.00000, 0.94510, 0.85490, 1.00000)
+autowrap_mode = 3
+
+clip_text = true
+vertical_alignment = 1
+
+[node name="SelectionArrow" type="Label" parent="MenuPanel/DifficultyPanel"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 20.0
+offset_right = 147.0
+offset_bottom = 49.0
+mouse_filter = 2
+text = "▶"
+vertical_alignment = 1
+theme_override_colors/font_color = Color(1, 0.84, 0.33, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.11, 0.06, 1)
+theme_override_constants/outline_size = 4
+
+[node name="CharacterTitle" type="Label" parent="MenuPanel/CharacterPanel"]
+layout_mode = 0
+offset_left = 137.0
+offset_top = -12.0
+offset_right = 317.0
+offset_bottom = 13.0
+text = "Character"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("Title")
+
+[node name="DifficultyTitle" type="Label" parent="MenuPanel/DifficultyPanel"]
+layout_mode = 0
+offset_left = 137.0
+offset_top = -12.0
+offset_right = 317.0
+offset_bottom = 13.0
+text = "Difficulty"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("Title")
+
+[node name="DescriptionTitle" type="Label" parent="MenuPanel/DescriptionPanel"]
+layout_mode = 0
+offset_left = 137.0
+offset_top = -12.0
+offset_right = 317.0
+offset_bottom = 13.0
+text = "Description"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("Title")
+
+[node name="CharacterHint" type="Label" parent="MenuPanel/CharacterPanel"]
+layout_mode = 0
+offset_left = 159.0
+offset_top = 89.0
+offset_right = 295.0
+offset_bottom = 108.0
+text = "Click to select"
+horizontal_alignment = 1
+mouse_filter = 2
+theme_override_font_sizes/font_size = 11
+
+[node name="CharacterSelectPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 110.0
+offset_right = 378.0
+offset_bottom = 310.0
+visible = false
+theme_override_styles/panel = SubResource("Section")
+
+[node name="SelectionTitle" type="Label" parent="CharacterSelectPanel"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 15.0
+offset_right = 254.0
+offset_bottom = 45.0
+text = "Select Character"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_styles/normal = SubResource("Title")
+
+[node name="SelectionMessage" type="Label" parent="CharacterSelectPanel"]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 65.0
+offset_right = 259.0
+offset_bottom = 120.0
+text = "Character selection coming soon."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="CloseButton" parent="CharacterSelectPanel" instance=ExtResource("MenuButton")]
+layout_mode = 0
+offset_left = 79.0
+offset_top = 145.0
+offset_right = 199.0
+offset_bottom = 177.0
+text = "Close"
+theme_override_styles/normal = SubResource("Back")
+theme_override_styles/hover = SubResource("BackHover")

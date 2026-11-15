@@ -1,0 +1,80 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://Level1/assets/foods/Glow/apple/apple sprite.png" id="1_841k1"]
+[ext_resource type="Texture2D" path="res://Level1/assets/foods/Glow/apple/Eating apple.png" id="2_r5lig"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_841k1"]
+atlas = ExtResource("1_841k1")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r5lig"]
+atlas = ExtResource("1_841k1")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r2xoh"]
+atlas = ExtResource("1_841k1")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6vgey"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqvm8"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijoag"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_op104"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_841k1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r5lig")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r2xoh")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6vgey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gqvm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijoag")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_op104")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7vi72"]
+radius = 41.83007
+height = 83.66014
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=574865204]
+position = Vector2(0, -5.9604645e-08)
+scale = Vector2(0.5976562, 0.5976562)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"attack"
+[node name="Area2D" type="Area2D" parent="." unique_id=898989592]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=920594844]
+shape = SubResource("CapsuleShape2D_7vi72")

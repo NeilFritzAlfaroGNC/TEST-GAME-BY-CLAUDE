@@ -1,0 +1,139 @@
+[gd_scene format=3 uid="uid://cx4etmtwsi5h0"]
+
+[ext_resource type="PackedScene" path="res://Shared/scenes/ui/map_level_stars.tscn" id="MapLevelStars"]
+[ext_resource type="PackedScene" uid="uid://csjajco3ej070" path="res://Shared/scenes/level_map/difficulty_setting.tscn" id="1_ec2hq"]
+[ext_resource type="Texture2D" uid="uid://cf2h6pkw3l5l3" path="res://Shared/assets/MapLevel/MapLevel.png" id="1_jggh4"]
+[ext_resource type="Script" uid="uid://cxgol1yjhqddi" path="res://Shared/scripts/Level Map/map_enlargement.gd" id="2_pu7l8"]
+[ext_resource type="Script" uid="uid://t1sfpbbxh5fy" path="res://Shared/scripts/Level Map/cafeteria.gd" id="4_m7776"]
+[ext_resource type="Script" uid="uid://6i68ltmlpmk3" path="res://Shared/scripts/Level Map/canteen.gd" id="6_5njr8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j2ts8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5njr8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uep26"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7vi72"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uknuq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m7776"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ec2hq"]
+
+[node name="level_map" type="Control" unique_id=1959214827]
+custom_minimum_size = Vector2(956.04, 440)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DifficultySetting" parent="." unique_id=798250863 instance=ExtResource("1_ec2hq")]
+layout_mode = 0
+anchors_preset = 0
+
+[node name="MapClip" type="Control" parent="." unique_id=1791456234]
+clip_children = 1
+clip_contents = true
+anchors_preset = 0
+offset_left = 478.0
+offset_right = 956.0
+offset_bottom = 440.0
+
+[node name="Map" type="TextureRect" parent="MapClip" unique_id=710602756]
+custom_minimum_size = Vector2(478, 440)
+layout_mode = 0
+offset_right = 478.0
+offset_bottom = 440.0
+mouse_filter = 0
+texture = ExtResource("1_jggh4")
+expand_mode = 1
+script = ExtResource("2_pu7l8")
+tanjangco_battle_path = "res://Level3/scenes/story/story_scene_level3.tscn"
+
+[node name="enlarging_cafeteria" type="Button" parent="MapClip/Map" unique_id=622689834]
+layout_mode = 0
+offset_left = 143.0
+offset_top = 94.0
+offset_right = 237.0
+offset_bottom = 125.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7vi72")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_uknuq")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_m7776")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ec2hq")
+
+[node name="Cafeteria" type="Button" parent="MapClip/Map" unique_id=630625233]
+layout_mode = 0
+offset_left = 143.0
+offset_top = 94.0
+offset_right = 237.0
+offset_bottom = 125.0
+text = "Cafeteria"
+icon_alignment = 1
+script = ExtResource("4_m7776")
+
+[node name="enlarging_canteen" type="Button" parent="MapClip/Map" unique_id=356759794]
+layout_mode = 0
+offset_left = 279.0
+offset_top = 94.0
+offset_right = 404.0
+offset_bottom = 125.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7vi72")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_uknuq")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_m7776")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ec2hq")
+
+[node name="Canteen" type="Button" parent="MapClip/Map" unique_id=953703489]
+layout_mode = 0
+offset_left = 278.0
+offset_top = 94.0
+offset_right = 404.0
+offset_bottom = 125.0
+text = "Mesa Hall"
+icon_alignment = 1
+script = ExtResource("6_5njr8")
+canteen_scene_path = "uid://cmansebgnrvd6"
+
+[node name="enlarging_tanjangco" type="Button" parent="MapClip/Map" unique_id=1518144631]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 133.0
+offset_right = 241.0
+offset_bottom = 177.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7vi72")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_uknuq")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_m7776")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ec2hq")
+
+[node name="Tanjangco" type="Button" parent="MapClip/Map" unique_id=1346039214]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 133.0
+offset_right = 241.0
+offset_bottom = 177.0
+theme_override_font_sizes/font_size = 14
+text = "Tanjangco Hall"
+
+[node name="CafeteriaStars" parent="MapClip/Map" unique_id=253707697 instance=ExtResource("MapLevelStars")]
+offset_left = 190
+offset_top = 74
+offset_right = 190
+offset_bottom = 74
+level_id = "cafeteria_level_1"
+
+
+[node name="CanteenStars" parent="MapClip/Map" unique_id=1317102653 instance=ExtResource("MapLevelStars")]
+offset_left = 340.5
+offset_top = 74
+offset_right = 340.5
+offset_bottom = 74
+level_id = "canteen_level_2"
+
+
+[node name="TanjangcoStars" parent="MapClip/Map" unique_id=826931019 instance=ExtResource("MapLevelStars")]
+offset_left = 188
+offset_top = 185
+offset_right = 188
+offset_bottom = 185
+level_id = "Tanjangco Hall"
+

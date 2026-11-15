@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Shared/scripts/ui/map_level_stars.gd" id="1"]
+[ext_resource type="Texture2D" path="res://Shared/assets/UI/map_star_filled.svg" id="2"]
+[ext_resource type="Texture2D" path="res://Shared/assets/UI/map_star_empty.svg" id="3"]
+
+[node name="LevelStars" type="Control"]
+mouse_filter = 2
+script = ExtResource("1")
+filled_star_texture = ExtResource("2")
+empty_star_texture = ExtResource("3")
+
+[node name="Star1" type="Sprite2D" parent="."]
+
+[node name="Star2" type="Sprite2D" parent="."]
+
+[node name="Star3" type="Sprite2D" parent="."]
