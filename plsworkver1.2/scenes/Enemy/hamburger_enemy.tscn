@@ -1,0 +1,331 @@
+[gd_scene format=3 uid="uid://svgj8f314168"]
+
+[ext_resource type="Texture2D" uid="uid://ciuwomsk3bagh" path="res://assets/Enemy/hambuger-monster/hamburger-attack/frame_000.png" id="1_0p3tq"]
+[ext_resource type="Script" uid="uid://dy1hyljpiu7xb" path="res://scripts/Enemy/enemy.gd" id="1_am3gd"]
+[ext_resource type="Texture2D" uid="uid://2osjd27monxr" path="res://assets/Enemy/hambuger-monster/hamburger-attack/frame_001.png" id="2_85l3u"]
+[ext_resource type="Texture2D" uid="uid://54cpc76sbh6o" path="res://assets/Enemy/hambuger-monster/hamburger-attack/frame_002.png" id="3_2do3u"]
+[ext_resource type="Texture2D" uid="uid://fuffj3v35j55" path="res://assets/Enemy/hambuger-monster/hamburger-attack/frame_003.png" id="4_bfb5m"]
+[ext_resource type="Texture2D" uid="uid://dukwcs5pl04p7" path="res://assets/Enemy/hambuger-monster/hamburger-attack/frame_004.png" id="5_a6y27"]
+[ext_resource type="Texture2D" uid="uid://ja60odqnqre5" path="res://assets/Enemy/hambuger-monster/hamburger-attack/frame_005.png" id="6_6ryxs"]
+[ext_resource type="Texture2D" uid="uid://detcf55yqfdyv" path="res://assets/Enemy/hambuger-monster/hamburger-attack/frame_006.png" id="7_8hva0"]
+[ext_resource type="Texture2D" uid="uid://dxbxx0dcgo6ck" path="res://assets/Enemy/hambuger-monster/hamburger-attack/frame_007.png" id="8_lu3w7"]
+[ext_resource type="Texture2D" uid="uid://brydqlid4obt0" path="res://assets/Enemy/hambuger-monster/hamburger-attack/frame_008.png" id="9_ktsx3"]
+[ext_resource type="Texture2D" uid="uid://cwjl6liv2656o" path="res://assets/Enemy/hambuger-monster/hamburger walk/frame_000.png" id="10_416r6"]
+[ext_resource type="Texture2D" uid="uid://pb3mtyp372fe" path="res://assets/Enemy/hambuger-monster/hamburger burn/frame_000.png" id="11_828ah"]
+[ext_resource type="Texture2D" uid="uid://dpk81d1md7tsm" path="res://assets/Enemy/hambuger-monster/hamburger walk/frame_001.png" id="11_cnpf6"]
+[ext_resource type="Texture2D" uid="uid://b4twr35o2dpv" path="res://assets/Enemy/hambuger-monster/hamburger burn/frame_001.png" id="12_5s3wl"]
+[ext_resource type="Texture2D" uid="uid://1l064i4rry8s" path="res://assets/Enemy/hambuger-monster/hamburger walk/frame_002.png" id="12_s7of0"]
+[ext_resource type="Texture2D" uid="uid://cpn8gdktaaigf" path="res://assets/Enemy/hambuger-monster/hamburger burn/frame_002.png" id="13_8khbm"]
+[ext_resource type="Texture2D" uid="uid://conody03nkbvc" path="res://assets/Enemy/hambuger-monster/hamburger walk/frame_003.png" id="13_g7npw"]
+[ext_resource type="Texture2D" uid="uid://b142neag3rbrq" path="res://assets/Enemy/hambuger-monster/hamburger burn/frame_003.png" id="14_eskdt"]
+[ext_resource type="Texture2D" uid="uid://dabhb083jynta" path="res://assets/Enemy/hambuger-monster/hamburger walk/frame_004.png" id="14_x7p4s"]
+[ext_resource type="Texture2D" uid="uid://byyhge5uw1hp2" path="res://assets/Enemy/hambuger-monster/hamburger burn/frame_004.png" id="15_bsuor"]
+[ext_resource type="Texture2D" uid="uid://dqfsa3ro4u3n8" path="res://assets/Enemy/hambuger-monster/hamburger walk/frame_005.png" id="15_xuxee"]
+[ext_resource type="Texture2D" uid="uid://c3bkw7jkdtm3x" path="res://assets/Enemy/hambuger-monster/hamburger walk/frame_006.png" id="16_363xw"]
+[ext_resource type="Texture2D" uid="uid://diy1mgryexewu" path="res://assets/Enemy/hambuger-monster/hamburger burn/frame_005.png" id="16_le2wd"]
+[ext_resource type="Texture2D" uid="uid://d3vheklbgicln" path="res://assets/Enemy/hambuger-monster/hamburger burn/frame_006.png" id="17_gf773"]
+[ext_resource type="Texture2D" uid="uid://cb753vcmytb20" path="res://assets/Enemy/hambuger-monster/hamburger walk/frame_007.png" id="17_wgpwk"]
+[ext_resource type="Texture2D" uid="uid://dvmk4b76214d2" path="res://assets/Enemy/hambuger-monster/hamburger burn/frame_007.png" id="18_f2sqk"]
+[ext_resource type="Texture2D" uid="uid://c437cwpnrtbex" path="res://assets/Enemy/hambuger-monster/hamburger walk/frame_008.png" id="18_lghbq"]
+[ext_resource type="Texture2D" uid="uid://c0rxyhjgypnd2" path="res://assets/Enemy/hambuger-monster/hamburger burn/frame_008.png" id="19_8a6sf"]
+[ext_resource type="PackedScene" uid="uid://ddky22wdxkgwe" path="res://scenes/Enemy/Enemy Attack Animation/claw_animation.tscn" id="20_2do3u"]
+[ext_resource type="Texture2D" uid="uid://dkdbhoi5vmiyl" path="res://assets/Enemy/hambuger-monster/hamburger freeze/frame_000.png" id="20_6bnhe"]
+[ext_resource type="Texture2D" uid="uid://bxmrerpdvt40s" path="res://assets/Enemy/hambuger-monster/hamburger defeated/frame_000.png" id="20_am3gd"]
+[ext_resource type="Texture2D" uid="uid://d2afbwgefjtr0" path="res://assets/Enemy/hambuger-monster/hamburger freeze/frame_001.png" id="21_am3gd"]
+[ext_resource type="Script" uid="uid://b1gfw8dlbje8e" path="res://scripts/Enemy/enemy_health.gd" id="21_bfb5m"]
+[ext_resource type="Texture2D" uid="uid://cqjgnyfp5ubne" path="res://assets/Enemy/hambuger-monster/hamburger defeated/frame_001.png" id="21_nbk1b"]
+[ext_resource type="Script" uid="uid://dtayidwgvikll" path="res://scripts/Enemy/enemy_status_effects.gd" id="22_a6y27"]
+[ext_resource type="Texture2D" uid="uid://d1otlb3eq8qov" path="res://assets/Enemy/hambuger-monster/hamburger freeze/frame_002.png" id="22_nbk1b"]
+[ext_resource type="Texture2D" uid="uid://bu8owwol6akfp" path="res://assets/Enemy/hambuger-monster/hamburger defeated/frame_002.png" id="22_yrpnp"]
+[ext_resource type="Script" uid="uid://cgtev8p7lo8pw" path="res://scripts/Enemy/enemy_knockback.gd" id="23_6ryxs"]
+[ext_resource type="Texture2D" uid="uid://fp2c6wc43cqi" path="res://assets/Enemy/hambuger-monster/hamburger defeated/frame_003.png" id="23_jwtnb"]
+[ext_resource type="Texture2D" uid="uid://ljs6oklnqh56" path="res://assets/Enemy/hambuger-monster/hamburger freeze/frame_003.png" id="23_yrpnp"]
+[ext_resource type="Texture2D" uid="uid://l1y8ln5runj" path="res://assets/Enemy/hambuger-monster/hamburger freeze/frame_004.png" id="24_jwtnb"]
+[ext_resource type="Texture2D" uid="uid://c4c7616jgog3h" path="res://assets/Enemy/hambuger-monster/hamburger defeated/frame_004.png" id="24_qrbxs"]
+[ext_resource type="Texture2D" uid="uid://cxw153i05gpb8" path="res://assets/Enemy/hambuger-monster/hamburger defeated/frame_005.png" id="25_77px8"]
+[ext_resource type="Texture2D" uid="uid://dw5bk0k64f52x" path="res://assets/Enemy/hambuger-monster/hamburger freeze/frame_005.png" id="25_qrbxs"]
+[ext_resource type="Texture2D" uid="uid://ceoa0ktdpdh8h" path="res://assets/Enemy/hambuger-monster/hamburger freeze/frame_006.png" id="26_77px8"]
+[ext_resource type="Texture2D" uid="uid://0kc4nhf10573" path="res://assets/Enemy/hambuger-monster/hamburger defeated/frame_006.png" id="26_d7ein"]
+[ext_resource type="Texture2D" uid="uid://cy7jcqglmsfx6" path="res://assets/Enemy/hambuger-monster/hamburger knockback/frame_000.png" id="27_d7ein"]
+[ext_resource type="Texture2D" uid="uid://cva871whryjso" path="res://assets/Enemy/hambuger-monster/hamburger defeated/frame_007.png" id="27_fw4d0"]
+[ext_resource type="Texture2D" uid="uid://cu7oubglcnwmm" path="res://assets/Enemy/hambuger-monster/hamburger knockback/frame_001.png" id="28_fw4d0"]
+[ext_resource type="Texture2D" uid="uid://imvvxc6xlumb" path="res://assets/Enemy/hambuger-monster/hamburger defeated/frame_008.png" id="28_w41a5"]
+[ext_resource type="Texture2D" uid="uid://dnglmy37o7tr3" path="res://assets/Enemy/hambuger-monster/hamburger knockback/frame_002.png" id="29_w41a5"]
+[ext_resource type="Texture2D" uid="uid://q1q7668scqdj" path="res://assets/Enemy/hambuger-monster/hamburger knockback/frame_003.png" id="30_686cd"]
+[ext_resource type="Texture2D" uid="uid://cb5g8bdvfimlt" path="res://assets/Enemy/hambuger-monster/hamburger knockback/frame_004.png" id="31_18xhm"]
+[ext_resource type="Texture2D" uid="uid://b4j6pw258vcfs" path="res://assets/Enemy/hambuger-monster/hamburger knockback/frame_005.png" id="32_tf3k6"]
+[ext_resource type="Texture2D" uid="uid://ddo3bl7tn2a4n" path="res://assets/Enemy/hambuger-monster/hamburger knockback/frame_006.png" id="33_joemp"]
+[ext_resource type="Texture2D" uid="uid://db6nu2aa21234" path="res://assets/Enemy/hambuger-monster/hamburger knockback/frame_007.png" id="34_rw62c"]
+[ext_resource type="Texture2D" uid="uid://cwlcjreafwv4j" path="res://assets/Enemy/hambuger-monster/hamburger knockback/frame_008.png" id="35_pga8u"]
+[ext_resource type="Texture2D" uid="uid://dbc7m6vx5yr3n" path="res://assets/Enemy/hambuger-monster/hamburget stun/frame_000.png" id="36_1wupk"]
+[ext_resource type="Texture2D" uid="uid://bwolm6sv25hvk" path="res://assets/Enemy/hambuger-monster/hamburget stun/frame_001.png" id="37_l2dlf"]
+[ext_resource type="Texture2D" uid="uid://dg63hpbr2rxfp" path="res://assets/Enemy/hambuger-monster/hamburget stun/frame_002.png" id="38_assag"]
+[ext_resource type="Texture2D" uid="uid://cx30ioeeo3xpd" path="res://assets/Enemy/hambuger-monster/hamburget stun/frame_003.png" id="39_okotg"]
+[ext_resource type="Texture2D" uid="uid://cg3xod7q6gj4i" path="res://assets/Enemy/hambuger-monster/hamburget stun/frame_004.png" id="40_8poxk"]
+[ext_resource type="Texture2D" uid="uid://c31lpilvbwcpj" path="res://assets/Enemy/hambuger-monster/hamburget stun/frame_005.png" id="41_7s3au"]
+[ext_resource type="Texture2D" uid="uid://b7q7y4s0xfgul" path="res://assets/Enemy/hambuger-monster/hamburget stun/frame_006.png" id="42_x35uu"]
+[ext_resource type="Texture2D" uid="uid://coo7of72j3ivr" path="res://assets/Enemy/hambuger-monster/hamburget stun/frame_007.png" id="43_6npi0"]
+[ext_resource type="Texture2D" uid="uid://be6rl024v8c1h" path="res://assets/Enemy/hambuger-monster/hamburget stun/frame_008.png" id="44_v8ajq"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_0p3tq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_85l3u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_2do3u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_bfb5m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_a6y27")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_6ryxs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_8hva0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_lu3w7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_ktsx3")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_828ah")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_5s3wl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_8khbm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_eskdt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_bsuor")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_le2wd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_gf773")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_f2sqk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_8a6sf")
+}],
+"loop": 1,
+"name": &"burn",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_am3gd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_nbk1b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_yrpnp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_jwtnb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_qrbxs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_77px8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_d7ein")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_fw4d0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_w41a5")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_6bnhe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_am3gd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_nbk1b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_yrpnp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_jwtnb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_qrbxs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_77px8")
+}],
+"loop": 1,
+"name": &"freeze",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("27_d7ein")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_fw4d0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_w41a5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_686cd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_18xhm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_tf3k6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_joemp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_rw62c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_pga8u")
+}],
+"loop": 1,
+"name": &"knockback",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("36_1wupk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_l2dlf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_assag")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_okotg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_8poxk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_7s3au")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_x35uu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_6npi0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_v8ajq")
+}],
+"loop": 1,
+"name": &"stun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_416r6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_cnpf6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_s7of0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_g7npw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_x7p4s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_xuxee")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_363xw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_wgpwk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_lghbq")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jtevl"]
+size = Vector2(81.5, 108)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7vi72"]
+size = Vector2(129, 108)
+
+[node name="hamburger_enemy" type="CharacterBody2D" unique_id=2055283136 groups=["enemy"]]
+collision_layer = 2
+script = ExtResource("1_am3gd")
+enemy_name = "HamburgerEnemy"
+attack_interval = 0.05
+attack_node_path = NodePath("HamburgerAttack")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=899838622]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"attack"
+frame_progress = 0.09525591
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=252389875]
+position = Vector2(-3.75, 0)
+shape = SubResource("RectangleShape2D_jtevl")
+
+[node name="DetectionArea" type="Area2D" parent="." unique_id=1958002601]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=260932932]
+position = Vector2(20.5, 0)
+shape = SubResource("RectangleShape2D_7vi72")
+
+[node name="HamburgerAttack" parent="." unique_id=2054813233 instance=ExtResource("20_2do3u")]
+position = Vector2(104, -4)
+use_enemy_nutrition_damage = true
+show_debug_messages = true
+
+[node name="EnemyHealth" type="Node" parent="." unique_id=1087910350]
+script = ExtResource("21_bfb5m")
+
+[node name="EnemyStatusEffects" type="Node" parent="." unique_id=1510070217]
+script = ExtResource("22_a6y27")
+
+[node name="EnemyKnockback" type="Node" parent="." unique_id=400662251]
+script = ExtResource("23_6ryxs")

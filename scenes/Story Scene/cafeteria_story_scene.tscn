@@ -1,0 +1,381 @@
+[gd_scene format=3 uid="uid://dx2es5wk2hq45"]
+
+[ext_resource type="Script" uid="uid://bvq725jp34tf6" path="res://scripts/Story Scene/cafeteria_story_scene.gd" id="1_jy6aa"]
+[ext_resource type="Script" uid="uid://b485ccrv6aek7" path="res://scripts/Story Scene/story_page.gd" id="2_bwaa1"]
+[ext_resource type="Script" uid="uid://cybnke0g05xtl" path="res://scripts/Story Scene/story_dialogue.gd" id="3_4ypkc"]
+[ext_resource type="Texture2D" uid="uid://7p1fhbw8d60k" path="res://assets/StoryScene/Scene 1 Cafeteria/scene 1.jpg" id="4_4ypkc"]
+[ext_resource type="Texture2D" uid="uid://cbwx6cxddvucw" path="res://assets/StoryScene/Scene 1 Cafeteria/scene 3.png" id="4_50pn7"]
+[ext_resource type="Texture2D" uid="uid://sy61brlw6wvo" path="res://assets/StoryScene/Scene 1 Cafeteria/scene 4.png" id="5_equhl"]
+[ext_resource type="Texture2D" uid="uid://dktt0ik2w52at" path="res://assets/StoryScene/Scene 1 Cafeteria/scene 2.png" id="5_nogtf"]
+[ext_resource type="Texture2D" uid="uid://b4ohb4e0k8d0t" path="res://assets/StoryScene/Scene 1 Cafeteria/scene 5.png" id="6_gfyhm"]
+[ext_resource type="Texture2D" uid="uid://dhdrgn1fvlmyj" path="res://assets/StoryScene/Scene 1 Cafeteria/scene 6.png" id="7_x82hw"]
+[ext_resource type="Texture2D" uid="uid://cgy20wyaoo2tt" path="res://assets/StoryScene/Scene 1 Cafeteria/scene 7.png" id="8_ob7cq"]
+[ext_resource type="Texture2D" uid="uid://c8jpu8efoqena" path="res://assets/StoryScene/Scene 1 Cafeteria/scene 8.png" id="9_ckoi3"]
+[ext_resource type="Texture2D" uid="uid://buhlqm8gxxjqs" path="res://assets/StoryScene/Scene 1 Cafeteria/scene 9.png" id="10_8wps7"]
+[ext_resource type="Script" uid="uid://wfm4qnyopatl" path="res://Shared/scripts/ui/story_skip_button.gd" id="story_skip"]
+
+[sub_resource type="Resource" id="Resource_bwaa1"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Narrator"
+dialogue_line = "It was just another normal day at school. Nothing unusual. Nothing dangerous. And definitely nothing that could possibly go wrong"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_jy6aa"]
+script = ExtResource("2_bwaa1")
+story_image = ExtResource("4_4ypkc")
+dialogues = Array[ExtResource("3_4ypkc")]([SubResource("Resource_bwaa1")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_rdfds"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Student 1"
+dialogue_line = "Uh... guys? Is my lunch supposed to be moving?"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_xgcg4"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Student 2"
+dialogue_line = "Stop messing around and eat."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_q0o1k"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Narrator"
+dialogue_line = "The hamburger suddenly twitches again."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_50pn7"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Student 1"
+dialogue_line = "Wait... IT MOVED AGAIN!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_nogtf"]
+script = ExtResource("2_bwaa1")
+story_image = ExtResource("5_nogtf")
+dialogues = Array[ExtResource("3_4ypkc")]([SubResource("Resource_rdfds"), SubResource("Resource_xgcg4"), SubResource("Resource_q0o1k"), SubResource("Resource_50pn7")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_q481n"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Burger Monster"
+dialogue_line = "FINALLY! LUNCHTIME IS OVER! NOW IT'S YOUR TURN TO BE THE FOOD!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_equhl"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Student 1"
+dialogue_line = "WHAT IS HAPPENING TO THE FOOD?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_gfyhm"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Student 2"
+dialogue_line = "THAT BURGER HAS TEETH! WHY DOES IT HAVE TEETH?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_ob7cq"]
+script = ExtResource("3_4ypkc")
+speaker_name = "SFX"
+dialogue_line = "BOING! CRASH! SCREEE!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_x82hw"]
+script = ExtResource("2_bwaa1")
+story_image = ExtResource("4_50pn7")
+dialogues = Array[ExtResource("3_4ypkc")]([SubResource("Resource_q481n"), SubResource("Resource_equhl"), SubResource("Resource_gfyhm"), SubResource("Resource_ob7cq")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_ckoi3"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Burger Monster"
+dialogue_line = "LOOK AT THEM RUN! THIS IS TOO EASY!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_8wps7"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Soda Monster"
+dialogue_line = "LET'S TURN THIS WHOLE SCHOOL UPSIDE DOWN!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_vt5gv"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Student 1"
+dialogue_line = "SOMEONE! PLEASE HELP US!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_ms4jw"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Student 2"
+dialogue_line = "THEY'RE EVERYWHERE! WHERE DID THEY COME FROM?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_l2opi"]
+script = ExtResource("2_bwaa1")
+story_image = ExtResource("5_equhl")
+dialogues = Array[ExtResource("3_4ypkc")]([SubResource("Resource_ckoi3"), SubResource("Resource_8wps7"), SubResource("Resource_vt5gv"), SubResource("Resource_ms4jw")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_hqbc3"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "Don't worry. I've dealt with things like these before."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_nyaov"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Student 1"
+dialogue_line = "THINGS LIKE THESE?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_j6y7i"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "Long story. Stay behind me."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_0mppn"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Burger Monster"
+dialogue_line = "WHO DO YOU THINK YOU ARE?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_2pigk"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "The person who's about to ruin your lunch break."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_gpkvk"]
+script = ExtResource("3_4ypkc")
+speaker_name = "SFX"
+dialogue_line = "DUN-DUN-DUUUN!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_vd2hn"]
+script = ExtResource("2_bwaa1")
+story_image = ExtResource("6_gfyhm")
+dialogues = Array[ExtResource("3_4ypkc")]([SubResource("Resource_hqbc3"), SubResource("Resource_nyaov"), SubResource("Resource_j6y7i"), SubResource("Resource_0mppn"), SubResource("Resource_2pigk"), SubResource("Resource_gpkvk")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_i6iok"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Burger Monster"
+dialogue_line = "GET BACK HERE!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_v7360"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "Whoa! You almost turned me into a burger!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_vv1og"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Soda Monster"
+dialogue_line = "YOU CAN'T DODGE US FOREVER!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_hcfhk"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "Yeah... I'm starting to notice that!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_irv7a"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Narrator"
+dialogue_line = "The hero backs away as more monsters approach."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_un2a6"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "Okay. A little help would be nice right about now!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_q0skw"]
+script = ExtResource("2_bwaa1")
+story_image = ExtResource("7_x82hw")
+dialogues = Array[ExtResource("3_4ypkc")]([SubResource("Resource_i6iok"), SubResource("Resource_v7360"), SubResource("Resource_vv1og"), SubResource("Resource_hcfhk"), SubResource("Resource_irv7a"), SubResource("Resource_un2a6")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_clb8i"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Device"
+dialogue_line = "RING! RING!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_2e0sc"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "Now? Seriously?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_x2yqu"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Professor"
+dialogue_line = "Can you hear me? My experiment has gone terribly wrong!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_sk7k5"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "You mean these walking lunch disasters are YOUR fault?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_hhdul"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Professor"
+dialogue_line = "Technically... yes"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_vqxfh"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "TECHNICALLY?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_j8d4s"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Professor"
+dialogue_line = "Listen! The monsters can be stopped. You need to choose the correct healthy foods!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_tj3fh"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "Great. My survival depends on knowing my lunch."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_b62c8"]
+script = ExtResource("2_bwaa1")
+story_image = ExtResource("8_ob7cq")
+dialogues = Array[ExtResource("3_4ypkc")]([SubResource("Resource_clb8i"), SubResource("Resource_2e0sc"), SubResource("Resource_x2yqu"), SubResource("Resource_sk7k5"), SubResource("Resource_hhdul"), SubResource("Resource_vqxfh"), SubResource("Resource_j8d4s"), SubResource("Resource_tj3fh")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_dugdo"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Professor"
+dialogue_line = "Choose the right healthy food! Each food group gives you a different power!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_ofqqb"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "So my lunch is my weapon now?"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_e4yxn"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Professor"
+dialogue_line = "Exactly! Go foods give you energy, Grow foods help build your body, and Glow foods help keep you healthy!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_qrhpj"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Burger Monster"
+dialogue_line = "Stop talking and fight us!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_d4qup"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "Fine! Let's see what today's lunch can do!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_tkkb8"]
+script = ExtResource("2_bwaa1")
+story_image = ExtResource("9_ckoi3")
+dialogues = Array[ExtResource("3_4ypkc")]([SubResource("Resource_dugdo"), SubResource("Resource_ofqqb"), SubResource("Resource_e4yxn"), SubResource("Resource_qrhpj"), SubResource("Resource_d4qup")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_vqcon"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Burger Monster"
+dialogue_line = "Come on, hero! Show me what you've got!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_h5wka"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "All right! Time to serve up some justice!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_53qo3"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Professor (through the communication device)"
+dialogue_line = "Wait! Before you attack, let me show you how to use your food powers!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_eblcd"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Hero"
+dialogue_line = "A tutorial? Now?!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_kavyl"]
+script = ExtResource("3_4ypkc")
+speaker_name = "Professor"
+dialogue_line = "Trust me. You'll need it!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_bl1yg"]
+script = ExtResource("2_bwaa1")
+story_image = ExtResource("10_8wps7")
+dialogues = Array[ExtResource("3_4ypkc")]([SubResource("Resource_vqcon"), SubResource("Resource_h5wka"), SubResource("Resource_53qo3"), SubResource("Resource_eblcd"), SubResource("Resource_kavyl")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[node name="CafeteriaStoryScene" type="Control" unique_id=215233824]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jy6aa")
+story_pages = Array[ExtResource("2_bwaa1")]([SubResource("Resource_jy6aa"), SubResource("Resource_nogtf"), SubResource("Resource_x82hw"), SubResource("Resource_l2opi"), SubResource("Resource_vd2hn"), SubResource("Resource_q0skw"), SubResource("Resource_b62c8"), SubResource("Resource_tkkb8"), SubResource("Resource_bl1yg")])
+
+[node name="Background" type="TextureRect" parent="." unique_id=194364716]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 948.0
+offset_bottom = 438.0
+expand_mode = 1
+
+[node name="DialoguePanel" type="Panel" parent="." unique_id=1779529413]
+layout_mode = 0
+offset_top = 344.0
+offset_right = 956.0
+offset_bottom = 440.0
+
+[node name="SpeakerName" type="Label" parent="DialoguePanel" unique_id=170593270]
+layout_mode = 0
+offset_top = -23.0
+offset_right = 74.0
+vertical_alignment = 2
+
+[node name="DialogueText" type="RichTextLabel" parent="DialoguePanel" unique_id=1213251921]
+layout_mode = 0
+offset_right = 956.0
+offset_bottom = 56.0
+
+[node name="SkipStoryButton" type="Button" parent="DialoguePanel" unique_id=445370306]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -132.0
+offset_top = -36.0
+offset_right = -15.0
+offset_bottom = -4.0
+grow_horizontal = 0
+grow_vertical = 0
+tooltip_text = "Skip the story and start this level."
+focus_mode = 0
+mouse_default_cursor_shape = 2
+text = "Skip Story"
+script = ExtResource("story_skip")
+
+[connection signal="skip_requested" from="DialoguePanel/SkipStoryButton" to="." method="_finish_story"]

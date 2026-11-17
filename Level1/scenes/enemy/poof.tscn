@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://ccnfa1togy7k1"]
+
+[ext_resource type="Texture2D" uid="uid://pfoqag82qgxr" path="res://Level1/assets/poof/Transition sprite.png" id="1_o5wp4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mb80i"]
+atlas = ExtResource("1_o5wp4")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jo4uq"]
+atlas = ExtResource("1_o5wp4")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5xrnb"]
+atlas = ExtResource("1_o5wp4")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5agc6"]
+atlas = ExtResource("1_o5wp4")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mb80i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jo4uq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5xrnb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5agc6")
+}],
+"loop": 1,
+"name": &"transition",
+"speed": 5.0
+}]
+
+[node name="Poof" type="Node2D" unique_id=1481274183]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1418370262]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"transition"

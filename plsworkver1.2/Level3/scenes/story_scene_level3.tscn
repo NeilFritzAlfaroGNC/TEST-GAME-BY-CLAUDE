@@ -1,0 +1,150 @@
+[gd_scene format=3 uid="uid://cwktyd0wc86et"]
+
+[ext_resource type="Script" uid="uid://bwq5fp4pkry65" path="res://Level3/scripts/story_scene_level3.gd" id="1_plsk8"]
+[ext_resource type="Script" uid="uid://b485ccrv6aek7" path="res://scripts/Story Scene/story_page.gd" id="2_nkbwn"]
+[ext_resource type="Script" uid="uid://cybnke0g05xtl" path="res://scripts/Story Scene/story_dialogue.gd" id="3_epbym"]
+[ext_resource type="Texture2D" uid="uid://y2ol38ehermb" path="res://assets/StoryScene/Scene 3 Tanjangco/level 3 scene 1.png" id="4_mh8g1"]
+[ext_resource type="Texture2D" uid="uid://cxg053bjxcfho" path="res://assets/StoryScene/Scene 3 Tanjangco/level 3 scene 2.png" id="5_s1icw"]
+[ext_resource type="Texture2D" uid="uid://cq88qmap7k8bw" path="res://assets/StoryScene/Scene 3 Tanjangco/level 3 scene 3.png" id="6_s1icw"]
+
+[sub_resource type="Resource" id="Resource_6tbuu"]
+script = ExtResource("3_epbym")
+speaker_name = "Gummy Candy Monster"
+dialogue_line = "Hehehe! This school is our next playground!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_442tq"]
+script = ExtResource("3_epbym")
+speaker_name = "Hotdog Monster"
+dialogue_line = "Let's make some trouble!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_aowcr"]
+script = ExtResource("3_epbym")
+speaker_name = "Frosted Cupcake Monster"
+dialogue_line = "And save some room for dessert!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_deru3"]
+script = ExtResource("3_epbym")
+speaker_name = "SFX"
+dialogue_line = "EVIL GIGGLE!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_n66im"]
+script = ExtResource("2_nkbwn")
+story_image = ExtResource("4_mh8g1")
+dialogues = Array[ExtResource("3_epbym")]([SubResource("Resource_6tbuu"), SubResource("Resource_442tq"), SubResource("Resource_aowcr"), SubResource("Resource_deru3")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_phqi7"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Hehe... they haven't noticed me yet."
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_idpkx"]
+script = ExtResource("3_epbym")
+speaker_name = "Gummy Candy Monster"
+dialogue_line = "Huh?! What's that over there?"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_2sjpu"]
+script = ExtResource("3_epbym")
+speaker_name = "Hotdog Monster"
+dialogue_line = "What's wrong?"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_c2uxo"]
+script = ExtResource("3_epbym")
+speaker_name = "Frosted Cupcake Monster"
+dialogue_line = "Someone's watching us!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_p34cj"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Uh-oh...!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_u687j"]
+script = ExtResource("3_epbym")
+speaker_name = "SFX"
+dialogue_line = "GASP!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_4myh1"]
+script = ExtResource("2_nkbwn")
+story_image = ExtResource("5_s1icw")
+dialogues = Array[ExtResource("3_epbym")]([SubResource("Resource_phqi7"), SubResource("Resource_idpkx"), SubResource("Resource_2sjpu"), SubResource("Resource_c2uxo"), SubResource("Resource_p34cj"), SubResource("Resource_u687j")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[sub_resource type="Resource" id="Resource_wng5m"]
+script = ExtResource("3_epbym")
+speaker_name = "Gummy Candy Monster"
+dialogue_line = "IT'S THE FOOD HERO!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_2knot"]
+script = ExtResource("3_epbym")
+speaker_name = "Hotdog Monster"
+dialogue_line = "Get ready! We've got trouble!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_x67pt"]
+script = ExtResource("3_epbym")
+speaker_name = "Frosted Cupcake Monster"
+dialogue_line = "Let's take that hero down!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_2ks2x"]
+script = ExtResource("3_epbym")
+speaker_name = "Hero"
+dialogue_line = "Come on! I'm ready!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_7u4gc"]
+script = ExtResource("3_epbym")
+speaker_name = "SFX"
+dialogue_line = "BATTLE START!"
+metadata/_custom_type_script = "uid://cybnke0g05xtl"
+
+[sub_resource type="Resource" id="Resource_v416f"]
+script = ExtResource("2_nkbwn")
+story_image = ExtResource("6_s1icw")
+dialogues = Array[ExtResource("3_epbym")]([SubResource("Resource_wng5m"), SubResource("Resource_2knot"), SubResource("Resource_x67pt"), SubResource("Resource_2ks2x"), SubResource("Resource_7u4gc")])
+metadata/_custom_type_script = "uid://b485ccrv6aek7"
+
+[node name="TanjangcoStoryScene" type="Control" unique_id=215233824]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_plsk8")
+story_pages = Array[ExtResource("2_nkbwn")]([SubResource("Resource_n66im"), SubResource("Resource_4myh1"), SubResource("Resource_v416f")])
+
+[node name="Background" type="TextureRect" parent="." unique_id=194364716]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 948.0
+offset_bottom = 438.0
+expand_mode = 1
+
+[node name="DialoguePanel" type="Panel" parent="." unique_id=1779529413]
+layout_mode = 0
+offset_top = 344.0
+offset_right = 956.0
+offset_bottom = 440.0
+
+[node name="SpeakerName" type="Label" parent="DialoguePanel" unique_id=170593270]
+layout_mode = 0
+offset_top = -23.0
+offset_right = 74.0
+vertical_alignment = 2
+
+[node name="DialogueText" type="RichTextLabel" parent="DialoguePanel" unique_id=1213251921]
+layout_mode = 0
+offset_right = 956.0
+offset_bottom = 96.0

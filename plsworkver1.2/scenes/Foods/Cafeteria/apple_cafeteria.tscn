@@ -1,0 +1,80 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/Foods/glow/apple.tscn" id="food_base"]
+[ext_resource type="Texture2D" uid="uid://ckirmukf2g5rk" path="res://assets/Foods/Glow/apple/apple sprite.png" id="1_841k1"]
+[ext_resource type="Texture2D" uid="uid://budrgqe8i6sg4" path="res://assets/Foods/Glow/apple/Eating apple.png" id="2_r5lig"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_841k1"]
+atlas = ExtResource("1_841k1")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r5lig"]
+atlas = ExtResource("1_841k1")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r2xoh"]
+atlas = ExtResource("1_841k1")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6vgey"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqvm8"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijoag"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_op104"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_841k1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r5lig")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r2xoh")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6vgey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gqvm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijoag")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_op104")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[node name="AnimatedSprite2D" instance=ExtResource("food_base")]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+l1_glow_nutrition_restore = 20
+l1_glow_charge_gain = 25
+l1_glow_throw_damage = 10
+l1_glow_buff = 0
+l1_glow_buff_duration = 0.0
+l1_glow_buff_strength = 0.0
+metadata/player_buff_id = "cooldown_reduction"
+metadata/player_buff_duration = 8.0
+metadata/player_buff_strength = 20.0

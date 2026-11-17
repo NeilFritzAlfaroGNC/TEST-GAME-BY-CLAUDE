@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://cnydibxdgebv8"]
+
+[ext_resource type="Script" uid="uid://cf3n7l8qbws71" path="res://scripts/Battle Scene/battle_scene_canteen.gd" id="1_sb7id"]
+[ext_resource type="Script" uid="uid://b05fvja7hvgi6" path="res://scripts/UI/food_inspector.gd" id="2_grp1e"]
+[ext_resource type="Texture2D" uid="uid://10l7l51dpbd6" path="res://assets/BattleScene/GNCI Cafeteria.png" id="3_grp1e"]
+[ext_resource type="PackedScene" uid="uid://d3yegafy67sjs" path="res://scenes/Conveyer Belt/conveyer_belt.tscn" id="4_n2kff"]
+[ext_resource type="PackedScene" uid="uid://dop0rxq1sq2vu" path="res://scenes/Components/LevelDifficultySetting.tscn" id="5_4dvls"]
+[ext_resource type="Resource" uid="uid://bad5rqb6gc630" path="res://resources/Difficulty/easy_canteen_level_2.tres" id="6_xbkdn"]
+[ext_resource type="Resource" uid="uid://dd2vlqvrdxi5" path="res://resources/Difficulty/normal_canteen_level_2.tres" id="7_1yxkq"]
+[ext_resource type="Resource" uid="uid://dnxoesh37a747" path="res://resources/Difficulty/hard_canteen_level_2.tres" id="8_1yxkq"]
+[ext_resource type="Script" uid="uid://i0u4ty5gep3i" path="res://scripts/Enemy Spawn/enemy_spawn.gd" id="8_ciqq3"]
+[ext_resource type="Script" uid="uid://bw4j3x0cxy5sl" path="res://scripts/Food Spawn/food_spawn.gd" id="9_vw3qg"]
+[ext_resource type="PackedScene" uid="uid://ltajjbixojjy" path="res://scenes/Foods/glow/apple.tscn" id="10_8l5u2"]
+[ext_resource type="PackedScene" uid="uid://daoew0t5objo8" path="res://scenes/Foods/go/bread.tscn" id="11_27mmf"]
+[ext_resource type="PackedScene" uid="uid://cwk6g10d2hdm8" path="res://scenes/Foods/grow/bean.tscn" id="13_grp1e"]
+[ext_resource type="PackedScene" uid="uid://il8e6bk63bvh" path="res://scenes/Foods/glow/banana.tscn" id="14_f4sp5"]
+[ext_resource type="PackedScene" uid="uid://c4gn225sfkvjr" path="res://scenes/Foods/go/corn.tscn" id="15_n2kff"]
+[ext_resource type="PackedScene" uid="uid://bm3lqk76v7t4g" path="res://scenes/Foods/grow/fish.tscn" id="16_4dvls"]
+[ext_resource type="PackedScene" uid="uid://b5sot0lwe7v0a" path="res://scenes/Main Character/main_char.tscn" id="16_vjxef"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wb6sh"]
+
+[node name="BattleScene" type="Control" unique_id=1451651748]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 65.0
+offset_bottom = 47.0
+script = ExtResource("1_sb7id")
+go_inspector_script = ExtResource("2_grp1e")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1182470010]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_grp1e")
+
+[node name="Conveyer Belt" parent="." unique_id=2084871955 instance=ExtResource("4_n2kff")]
+position = Vector2(478, 411)
+scale = Vector2(0.14101124, 0.12086778)
+frame = 7
+frame_progress = 0.9064217
+flip_h = true
+queue_right_margin = 25.0
+
+[node name="LevelDifficultySetting" parent="." unique_id=296372107 instance=ExtResource("5_4dvls")]
+easy_settings = ExtResource("6_xbkdn")
+normal_settings = ExtResource("7_1yxkq")
+hard_settings = ExtResource("8_1yxkq")
+
+[node name="EnemySpawn" type="Marker2D" parent="." unique_id=49369584]
+position = Vector2(114, 329)
+script = ExtResource("8_ciqq3")
+enemy_items_path = NodePath("../EnemyItems")
+
+[node name="EnemyItems" type="Node2D" parent="." unique_id=1179757828]
+
+[node name="FoodSpawn" type="Marker2D" parent="." unique_id=203430058]
+position = Vector2(241, 416)
+script = ExtResource("9_vw3qg")
+available_foods = Array[PackedScene]([ExtResource("10_8l5u2"), ExtResource("11_27mmf"), ExtResource("13_grp1e"), ExtResource("14_f4sp5"), ExtResource("15_n2kff"), ExtResource("16_4dvls")])
+max_spawn_time = 3.0
+
+[node name="FoodItems" type="Node2D" parent="." unique_id=1839276456]
+
+[node name="main_character" parent="." unique_id=449091310 instance=ExtResource("16_vjxef")]
+position = Vector2(768, 331)
+
+[node name="Floor Mechanic" type="StaticBody2D" parent="." unique_id=1728979765]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor Mechanic" unique_id=2058293818]
+position = Vector2(768, 380)
+shape = SubResource("WorldBoundaryShape2D_wb6sh")

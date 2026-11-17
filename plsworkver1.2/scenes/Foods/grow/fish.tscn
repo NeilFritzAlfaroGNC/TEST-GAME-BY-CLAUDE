@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://bm3lqk76v7t4g"]
+
+[ext_resource type="Texture2D" uid="uid://bu2em4suxxoyd" path="res://assets/Foods/Grow/Fish/Eating fish.png" id="1_tbgkd"]
+[ext_resource type="Script" uid="uid://be7p7sl51jmuc" path="res://scripts/Foods/food_data.gd" id="2_ohaaf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ohaaf"]
+atlas = ExtResource("1_tbgkd")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m6spa"]
+atlas = ExtResource("1_tbgkd")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7r7p7"]
+atlas = ExtResource("1_tbgkd")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tsgm6"]
+atlas = ExtResource("1_tbgkd")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ohaaf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m6spa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7r7p7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tsgm6")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7vi72"]
+size = Vector2(93.699356, 43.503273)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=574865204]
+position = Vector2(0, -5.9604645e-08)
+scale = Vector2(0.5976562, 0.5976562)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"eaten"
+script = ExtResource("2_ohaaf")
+food_name = "fish"
+normal_category = 2
+grow_enable_damage = false
+grow_enable_flopping = true
+grow_flop_max_hits = 3
+grow_flop_bounce_range = null
+grow_flop_random_fallback = null
+
+[node name="Area2D" type="Area2D" parent="." unique_id=898989592 groups=["food"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1702363374]
+position = Vector2(3.3464036, 1.6732028)
+shape = SubResource("RectangleShape2D_7vi72")

@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://iqtlx7nwren"]
+
+[ext_resource type="Script" uid="uid://buh25roo8x0iw" path="res://scripts/UI/level_stars.gd" id="1_fvyj8"]
+
+[node name="LevelStars" type="Control" unique_id=253707697]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 1.0
+offset_right = 120.0
+offset_bottom = 41.0
+script = ExtResource("1_fvyj8")
+
+[node name="Stars" type="HBoxContainer" parent="." unique_id=1294124674]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -21.0
+offset_right = 60.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Star1" type="Label" parent="Stars" unique_id=1871931915]
+custom_minimum_size = Vector2(37, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "☆"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Star2" type="Label" parent="Stars" unique_id=787381805]
+custom_minimum_size = Vector2(37, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "☆"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Star3" type="Label" parent="Stars" unique_id=336690045]
+custom_minimum_size = Vector2(37, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "☆"
+horizontal_alignment = 1
+vertical_alignment = 1

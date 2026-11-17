@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://1m3ty8vnn8yh"]
+
+[ext_resource type="Texture2D" uid="uid://b8bld54innrtv" path="res://assets/Foods/Glow/mango/mango sprite.png" id="1_knwej"]
+[ext_resource type="Texture2D" uid="uid://dakrnsp0hpf8e" path="res://assets/Foods/Glow/mango/Eating mango.png" id="2_h7rus"]
+[ext_resource type="Script" uid="uid://be7p7sl51jmuc" path="res://scripts/Foods/food_data.gd" id="3_dvtfr"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_svdv1"]
+atlas = ExtResource("1_knwej")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_whsnt"]
+atlas = ExtResource("1_knwej")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6kgsf"]
+atlas = ExtResource("1_knwej")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5lykd"]
+atlas = ExtResource("2_h7rus")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eiatd"]
+atlas = ExtResource("2_h7rus")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nr1ed"]
+atlas = ExtResource("2_h7rus")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i8cfo"]
+atlas = ExtResource("2_h7rus")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_svdv1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_whsnt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6kgsf")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5lykd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eiatd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nr1ed")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i8cfo")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7vi72"]
+radius = 30.896545
+height = 76.505745
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=574865204]
+position = Vector2(2.2649767e-06, -1.9073486e-06)
+scale = Vector2(0.6796875, 0.6796875)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"attack"
+frame_progress = 0.69512045
+script = ExtResource("3_dvtfr")
+food_name = "mango"
+normal_category = 1
+enable_burn = true
+burn_duration = 6.0
+burn_tick_count = 4
+
+[node name="Area2D" type="Area2D" parent="." unique_id=898989592 groups=["food"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=920594844]
+shape = SubResource("CapsuleShape2D_7vi72")

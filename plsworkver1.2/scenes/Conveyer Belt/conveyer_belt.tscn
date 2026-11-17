@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://d3yegafy67sjs"]
+
+[ext_resource type="Texture2D" uid="uid://brdpcimj77a6g" path="res://assets/ConveyerBelt/Frame 2.png" id="1_2pbm7"]
+[ext_resource type="Texture2D" uid="uid://34jv13a43s8p" path="res://assets/ConveyerBelt/Frame 3.png" id="2_hck4s"]
+[ext_resource type="Texture2D" uid="uid://gkwtwls0364w" path="res://assets/ConveyerBelt/Frame 4.png" id="3_d4cfs"]
+[ext_resource type="Texture2D" uid="uid://bd25xvjstik3s" path="res://assets/ConveyerBelt/Frame 5.png" id="4_xv148"]
+[ext_resource type="Texture2D" uid="uid://bjtor7r4yjo5j" path="res://assets/ConveyerBelt/Frame 6.png" id="5_hpei3"]
+[ext_resource type="Texture2D" uid="uid://hoctcq1o6pvk" path="res://assets/ConveyerBelt/Frame 7.png" id="6_1fegn"]
+[ext_resource type="Texture2D" uid="uid://c42t51ypqsow6" path="res://assets/ConveyerBelt/Frame 8.png" id="7_uiwmw"]
+[ext_resource type="Texture2D" uid="uid://c0i27npoytksu" path="res://assets/ConveyerBelt/Frame 9.png" id="8_bw1p0"]
+[ext_resource type="Texture2D" uid="uid://c305it485m5xd" path="res://assets/ConveyerBelt/Frame 10.png" id="9_kx1v6"]
+[ext_resource type="Texture2D" uid="uid://cqokm527gkfpg" path="res://assets/ConveyerBelt/Frame 11.png" id="10_g8jbv"]
+[ext_resource type="Texture2D" uid="uid://cos0utypm7ut1" path="res://assets/ConveyerBelt/Frame 12.png" id="11_qy5tn"]
+[ext_resource type="Texture2D" uid="uid://bhj8eadl4xyy4" path="res://assets/ConveyerBelt/Frame 13.png" id="12_3x4ti"]
+[ext_resource type="Script" uid="uid://da0ai0vpxsl5c" path="res://scripts/Conveyer Belt/food_conveyer.gd" id="13_hck4s"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_2pbm7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_hck4s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_d4cfs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_xv148")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_hpei3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_1fegn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_uiwmw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_bw1p0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_kx1v6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_g8jbv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_qy5tn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_3x4ti")
+}],
+"loop": 1,
+"name": &"rotation",
+"speed": 20.0
+}]
+
+[node name="FoodConveyer" type="AnimatedSprite2D" unique_id=2084871955]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"rotation"
+autoplay = "rotation"
+frame_progress = 0.20397863
+script = ExtResource("13_hck4s")

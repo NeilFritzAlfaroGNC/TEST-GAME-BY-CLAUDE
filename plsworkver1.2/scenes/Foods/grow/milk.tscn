@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://1noynvkg3p2r"]
+
+[ext_resource type="Texture2D" uid="uid://bcf5tfixdw3ip" path="res://assets/Foods/Grow/milk/Drinking milk.png" id="1_fcf52"]
+[ext_resource type="Script" uid="uid://be7p7sl51jmuc" path="res://scripts/Foods/food_data.gd" id="2_mey6d"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mey6d"]
+atlas = ExtResource("1_fcf52")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rb2jn"]
+atlas = ExtResource("1_fcf52")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vgb3t"]
+atlas = ExtResource("1_fcf52")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x1n33"]
+atlas = ExtResource("1_fcf52")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6f668"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mey6d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rb2jn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vgb3t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x1n33")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7vi72"]
+radius = 31.790852
+height = 80.313736
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=574865204]
+position = Vector2(0, -5.9604645e-08)
+scale = Vector2(0.5976562, 0.5976562)
+sprite_frames = SubResource("SpriteFrames_6f668")
+animation = &"eaten"
+script = ExtResource("2_mey6d")
+food_name = "milk"
+normal_category = 2
+damage_bonus = 20.0
+grow_enable_enlarge = null
+grow_size_multiplier = null
+grow_enable_knockback = null
+grow_knockback_strength = null
+grow_enable_stun = null
+grow_stun_duration = null
+grow_enable_flopping = null
+grow_flop_max_hits = null
+grow_flop_bounce_range = null
+grow_flop_bounce_duration = null
+grow_flop_bounce_height = null
+grow_flop_random_fallback = null
+
+[node name="Area2D" type="Area2D" parent="." unique_id=898989592 groups=["food"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=920594844]
+position = Vector2(0, 2.3841858e-07)
+shape = SubResource("CapsuleShape2D_7vi72")

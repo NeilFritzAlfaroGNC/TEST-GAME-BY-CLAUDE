@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://71vw2ietncys"]
+
+[ext_resource type="PackedScene" uid="uid://cnydibxdgebv8" path="res://scenes/Battle Scene/battle_scene_canteen.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://c6lf7bstknhi4" path="res://scripts/Battle Scene/level1_classic_battle.gd" id="2_battle"]
+[ext_resource type="Resource" uid="uid://csdddpkhdy757" path="res://resources/Difficulty/easy_classic_level_1.tres" id="4_easy"]
+[ext_resource type="Resource" uid="uid://dr0wxouusfqr1" path="res://resources/Difficulty/normal_classic_level_1.tres" id="5_normal"]
+[ext_resource type="Resource" uid="uid://dmvd4clbnr8sb" path="res://resources/Difficulty/hard_classic_level_1.tres" id="6_hard"]
+
+[node name="BattleScene" unique_id=450202094 instance=ExtResource("1_base")]
+script = ExtResource("2_battle")
+
+[node name="LevelDifficultySetting" parent="." index="2" unique_id=296372107]
+easy_settings = ExtResource("4_easy")
+normal_settings = ExtResource("5_normal")
+hard_settings = ExtResource("6_hard")

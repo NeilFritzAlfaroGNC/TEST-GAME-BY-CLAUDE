@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/Foods/go/bread.tscn" id="food_base"]
+[ext_resource type="Texture2D" uid="uid://capk0w6a15rv5" path="res://assets/Foods/Go/bread/Eating bread.png" id="1_tfdea"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_porc0"]
+atlas = ExtResource("1_tfdea")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wfld5"]
+atlas = ExtResource("1_tfdea")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cyvp6"]
+atlas = ExtResource("1_tfdea")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ebmi"]
+atlas = ExtResource("1_tfdea")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_porc0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wfld5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cyvp6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6ebmi")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[node name="AnimatedSprite2D" instance=ExtResource("food_base")]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+l1_go_nutrition_restore = 20
+l1_go_charge_gain = 25
+l1_go_throw_damage = 10
+l1_go_buff = 0
+l1_go_buff_duration = 0.0
+l1_go_buff_strength = 0.0
+metadata/player_buff_id = "damage_boost"
+metadata/player_buff_duration = 8.0
+metadata/player_buff_strength = 25.0

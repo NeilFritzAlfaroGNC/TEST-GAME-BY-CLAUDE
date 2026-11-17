@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://xyv7qaxg47y3"]
+
+[ext_resource type="Texture2D" uid="uid://ctrnnsjfpku5o" path="res://assets/Foods/Glow/papaya/Papaya sprite.png" id="1_2tqwl"]
+[ext_resource type="Texture2D" uid="uid://budrgqe8i6sg4" path="res://assets/Foods/Glow/apple/Eating apple.png" id="2_icib3"]
+[ext_resource type="Script" uid="uid://be7p7sl51jmuc" path="res://scripts/Foods/food_data.gd" id="3_rk1vd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icib3"]
+atlas = ExtResource("1_2tqwl")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rk1vd"]
+atlas = ExtResource("1_2tqwl")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pbhuk"]
+atlas = ExtResource("1_2tqwl")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6vgey"]
+atlas = ExtResource("2_icib3")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqvm8"]
+atlas = ExtResource("2_icib3")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijoag"]
+atlas = ExtResource("2_icib3")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_op104"]
+atlas = ExtResource("2_icib3")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_icib3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rk1vd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pbhuk")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6vgey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gqvm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijoag")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_op104")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7vi72"]
+radius = 26.771244
+height = 83.66014
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=574865204]
+scale = Vector2(0.6816406, 0.6816406)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"attack"
+script = ExtResource("3_rk1vd")
+food_name = "papaya"
+normal_category = 1
+enable_freeze = true
+burn_duration = 4.0
+burn_tick_count = 2
+
+[node name="Area2D" type="Area2D" parent="." unique_id=898989592 groups=["food"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=920594844]
+shape = SubResource("CapsuleShape2D_7vi72")

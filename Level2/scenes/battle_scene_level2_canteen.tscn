@@ -1,0 +1,259 @@
+[gd_scene format=3 uid="uid://3h6ekunnpang"]
+
+[ext_resource type="Script" uid="uid://3b4lvg0ugkjw" path="res://Level2/scripts/level2_guess_food.gd" id="1_game"]
+[ext_resource type="Texture2D" uid="uid://d064wfyy7u8pm" path="res://assets/BattleScene/GNCI Canteen.png" id="2_background"]
+[ext_resource type="PackedScene" uid="uid://ltajjbixojjy" path="res://scenes/Foods/glow/apple.tscn" id="food_apple"]
+[ext_resource type="PackedScene" uid="uid://il8e6bk63bvh" path="res://scenes/Foods/glow/banana.tscn" id="food_banana"]
+[ext_resource type="PackedScene" uid="uid://cwk6g10d2hdm8" path="res://scenes/Foods/grow/bean.tscn" id="food_bean"]
+[ext_resource type="PackedScene" uid="uid://daoew0t5objo8" path="res://scenes/Foods/go/bread.tscn" id="food_bread"]
+[ext_resource type="PackedScene" uid="uid://5nuryi7guh2r" path="res://scenes/Foods/glow/carrot.tscn" id="food_carrot"]
+[ext_resource type="PackedScene" uid="uid://cco83kfmg8q8d" path="res://scenes/Foods/grow/chicken.tscn" id="food_chicken"]
+[ext_resource type="PackedScene" uid="uid://c4gn225sfkvjr" path="res://scenes/Foods/go/corn.tscn" id="food_corn"]
+[ext_resource type="PackedScene" uid="uid://b8sxped5gaefi" path="res://scenes/Foods/grow/egg.tscn" id="food_egg"]
+[ext_resource type="PackedScene" uid="uid://bm3lqk76v7t4g" path="res://scenes/Foods/grow/fish.tscn" id="food_fish"]
+[ext_resource type="PackedScene" uid="uid://1m3ty8vnn8yh" path="res://scenes/Foods/glow/mango.tscn" id="food_mango"]
+[ext_resource type="PackedScene" uid="uid://1noynvkg3p2r" path="res://scenes/Foods/grow/milk.tscn" id="food_milk"]
+[ext_resource type="PackedScene" uid="uid://cvcrk8qnu1wgn" path="res://scenes/Foods/go/oats.tscn" id="food_oats"]
+[ext_resource type="PackedScene" uid="uid://xyv7qaxg47y3" path="res://scenes/Foods/glow/papaya.tscn" id="food_papaya"]
+[ext_resource type="PackedScene" uid="uid://bv6f0mssw7358" path="res://scenes/Foods/go/potato.tscn" id="food_potato"]
+[ext_resource type="PackedScene" uid="uid://bk68vb36vu0c6" path="res://scenes/Foods/go/rice.tscn" id="food_rice"]
+[ext_resource type="Script" uid="uid://dciw84ymwe7es" path="res://Level2/scripts/tutorial/level2_tutorial.gd" id="level2_tutorial"]
+
+[sub_resource type="StyleBoxFlat" id="FoodCardStyle"]
+bg_color = Color(0.12, 0.18, 0.19, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.81, 0.85, 0.7, 0.82)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="GOStyle"]
+bg_color = Color(0.08, 0.13, 0.14, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.93, 0.69, 0.3, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="GLOWStyle"]
+bg_color = Color(0.08, 0.13, 0.14, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.52, 0.84, 0.52, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="GROWStyle"]
+bg_color = Color(0.08, 0.13, 0.14, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.56, 0.76, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="Level2Canteen" type="Control" unique_id=1050001622]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_game")
+food_scenes = Array[PackedScene]([ExtResource("food_bread"), ExtResource("food_corn"), ExtResource("food_oats"), ExtResource("food_potato"), ExtResource("food_rice"), ExtResource("food_apple"), ExtResource("food_banana"), ExtResource("food_carrot"), ExtResource("food_mango"), ExtResource("food_papaya"), ExtResource("food_bean"), ExtResource("food_chicken"), ExtResource("food_egg"), ExtResource("food_fish"), ExtResource("food_milk")])
+canteen_background = ExtResource("2_background")
+save_progress_on_pass = true
+
+[node name="Background" type="TextureRect" parent="." unique_id=1465685749]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Shade" type="ColorRect" parent="." unique_id=102958516]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.035, 0.08, 0.085, 0.79)
+
+[node name="Layout" type="CenterContainer" parent="." unique_id=629518076]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Content" type="VBoxContainer" parent="Layout" unique_id=1730421646]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 9
+
+[node name="Title" type="Label" parent="Layout/Content" unique_id=1801522953]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.91, 0.7, 1)
+theme_override_font_sizes/font_size = 26
+text = "CANTEEN  /  GUESS THE FOOD"
+horizontal_alignment = 1
+
+[node name="Status" type="Label" parent="Layout/Content" unique_id=1341166882]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="Question" type="CenterContainer" parent="Layout/Content" unique_id=772793793]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="FoodCard" type="PanelContainer" parent="Layout/Content/Question" unique_id=904258615]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(305, 172)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/panel = SubResource("FoodCardStyle")
+
+[node name="FoodDisplay" type="Node2D" parent="Layout/Content/Question/FoodCard" unique_id=1149309346]
+unique_name_in_owner = true
+
+[node name="Result" type="VBoxContainer" parent="Layout/Content/Question/FoodCard" unique_id=830192031]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="ResultText" type="Label" parent="Layout/Content/Question/FoodCard/Result" unique_id=1161716747]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="Retry" type="Button" parent="Layout/Content/Question/FoodCard/Result" unique_id=1599092613]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "  Play again  "
+
+[node name="BackToMap" type="Button" parent="Layout/Content/Question/FoodCard/Result" unique_id=1438560260]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "  Back to Level Map  "
+
+[node name="Feedback" type="Label" parent="Layout/Content" unique_id=220060]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="Baskets" type="HBoxContainer" parent="Layout/Content" unique_id=1857981104]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="GO" type="PanelContainer" parent="Layout/Content/Baskets" unique_id=281897491]
+custom_minimum_size = Vector2(176, 78)
+layout_mode = 2
+theme_override_styles/panel = SubResource("GOStyle")
+
+[node name="Labels" type="VBoxContainer" parent="Layout/Content/Baskets/GO" unique_id=453227164]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="Category" type="Label" parent="Layout/Content/Baskets/GO/Labels" unique_id=471620706]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.69, 0.3, 1)
+theme_override_font_sizes/font_size = 22
+text = "GO"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Layout/Content/Baskets/GO/Labels" unique_id=769989908]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Energy foods"
+horizontal_alignment = 1
+
+[node name="GLOW" type="PanelContainer" parent="Layout/Content/Baskets" unique_id=1645719966]
+custom_minimum_size = Vector2(176, 78)
+layout_mode = 2
+theme_override_styles/panel = SubResource("GLOWStyle")
+
+[node name="Labels" type="VBoxContainer" parent="Layout/Content/Baskets/GLOW" unique_id=234989643]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="Category" type="Label" parent="Layout/Content/Baskets/GLOW/Labels" unique_id=928978132]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.52, 0.84, 0.52, 1)
+theme_override_font_sizes/font_size = 22
+text = "GLOW"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Layout/Content/Baskets/GLOW/Labels" unique_id=2115398039]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Protective foods"
+horizontal_alignment = 1
+
+[node name="GROW" type="PanelContainer" parent="Layout/Content/Baskets" unique_id=1565913134]
+custom_minimum_size = Vector2(176, 78)
+layout_mode = 2
+theme_override_styles/panel = SubResource("GROWStyle")
+
+[node name="Labels" type="VBoxContainer" parent="Layout/Content/Baskets/GROW" unique_id=1826978729]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="Category" type="Label" parent="Layout/Content/Baskets/GROW/Labels" unique_id=616351122]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.56, 0.76, 1, 1)
+theme_override_font_sizes/font_size = 22
+text = "GROW"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="Layout/Content/Baskets/GROW/Labels" unique_id=247695665]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Body-building foods"
+horizontal_alignment = 1
+
+[node name="FeedbackTimer" type="Timer" parent="." unique_id=335037953]
+unique_name_in_owner = true
+one_shot = true
+
+[node name="Level2Tutorial" type="Node" parent="." unique_id=145420153]
+process_mode = 3
+script = ExtResource("level2_tutorial")

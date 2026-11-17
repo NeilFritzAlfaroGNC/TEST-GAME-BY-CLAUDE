@@ -1,0 +1,170 @@
+[gd_scene format=3 uid="uid://bl355loi4x43o"]
+
+[ext_resource type="Texture2D" uid="uid://b13i6g1hpehag" path="res://Level1/assets/backgrounds/GNCI Cafeteria.png" id="3_grp1e"]
+[ext_resource type="PackedScene" path="res://Level1/scenes/conveyor/conveyer_belt.tscn" id="4_n2kff"]
+[ext_resource type="Script" uid="uid://cauj5r2wuxgo6" path="res://Level1/scripts/spawner/food_spawn.gd" id="9_vw3qg"]
+[ext_resource type="PackedScene" path="res://Level1/scenes/food/apple.tscn" id="10_8l5u2"]
+[ext_resource type="PackedScene" path="res://Level1/scenes/food/bread.tscn" id="11_27mmf"]
+[ext_resource type="PackedScene" path="res://Level1/scenes/food/bean.tscn" id="13_grp1e"]
+[ext_resource type="PackedScene" path="res://Level1/scenes/food/banana.tscn" id="14_f4sp5"]
+[ext_resource type="PackedScene" path="res://Level1/scenes/food/corn.tscn" id="15_n2kff"]
+[ext_resource type="PackedScene" path="res://Level1/scenes/food/fish.tscn" id="16_4dvls"]
+[ext_resource type="Script" uid="uid://3sgmwjcf0b1s" path="res://Level1/scripts/floor/level1_floor.gd" id="17_floor"]
+[ext_resource type="PackedScene" path="res://Level1/scenes/enemy/level1_student_soda.tscn" id="19_soda"]
+[ext_resource type="Script" uid="uid://bqncu02q26qmj" path="res://Level1/scripts/spawner/level1_enemy_spawner.gd" id="20_spawner"]
+[ext_resource type="Script" uid="uid://d18yr28jukas2" path="res://Level1/scripts/food/level1_food_drag_controller.gd" id="21_food_drag"]
+[ext_resource type="Script" uid="uid://cnoou7iyc2eqf" path="res://Level1/scripts/battle/level1_battle_controller.gd" id="22_battle"]
+[ext_resource type="Script" uid="uid://b26s0goya1r08" path="res://Level1/scripts/tutorial/level1_guided_tutorial.gd" id="tutorial_guide"]
+
+[sub_resource type="RectangleShape2D" id="Floor2_Platform"]
+size = Vector2(800, 12)
+
+[sub_resource type="RectangleShape2D" id="Floor2_LeftWall"]
+size = Vector2(12, 70)
+
+[sub_resource type="RectangleShape2D" id="Floor2_RightWall"]
+size = Vector2(12, 70)
+
+[sub_resource type="RectangleShape2D" id="Floor1_Platform"]
+size = Vector2(800, 12)
+
+[sub_resource type="RectangleShape2D" id="Floor1_LeftWall"]
+size = Vector2(12, 70)
+
+[sub_resource type="RectangleShape2D" id="Floor1_RightWall"]
+size = Vector2(12, 70)
+
+[node name="BattleScene" type="Control" unique_id=1451651748]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 65.0
+offset_bottom = 47.0
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1182470010]
+custom_minimum_size = Vector2(956, 440)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_grp1e")
+
+[node name="Level1Enemies" type="Node2D" parent="." unique_id=1569753456]
+
+[node name="Level1Floors" type="Node2D" parent="." unique_id=1531919759]
+
+[node name="Floor2" type="Node2D" parent="Level1Floors" unique_id=353952341]
+position = Vector2(478, 225)
+script = ExtResource("17_floor")
+
+[node name="Platform" type="StaticBody2D" parent="Level1Floors/Floor2" unique_id=467665271]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level1Floors/Floor2/Platform" unique_id=254406264]
+position = Vector2(0, 93)
+shape = SubResource("Floor2_Platform")
+
+[node name="LeftWall" type="StaticBody2D" parent="Level1Floors/Floor2" unique_id=1352000816]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level1Floors/Floor2/LeftWall" unique_id=715097631]
+position = Vector2(-333, 64)
+shape = SubResource("Floor2_LeftWall")
+
+[node name="RightWall" type="StaticBody2D" parent="Level1Floors/Floor2" unique_id=402309537]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level1Floors/Floor2/RightWall" unique_id=888177840]
+position = Vector2(332, 64)
+shape = SubResource("Floor2_RightWall")
+
+[node name="EnemySpawner" type="Node2D" parent="Level1Floors/Floor2" unique_id=895833501]
+script = ExtResource("20_spawner")
+enemy_scenes = Array[PackedScene]([ExtResource("19_soda")])
+monster_scale_multiplier = 0.6
+enemy_container_path = NodePath("../../../Level1Enemies")
+
+[node name="SpawnPoint1" type="Marker2D" parent="Level1Floors/Floor2/EnemySpawner" unique_id=1558450674]
+position = Vector2(-240, 50)
+
+[node name="SpawnPoint2" type="Marker2D" parent="Level1Floors/Floor2/EnemySpawner" unique_id=777065740]
+position = Vector2(0, 50)
+
+[node name="SpawnPoint3" type="Marker2D" parent="Level1Floors/Floor2/EnemySpawner" unique_id=2084852152]
+position = Vector2(240, 50)
+
+[node name="Floor1" type="Node2D" parent="Level1Floors" unique_id=1882535762]
+position = Vector2(478, 340)
+script = ExtResource("17_floor")
+
+[node name="Platform" type="StaticBody2D" parent="Level1Floors/Floor1" unique_id=2099435228]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level1Floors/Floor1/Platform" unique_id=427986029]
+position = Vector2(0, 48)
+shape = SubResource("Floor1_Platform")
+
+[node name="LeftWall" type="StaticBody2D" parent="Level1Floors/Floor1" unique_id=2011372989]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level1Floors/Floor1/LeftWall" unique_id=434856574]
+position = Vector2(-394, 7)
+shape = SubResource("Floor1_LeftWall")
+
+[node name="RightWall" type="StaticBody2D" parent="Level1Floors/Floor1" unique_id=490582613]
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level1Floors/Floor1/RightWall" unique_id=1983095343]
+position = Vector2(394, 7)
+shape = SubResource("Floor1_RightWall")
+
+[node name="EnemySpawner" type="Node2D" parent="Level1Floors/Floor1" unique_id=791959671]
+script = ExtResource("20_spawner")
+enemy_scenes = Array[PackedScene]([ExtResource("19_soda")])
+monster_scale_multiplier = 0.7999999999999999
+enemy_container_path = NodePath("../../../Level1Enemies")
+
+[node name="SpawnPoint1" type="Marker2D" parent="Level1Floors/Floor1/EnemySpawner" unique_id=1598252226]
+position = Vector2(-240, -6)
+
+[node name="SpawnPoint2" type="Marker2D" parent="Level1Floors/Floor1/EnemySpawner" unique_id=1757577481]
+position = Vector2(0, -6)
+
+[node name="SpawnPoint3" type="Marker2D" parent="Level1Floors/Floor1/EnemySpawner" unique_id=927980421]
+position = Vector2(240, -6)
+
+[node name="Conveyer Belt" parent="." unique_id=2084871955 instance=ExtResource("4_n2kff")]
+position = Vector2(478, 411)
+scale = Vector2(0.14101124, 0.12086778)
+frame = 7
+frame_progress = 0.0
+flip_h = true
+queue_right_margin = 250.0
+
+[node name="FoodSpawn" type="Marker2D" parent="." unique_id=203430058]
+position = Vector2(241, 416)
+script = ExtResource("9_vw3qg")
+available_foods = Array[PackedScene]([ExtResource("10_8l5u2"), ExtResource("11_27mmf"), ExtResource("13_grp1e"), ExtResource("14_f4sp5"), ExtResource("15_n2kff"), ExtResource("16_4dvls")])
+max_spawn_time = 3.0
+
+[node name="FoodItems" type="Node2D" parent="." unique_id=1839276456]
+
+[node name="FoodDragController" type="Node2D" parent="." unique_id=1998890295]
+script = ExtResource("21_food_drag")
+conveyor_path = NodePath("../Conveyer Belt")
+show_debug_messages = true
+
+[node name="Level1BattleController" type="Node" parent="." unique_id=1298024631]
+script = ExtResource("22_battle")
+save_progress_on_victory = true
+open_victory_screen = true
+
+[node name="Level1Tutorial" type="CanvasLayer" parent="." unique_id=956221761]
+process_mode = 3
+layer = 1000
+script = ExtResource("tutorial_guide")

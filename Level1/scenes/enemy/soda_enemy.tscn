@@ -1,0 +1,288 @@
+[gd_scene format=3 uid="uid://b6537v2p4rv53"]
+
+[ext_resource type="Script" uid="uid://66bwgd04v41t" path="res://Level1/scripts/enemy/level1_enemy_roaming.gd" id="1_roaming"]
+[ext_resource type="Texture2D" uid="uid://dxskkxy136m83" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_000.png" id="2_o0rah"]
+[ext_resource type="Texture2D" uid="uid://beswlvsw42mf0" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_001.png" id="3_lh0p8"]
+[ext_resource type="Texture2D" uid="uid://d11u1j3j1fa5i" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_002.png" id="4_e8uue"]
+[ext_resource type="Texture2D" uid="uid://cjn30fa31h0ru" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_003.png" id="5_htyui"]
+[ext_resource type="Texture2D" uid="uid://coj3gx0bryw7d" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_004.png" id="6_vl0xc"]
+[ext_resource type="Texture2D" uid="uid://ddukhyho6ij8j" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_005.png" id="7_rfyyg"]
+[ext_resource type="Texture2D" uid="uid://bnf8lppijuv3l" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_000.png" id="11_owt2a"]
+[ext_resource type="Texture2D" uid="uid://dolu0r0lslrn1" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_001.png" id="12_4cpp2"]
+[ext_resource type="Texture2D" uid="uid://dv7x36ibxdeo6" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_002.png" id="13_pi03q"]
+[ext_resource type="Texture2D" uid="uid://itrd16kxb7bw" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_003.png" id="14_qbjj3"]
+[ext_resource type="Texture2D" uid="uid://bhpsdm2oohmy6" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_004.png" id="15_ldfub"]
+[ext_resource type="Texture2D" uid="uid://xve7lanlqnsm" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_005.png" id="16_nh3bi"]
+[ext_resource type="Texture2D" uid="uid://b1vop8l0xhw74" path="res://Level1/assets/enemies/soda-monster/soda defeated/frame_000.png" id="17_drjbe"]
+[ext_resource type="Texture2D" uid="uid://bia4n6qimxhpu" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_006.png" id="17_m7yh1"]
+[ext_resource type="Texture2D" uid="uid://byrbxfnm0mjre" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_007.png" id="18_4cjhm"]
+[ext_resource type="Texture2D" uid="uid://cx7xinmi5htea" path="res://Level1/assets/enemies/soda-monster/soda defeated/frame_001.png" id="18_016ls"]
+[ext_resource type="Texture2D" uid="uid://bvjqejacgyj1" path="res://Level1/assets/enemies/soda-monster/soda defeated/frame_002.png" id="19_6caek"]
+[ext_resource type="Texture2D" uid="uid://dl30v5b24an2v" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_008.png" id="19_54um2"]
+[ext_resource type="Texture2D" uid="uid://cef7148wc5gsj" path="res://Level1/assets/enemies/soda-monster/soda defeated/frame_003.png" id="20_ghek5"]
+[ext_resource type="Texture2D" uid="uid://kg2pjt2ywgp8" path="res://Level1/assets/enemies/soda-monster/soda defeated/frame_004.png" id="21_48nkm"]
+[ext_resource type="Texture2D" uid="uid://m01vn5o3pfy5" path="res://Level1/assets/enemies/soda-monster/soda defeated/frame_005.png" id="22_71y0f"]
+[ext_resource type="Texture2D" uid="uid://c5ju42snl874h" path="res://Level1/assets/enemies/soda-monster/soda defeated/frame_006.png" id="23_4hbmc"]
+[ext_resource type="Texture2D" uid="uid://ddahwox7yncnc" path="res://Level1/assets/enemies/soda-monster/soda defeated/frame_007.png" id="24_fssr3"]
+[ext_resource type="Texture2D" uid="uid://ldnjgq2qtdac" path="res://Level1/assets/enemies/soda-monster/soda defeated/frame_008.png" id="25_owt2a"]
+[ext_resource type="Texture2D" uid="uid://b6cq5ghckw0ai" path="res://Level1/assets/enemies/hambuger-monster/hamburger freeze/frame_000.png" id="29_evgbl"]
+[ext_resource type="Texture2D" uid="uid://byqypnxv2k5eb" path="res://Level1/assets/enemies/hambuger-monster/hamburger freeze/frame_001.png" id="30_pfb14"]
+[ext_resource type="Texture2D" uid="uid://cpjeolfu6cai5" path="res://Level1/assets/enemies/hambuger-monster/hamburger freeze/frame_002.png" id="31_1tuhu"]
+[ext_resource type="Texture2D" uid="uid://dwmxnohko2eh8" path="res://Level1/assets/enemies/hambuger-monster/hamburger freeze/frame_003.png" id="32_r4dp0"]
+[ext_resource type="Texture2D" uid="uid://xvj503adj0ia" path="res://Level1/assets/enemies/hambuger-monster/hamburger freeze/frame_004.png" id="33_e5bmo"]
+[ext_resource type="Texture2D" uid="uid://cxr0u8dnhdw06" path="res://Level1/assets/enemies/hambuger-monster/hamburger freeze/frame_005.png" id="34_bamg8"]
+[ext_resource type="Texture2D" uid="uid://cp0esmij6qlpo" path="res://Level1/assets/enemies/hambuger-monster/hamburger freeze/frame_006.png" id="35_fv64u"]
+[ext_resource type="Texture2D" uid="uid://b3glyf8wrmkss" path="res://Level1/assets/enemies/hambuger-monster/hamburger knockback/frame_000.png" id="36_ob0a0"]
+[ext_resource type="Texture2D" uid="uid://e6gt3yfvvp51" path="res://Level1/assets/enemies/hambuger-monster/hamburger knockback/frame_001.png" id="37_6528j"]
+[ext_resource type="Texture2D" uid="uid://8ul3qlwl7hcj" path="res://Level1/assets/enemies/hambuger-monster/hamburger knockback/frame_002.png" id="38_lynjg"]
+[ext_resource type="Texture2D" uid="uid://diaruq5nd8avk" path="res://Level1/assets/enemies/hambuger-monster/hamburger knockback/frame_003.png" id="39_4vkjt"]
+[ext_resource type="Texture2D" uid="uid://0keh85ledfi3" path="res://Level1/assets/enemies/hambuger-monster/hamburger knockback/frame_004.png" id="40_7o3rj"]
+[ext_resource type="Texture2D" uid="uid://d11sporw2npck" path="res://Level1/assets/enemies/hambuger-monster/hamburger knockback/frame_005.png" id="41_o2a8h"]
+[ext_resource type="Texture2D" uid="uid://cl0nj2mhvoio3" path="res://Level1/assets/enemies/hambuger-monster/hamburger knockback/frame_006.png" id="42_tmjmg"]
+[ext_resource type="Texture2D" uid="uid://b8c38iknpwcxc" path="res://Level1/assets/enemies/hambuger-monster/hamburger knockback/frame_007.png" id="43_visl7"]
+[ext_resource type="Texture2D" uid="uid://bnc06twxh6mww" path="res://Level1/assets/enemies/hambuger-monster/hamburger knockback/frame_008.png" id="44_jmc7j"]
+[ext_resource type="Texture2D" uid="uid://dfni3aaega84l" path="res://Level1/assets/enemies/hambuger-monster/hamburget stun/frame_000.png" id="45_qf4f4"]
+[ext_resource type="Texture2D" uid="uid://dr7ci8lvkq3ih" path="res://Level1/assets/enemies/hambuger-monster/hamburget stun/frame_001.png" id="46_uxcnr"]
+[ext_resource type="Texture2D" uid="uid://002y3f7fw2dv" path="res://Level1/assets/enemies/hambuger-monster/hamburget stun/frame_002.png" id="47_psqad"]
+[ext_resource type="Texture2D" uid="uid://xsg8imr5d457" path="res://Level1/assets/enemies/hambuger-monster/hamburget stun/frame_003.png" id="48_0pah0"]
+[ext_resource type="Texture2D" uid="uid://dc4682nah0o8n" path="res://Level1/assets/enemies/hambuger-monster/hamburget stun/frame_004.png" id="49_lnrj8"]
+[ext_resource type="Texture2D" uid="uid://bv2j3s1a54a4l" path="res://Level1/assets/enemies/hambuger-monster/hamburget stun/frame_005.png" id="50_nf5go"]
+[ext_resource type="Texture2D" uid="uid://drlce4xkc1vtk" path="res://Level1/assets/enemies/soda-monster/soda walk/frame_000.png" id="51_4cpp2"]
+[ext_resource type="Texture2D" uid="uid://c4yxd5v8k1uto" path="res://Level1/assets/enemies/hambuger-monster/hamburget stun/frame_006.png" id="51_paqjh"]
+[ext_resource type="Texture2D" uid="uid://crga7il6p4mqr" path="res://Level1/assets/enemies/hambuger-monster/hamburget stun/frame_007.png" id="52_fl2yq"]
+[ext_resource type="Texture2D" uid="uid://bedd7lvt5ipsi" path="res://Level1/assets/enemies/soda-monster/soda walk/frame_001.png" id="52_pi03q"]
+[ext_resource type="Texture2D" uid="uid://cjp511ueoiqh6" path="res://Level1/assets/enemies/hambuger-monster/hamburget stun/frame_008.png" id="53_30sms"]
+[ext_resource type="Texture2D" uid="uid://nyj6osffaty1" path="res://Level1/assets/enemies/soda-monster/soda walk/frame_002.png" id="53_qbjj3"]
+[ext_resource type="Texture2D" uid="uid://c012veiqp7k4y" path="res://Level1/assets/enemies/soda-monster/soda walk/frame_003.png" id="54_ldfub"]
+[ext_resource type="Texture2D" uid="uid://cp500v6t5nu5y" path="res://Level1/assets/enemies/soda-monster/soda walk/frame_004.png" id="55_nh3bi"]
+[ext_resource type="Texture2D" uid="uid://xwj6kxcjottc" path="res://Level1/assets/enemies/soda-monster/soda walk/frame_005.png" id="56_m7yh1"]
+[ext_resource type="Texture2D" uid="uid://cjc1shtt3nfqp" path="res://Level1/assets/enemies/soda-monster/soda walk/frame_006.png" id="57_4cjhm"]
+[ext_resource type="Texture2D" uid="uid://h5ilc2lcve73" path="res://Level1/assets/enemies/soda-monster/soda walk/frame_007.png" id="58_54um2"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_o0rah")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_lh0p8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_e8uue")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_htyui")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_vl0xc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_rfyyg")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_owt2a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_4cpp2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_pi03q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_qbjj3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_ldfub")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_nh3bi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_m7yh1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_4cjhm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_54um2")
+}],
+"loop": 1,
+"name": &"burn",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_drjbe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_016ls")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_6caek")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_ghek5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_48nkm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_71y0f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_4hbmc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_fssr3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_owt2a")
+}],
+"loop": 1,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("29_evgbl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_pfb14")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_1tuhu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_r4dp0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_e5bmo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_bamg8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_fv64u")
+}],
+"loop": 1,
+"name": &"freeze",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("36_ob0a0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_6528j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_lynjg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_4vkjt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_7o3rj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_o2a8h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_tmjmg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_visl7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_jmc7j")
+}],
+"loop": 1,
+"name": &"knockback",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("45_qf4f4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_uxcnr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_psqad")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_0pah0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_lnrj8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_nf5go")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_paqjh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_fl2yq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_30sms")
+}],
+"loop": 1,
+"name": &"stun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("51_4cpp2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_pi03q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_qbjj3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_ldfub")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_nh3bi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_m7yh1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_4cjhm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_54um2")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jtevl"]
+size = Vector2(58, 68)
+
+[node name="Level1Soda" type="CharacterBody2D" unique_id=2055283136]
+collision_layer = 2
+collision_mask = 8
+script = ExtResource("1_roaming")
+random_starting_direction = true
+gravity_enabled = true
+roaming_collision_mask = 8
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=899838622]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=252389875]
+position = Vector2(12, 23)
+shape = SubResource("RectangleShape2D_jtevl")
