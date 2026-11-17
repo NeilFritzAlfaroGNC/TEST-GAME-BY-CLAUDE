@@ -10,6 +10,8 @@ extends Control
 # with at least 1 star.
 # ==================================================
 
+const CHARACTER_EQUIPMENT := preload("res://scripts/character_codex/character_equipment.gd")
+
 const MAIN_MENU_SCENE_PATH: String = "res://Shared/scenes/main_menu/main_menu_screen.tscn"
 
 const CAFETERIA_LEVEL_ID: String = "cafeteria_level_1"
@@ -69,6 +71,7 @@ var hard_original_styles: Dictionary = {}
 # ==================================================
 
 func _ready() -> void:
+	_show_equipped_character()
 	_save_original_styles()
 	_connect_buttons()
 	_style_locked_buttons()
@@ -112,6 +115,23 @@ func _connect_buttons() -> void:
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 	character_button.pressed.connect(_open_character_selection)
 	close_button.pressed.connect(character_select_panel.hide)
+
+
+func _show_equipped_character() -> void:
+	var equipped_id := CHARACTER_EQUIPMENT.load_id()
+	var sprite: AnimatedSprite2D = $MenuPanel/CharacterPanel/CharacterPreview/CharacterSprite
+	var question: Label = $MenuPanel/CharacterPanel/CharacterPreview/EquipmentQuestion
+	sprite.hide()
+	sprite.stop()
+	question.show()
+	if equipped_id == &"":
+		return
+	for entry in CHARACTER_EQUIPMENT.unlocked_characters():
+		if entry.id == equipped_id:
+			if CHARACTER_EQUIPMENT.apply_preview(sprite, entry, Vector2(110, 66)):
+				sprite.show()
+				question.hide()
+			return
 
 
 func _open_character_selection() -> void:

@@ -17,15 +17,14 @@ extends Control
 # Progress saved under scene3_level_3 only.
 # ==================================================
 
+const TOKEN_UNLOCKS := preload("res://scripts/codex/codex_token_unlocks.gd")
 const LEVEL_ID: String = "scene3_level_3"
 
 const VICTORY_SCENE: String = (
 	"res://Shared/scenes/victory/victory_screen.tscn"
 )
 
-const MAP_SCENE: String = (
-	"res://Shared/scenes/level_map/level_map.tscn"
-)
+const GAME_OVER_OVERLAY := preload("res://Shared/scripts/ui/battle_game_over_overlay.gd")
 
 
 # ==================================================
@@ -34,10 +33,18 @@ const MAP_SCENE: String = (
 
 @export_group("Level 3 - Monster Spawning")
 
-@export var monster_scene: PackedScene
+@export_group("Child Scene Variants")
+@export var sick_male_scenes: Array[PackedScene] = []
+@export var sick_female_scenes: Array[PackedScene] = []
+@export var healthy_male_scenes: Array[PackedScene] = []
+@export var healthy_female_scenes: Array[PackedScene] = []
+@export_group("Patrol")
+## Distance a sick child can patrol before counting as an escape. Zero disables this limit.
+@export_range(0.0, 3000.0, 10.0, "or_greater", "suffix:px")
+var patrol_escape_distance := 850.0
 
 @export_range(1, 10, 1)
-var maximum_active_monsters: int = 3
+var maximum_active_monsters: int = 5
 
 var spawn_interval: float = 5.0
 
@@ -126,9 +133,10 @@ var run_difficulty: String = "easy"
 	$MonsterContainer
 )
 
-@onready var spawn_point: Marker2D = (
-	$SpawnPoint
-)
+@onready var healthy_spawner: Node2D = $HealthyChildSpawner
+@onready var sick_spawner: Node2D = $SickChildSpawner
+@onready var token_drops = $CodexTokenDrops
+@onready var healthy_children: Node2D = $HealthyChildren
 
 @onready var escape_zone: Area2D = (
 	$EscapeZone
@@ -148,6 +156,7 @@ var escaped_count: int = 0
 
 var battle_finished: bool = false
 var spawn_clock: float = 0.0
+var _tutorial_monster_spawned := false
 
 var active_monsters: Array[Level3NutritionMonster] = []
 var selected_monster: Level3NutritionMonster = null
@@ -169,7 +178,6 @@ var selected_label: Label
 var nutrition_panel: Control
 var liquid_ui: CanvasLayer
 
-var result_layer: CanvasLayer
 
 
 # ==================================================
@@ -180,14 +188,19 @@ func _ready() -> void:
 
 	_load_difficulty_settings()
 
-	if monster_scene == null:
-		push_error(
-			"[Level3] Assign Monster Scene in Inspector."
-		)
-		battle_finished = true
-		set_process(false)
-		set_process_input(false)
-		return
+	for variants in [sick_male_scenes, sick_female_scenes, healthy_male_scenes, healthy_female_scenes]:
+		if _available_variants(variants).is_empty():
+			push_error("[Level3] Assign at least one scene to each child variant list.")
+			battle_finished = true
+			set_process(false)
+			set_process_input(false)
+			return
+
+	for child in healthy_spawner.get_children():
+		var marker := child as Marker2D
+		if marker != null:
+			var scene := _pick_child_scene(healthy_female_scenes if randf() < 0.5 else healthy_male_scenes)
+			_spawn_healthy_child(scene, marker.global_position)
 
 	# Use the existing conveyor group if available.
 	conveyor = get_tree().get_first_node_in_group(
@@ -239,31 +252,80 @@ func _spawn_monster() -> void:
 	if battle_finished:
 		return
 
-	if active_monsters.size() >= maximum_active_monsters:
+	if _tutorial_monster_spawned and _is_tutorial_spawn_limited():
 		return
 
-	var instance: Node = monster_scene.instantiate()
+	if active_monsters.size() >= mini(maximum_active_monsters, required_cures - cured_count):
+		return
 
-	if not instance is Level3NutritionMonster:
-		push_error(
-			"[Level3] Monster scene root must use "
-			+ "level3_nutrition_monster.gd."
-		)
+	var available: Array[Marker2D] = []
+	for child in sick_spawner.get_children():
+		var candidate := child as Marker2D
+		if candidate != null and candidate.get_node_or_null("PatrolEnd") is Marker2D:
+			var occupied := false
+			for child_actor in active_monsters:
+				if is_instance_valid(child_actor) and child_actor.patrol_spawn == candidate:
+					occupied = true
+					break
+			if not occupied:
+				available.append(candidate)
+	if available.is_empty():
+		return
+
+	var marker: Marker2D = available.pick_random()
+	var female := randf() < 0.5
+	var sick_scene := _pick_child_scene(sick_female_scenes if female else sick_male_scenes)
+	var healthy_scene := _pick_child_scene(healthy_female_scenes if female else healthy_male_scenes)
+	var instance := sick_scene.instantiate()
+	var monster := instance as Level3NutritionMonster
+	if monster == null:
+		push_error("[Level3] Sick child scene must use Level3NutritionMonster.")
 		instance.free()
 		return
 
-	var monster: Level3NutritionMonster = instance
-
-	monster.position = monster_container.to_local(spawn_point.global_position)
+	monster.position = monster_container.to_local(marker.global_position)
+	monster.configure_patrol(marker, marker.get_node("PatrolEnd") as Marker2D, healthy_scene, patrol_escape_distance)
 	_apply_difficulty(monster)
 
 	monster.selected.connect(_on_monster_selected)
 	monster.cured.connect(_on_monster_cured)
+	monster.patrol_exhausted.connect(_on_monster_escaped)
 
+	if _is_tutorial_spawn_limited():
+		_tutorial_monster_spawned = true
 	active_monsters.append(monster)
 	monster_container.add_child(monster)
 
 	print("[Level3] Monster spawned.")
+
+
+func _available_variants(scenes: Array[PackedScene]) -> Array[PackedScene]:
+	var available: Array[PackedScene] = []
+	for scene in scenes:
+		if scene != null:
+			available.append(scene)
+	return available
+
+
+func _pick_child_scene(scenes: Array[PackedScene]) -> PackedScene:
+	return _available_variants(scenes).pick_random()
+
+
+func _spawn_healthy_child(scene: PackedScene, location: Vector2) -> void:
+	var instance := scene.instantiate()
+	var child := instance as CharacterBody2D
+	if child == null:
+		push_error("[Level3] Healthy child scene must use CharacterBody2D.")
+		instance.free()
+		return
+	child.collision_layer = 0
+	child.collision_mask = 0
+	child.input_pickable = false
+	child.position = healthy_children.to_local(location)
+	healthy_children.add_child(child)
+	var animation := child.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	if animation != null and not animation.is_playing():
+		animation.play()
 
 
 # ==================================================
@@ -583,10 +645,13 @@ func _on_monster_cured(
 	monster: Level3NutritionMonster
 ) -> void:
 
-	if battle_finished:
+	if battle_finished or not active_monsters.has(monster):
 		return
 
 	cured_count += 1
+	_spawn_healthy_child(monster.healthy_scene, monster.global_position)
+	token_drops.offer(TOKEN_UNLOCKS.child_id_for_scene(monster.scene_file_path), monster.global_position + Vector2(-18, 0))
+	token_drops.offer(TOKEN_UNLOCKS.child_id_for_scene(monster.healthy_scene.resource_path), monster.global_position + Vector2(18, 0))
 
 	print(
 		"[Level3] Cured: ",
@@ -611,6 +676,11 @@ func _on_monster_cured(
 # ESCAPE DETECTOR
 # ==================================================
 
+func _is_tutorial_spawn_limited() -> bool:
+	var tutorial := get_node_or_null("Level3Tutorial")
+	return tutorial != null and tutorial.call("is_spawn_limit_active")
+
+
 func _on_monster_escaped(body: Node2D) -> void:
 
 	if battle_finished:
@@ -625,6 +695,11 @@ func _on_monster_escaped(body: Node2D) -> void:
 		return
 
 	if monster.is_cured:
+		return
+
+	if _is_tutorial_spawn_limited():
+		# Keep the same practice target available if it reaches the exit.
+		monster.restart_patrol()
 		return
 
 	monster.mark_escaped()
@@ -677,6 +752,8 @@ func _finish_victory() -> void:
 		earned_stars
 	)
 
+	var rewards: PackedStringArray = await token_drops.finish_victory()
+	ProgressManager.set_meta(TOKEN_UNLOCKS.REWARD_META, rewards)
 	get_tree().call_deferred(
 		"change_scene_to_file",
 		VICTORY_SCENE
@@ -697,6 +774,7 @@ func _finish_game_over() -> void:
 
 	ProgressManager.current_run_stars = 0
 
+	token_drops.discard()
 	# Do not save progress on Game Over.
 	_create_game_over_screen()
 
@@ -739,53 +817,12 @@ func _create_hud() -> void:
 # ==================================================
 
 func _create_game_over_screen() -> void:
-
-	result_layer = CanvasLayer.new()
-	result_layer.layer = 20
-	add_child(result_layer)
-
-	var backdrop: ColorRect = ColorRect.new()
-	backdrop.color = Color(0, 0, 0, 0.75)
-	backdrop.set_anchors_and_offsets_preset(
-		Control.PRESET_FULL_RECT
+	var overlay := GAME_OVER_OVERLAY.new()
+	add_child(overlay)
+	overlay.show_result(
+		"Too many sick children left without being helped.\nChildren left: %d / %d\nNo stars earned." % [escaped_count, maximum_escapes],
+		"Retry Level 3", _retry_level
 	)
-	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
-	result_layer.add_child(backdrop)
-
-	var panel: PanelContainer = PanelContainer.new()
-	panel.custom_minimum_size = Vector2(320, 160)
-	panel.set_anchors_preset(
-		Control.PRESET_CENTER
-	)
-	panel.position = Vector2(318, 140)
-	result_layer.add_child(panel)
-
-	var column: VBoxContainer = VBoxContainer.new()
-	panel.add_child(column)
-
-	var title: Label = Label.new()
-	title.text = "GAME OVER"
-	title.horizontal_alignment = (
-		HORIZONTAL_ALIGNMENT_CENTER
-	)
-	column.add_child(title)
-
-	var details: Label = Label.new()
-	details.text = "%d monsters escaped without being cured." % maximum_escapes
-	details.horizontal_alignment = (
-		HORIZONTAL_ALIGNMENT_CENTER
-	)
-	column.add_child(details)
-
-	var retry: Button = Button.new()
-	retry.text = "Retry Level 3"
-	column.add_child(retry)
-	retry.pressed.connect(_retry_level)
-
-	var map_button: Button = Button.new()
-	map_button.text = "Back to Map"
-	column.add_child(map_button)
-	map_button.pressed.connect(_return_to_map)
 
 
 func _stop_encounter() -> void:
@@ -813,8 +850,7 @@ func _stop_encounter() -> void:
 
 
 func _retry_level() -> void:
-	get_tree().reload_current_scene()
-
-
-func _return_to_map() -> void:
-	get_tree().change_scene_to_file(MAP_SCENE)
+	get_tree().paused = false
+	var error := get_tree().reload_current_scene()
+	if error != OK:
+		push_error("[Level3] Retry failed: " + error_string(error))

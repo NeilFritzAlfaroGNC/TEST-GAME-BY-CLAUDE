@@ -1,12 +1,13 @@
 extends Control
 
-const SLOT := preload("res://scenes/codex/CodexEntrySlot.tscn")
 const CATEGORIES := [&"healthy_foods", &"junk_enemies", &"sick_child"]
 const TOKEN_SLOT := preload("res://scenes/codex/TokenSlot.tscn")
 const TOKEN_UNLOCKS := preload("res://scripts/codex/codex_token_unlocks.gd")
 const ENEMY_TOKENS := [
 	preload("res://data/tokens/soda_enemy_token.tres"),
 	preload("res://data/tokens/donut_enemy_token.tres"),
+	preload("res://data/tokens/fries_enemy_token.tres"),
+	preload("res://data/tokens/pizza_enemy_token.tres"),
 ]
 const PAGE_SIZE := 12
 const SAVE_PATH := "user://character_codex.cfg"
@@ -91,18 +92,18 @@ func _set_category(index: int) -> void:
 	for child in $Codex/Tabs.get_children():
 		var tab := child as Button
 		tab.set_pressed_no_signal(tab.get_index() == index)
-	_build_slots(TOKEN_SLOT if CATEGORIES[_category] == &"junk_enemies" else SLOT)
+	_build_slots()
 	_refresh_page()
 
 
-func _build_slots(scene: PackedScene) -> void:
+func _build_slots() -> void:
 	for slot in _slots:
 		$Codex/Grid.remove_child(slot)
 		slot.queue_free()
 	_slots.clear()
 	var group := ButtonGroup.new()
 	for i in range(PAGE_SIZE):
-		var slot := scene.instantiate() as CodexEntrySlot
+		var slot := TOKEN_SLOT.instantiate() as CodexEntrySlot
 		slot.button_group = group
 		$Codex/Grid.add_child(slot)
 		slot.slot_selected.connect(_show_entry)
@@ -122,7 +123,7 @@ func _refresh_page() -> void:
 		var config := TOKEN_UNLOCKS.load_unlocks()
 		for token: CodexEntryData in ENEMY_TOKENS:
 			var entry := token.duplicate() as CodexEntryData
-			entry.unlocked = config.get_value(TOKEN_UNLOCKS.SECTION, entry.id, false)
+			entry.unlocked = TOKEN_UNLOCKS.is_unlocked(config, entry.id, TOKEN_UNLOCKS.INFO)
 			entries.append(entry)
 	var last := maxi(0, ceili(float(entries.size()) / PAGE_SIZE) - 1)
 	_page = clampi(_page, 0, last)
@@ -154,5 +155,5 @@ func _show_entry(slot: CodexEntrySlot) -> void:
 		for stat: Dictionary in entry.visible_stat_rows():
 			lines.append("%s  %s" % [stat["label"], stat["value"]])
 	else:
-		lines.append("Collect a blank token and win the battle to reveal it." if TOKEN_UNLOCKS.NAMES.has(entry.id) else "Undiscovered entry")
+		lines.append("Collect a blank token and win the battle to reveal it." if TOKEN_UNLOCKS.ENTRIES.has(entry.id) else "Undiscovered entry")
 	details.text = "\n\n".join(lines)

@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://divwltm2dm12t"]
+
+[ext_resource type="Texture2D" uid="uid://b7xxhk7i16q4r" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_000.png" id="1_ryhw5"]
+[ext_resource type="Texture2D" uid="uid://dfj0hja77rf2e" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_001.png" id="2_omkae"]
+[ext_resource type="Texture2D" uid="uid://cxyu7yr16gmg2" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_002.png" id="3_3leiw"]
+[ext_resource type="Texture2D" uid="uid://bxy0ck7morfu0" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_003.png" id="4_m5rtc"]
+[ext_resource type="Texture2D" uid="uid://dx3whgpo4uqf4" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_004.png" id="5_ocsv5"]
+[ext_resource type="Texture2D" uid="uid://di4samavpuj08" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_005.png" id="6_f1wss"]
+[ext_resource type="Texture2D" uid="uid://bwm8yvrbir61q" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_006.png" id="7_fj2e4"]
+[ext_resource type="Texture2D" uid="uid://dur8fgasqq45i" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_007.png" id="8_70lq1"]
+[ext_resource type="Texture2D" uid="uid://c73y3jj64cqho" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_008.png" id="9_qditv"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_ryhw5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_omkae")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_3leiw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_m5rtc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ocsv5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_f1wss")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_fj2e4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_70lq1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_qditv")
+}],
+"loop": 1,
+"name": &"weightlifting_right",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="RescueBody"]
+radius = 22.0
+height = 60.0
+
+[node name="WeightliftingRight" type="CharacterBody2D" unique_id=1231740103]
+collision_layer = 2
+collision_mask = 8
+floor_snap_length = 6.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=78307478]
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"weightlifting_right"
+autoplay = "weightlifting_right"
+frame_progress = 0.2888169
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1659882150]
+shape = SubResource("RescueBody")

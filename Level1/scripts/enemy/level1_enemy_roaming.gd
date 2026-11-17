@@ -92,9 +92,13 @@ var monster_scale: float = 1.0
 @export var thought_text: String = "...."
 @export var thought_bubble_offset: Vector2 = Vector2(0, -75)
 
+@export_group("Student Appearance")
+@export var male_frames: SpriteFrames = preload("res://Level1/resources/difficulty/male_student_frames.tres")
+@export var female_frames: SpriteFrames = preload("res://Level1/resources/difficulty/female_student_frames.tres")
+@export_range(12.0, 80.0, 1.0, "suffix:px") var target_height := 52.0
+
 @export_group("Defeat And Return")
 
-@export var return_to_student_when_defeated: bool = true
 @export var vanish_on_next_wall_hit: bool = true
 @export var play_student_walk_after_return: bool = true
 
@@ -158,10 +162,12 @@ const DEFAULT_STUDENT_WALK := preload("res://Level1/resources/difficulty/student
 const DEFAULT_STUDENT_POOF := preload("res://Level1/resources/difficulty/student_poof.tres")
 
 var _configured_monster_speed := -1.0
+var _monster_walk_speed_scale := 1.0
 var _configured_student_intro := false
+var student_gender := ""
 
 
-func configure_student_spawn(monster_speed: float, food_count: int) -> void:
+func configure_student_spawn(speed_bonus: float, food_count: int) -> void:
 	start_as_student = true
 	transform_on_wall_hit = true
 	foods_required = maxi(food_count, 1)
@@ -173,7 +179,8 @@ func configure_student_spawn(monster_speed: float, food_count: int) -> void:
 		student_shape.size = Vector2(41, 68)
 		body_shape.shape = student_shape
 		body_shape.position = Vector2(3.5, 23)
-	_configured_monster_speed = monster_speed if monster_speed >= 0.0 else movement_speed
+	_configured_monster_speed = movement_speed + maxf(speed_bonus, 0.0)
+	_monster_walk_speed_scale = 1.0 + maxf(speed_bonus, 0.0) / 100.0
 	if movement_speed <= 0.0:
 		movement_speed = 60.0
 
@@ -236,6 +243,7 @@ func _ready() -> void:
 
 	original_collision_layer = collision_layer
 	if start_as_student and _has_animation(student_sprite, student_walk_animation):
+		_setup_student_appearance()
 		_begin_as_student()
 	elif sprite == null:
 		push_warning(
@@ -363,6 +371,7 @@ func _play_walk_animation() -> void:
 		)
 		return
 
+	sprite.speed_scale = _monster_walk_speed_scale
 	sprite.play(walk_animation)
 
 
@@ -373,6 +382,34 @@ func _has_animation(animated_sprite: AnimatedSprite2D, animation: StringName) ->
 		and animated_sprite.sprite_frames.has_animation(animation)
 		and animated_sprite.sprite_frames.get_frame_count(animation) > 0
 	)
+
+
+func _setup_student_appearance() -> void:
+	student_gender = "male" if randf() < 0.5 else "female"
+	var selected := male_frames if student_gender == "male" else female_frames
+	if selected == null or not selected.has_animation(&"run") or selected.get_frame_count(&"run") == 0:
+		return
+	student_sprite.sprite_frames = selected
+	student_walk_animation = &"run"
+	student_sprite.centered = false
+	student_sprite.position = Vector2(0, 57)
+	student_sprite.frame_changed.connect(_fit_student_frame)
+
+
+func _fit_student_frame() -> void:
+	if student_walk_animation != &"run":
+		return
+	var frames := student_sprite.sprite_frames
+	var texture := frames.get_frame_texture(student_sprite.animation, student_sprite.frame)
+	if texture == null or texture.get_height() == 0:
+		return
+	# The female static pose faces left in the source art.
+	if flip_sprite_when_turning:
+		var faces_right := student_gender != "female" or student_sprite.animation != &"idle"
+		student_sprite.flip_h = (movement_direction < 0) == faces_right
+	var world_scale := maxf(absf(global_scale.y), 0.001)
+	student_sprite.scale = Vector2.ONE * (target_height / (texture.get_height() * world_scale))
+	student_sprite.offset = Vector2(-texture.get_width() * 0.5, -texture.get_height())
 
 
 func _begin_as_student(returning: bool = false) -> void:
@@ -387,6 +424,7 @@ func _begin_as_student(returning: bool = false) -> void:
 	student_sprite.show()
 	if not returning or play_student_walk_after_return:
 		student_sprite.play(student_walk_animation)
+		_fit_student_frame()
 	_update_sprite_direction()
 
 
@@ -402,7 +440,11 @@ func _handle_wall_collision() -> void:
 func _start_transformation() -> void:
 	character_state = CharacterState.STOPPED_AT_WALL
 	velocity.x = 0.0
-	student_sprite.pause()
+	if _has_animation(student_sprite, &"idle"):
+		student_sprite.play(&"idle")
+		_fit_student_frame()
+	else:
+		student_sprite.pause()
 	if wall_stop_duration > 0.0:
 		_start_transformation_timer(wall_stop_duration, _show_transformation_bubble)
 	else:
@@ -527,10 +569,7 @@ func _finish_defeat() -> void:
 	if _rescue_completed or character_state != CharacterState.DEFEAT_POOF:
 		return
 	_rescue_completed = true
-	if return_to_student_when_defeated:
-		_begin_as_student(true)
-	else:
-		_vanish()
+	_vanish()
 	rescue_finished.emit(self)
 
 

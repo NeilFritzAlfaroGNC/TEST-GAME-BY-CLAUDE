@@ -1,0 +1,78 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://djp74ayel5h6b"]
+
+[ext_resource type="Texture2D" uid="uid://kayqlmiofjiy" path="res://Level1/assets/student/female students/female student running/frame_000.png" id="Frame0"]
+[ext_resource type="Texture2D" uid="uid://kgio6cdaiqqh" path="res://Level1/assets/student/female students/female student running/frame_001.png" id="Frame1"]
+[ext_resource type="Texture2D" uid="uid://vj5211vv3juo" path="res://Level1/assets/student/female students/female student running/frame_002.png" id="Frame2"]
+[ext_resource type="Texture2D" uid="uid://br0gyvwvfsuj0" path="res://Level1/assets/student/female students/female student running/frame_003.png" id="Frame3"]
+[ext_resource type="Texture2D" uid="uid://cb2lweuj3ot88" path="res://Level1/assets/student/female students/female student running/frame_004.png" id="Frame4"]
+[ext_resource type="Texture2D" uid="uid://h55nu1x4ge5n" path="res://Level1/assets/student/female students/female student running/frame_005.png" id="Frame5"]
+[ext_resource type="Texture2D" uid="uid://d3qipbs0o6jhm" path="res://Level1/assets/student/female students/female student idle static/frame_000.png" id="Frame6"]
+
+[sub_resource type="AtlasTexture" id="Crop6"]
+atlas = ExtResource("Frame6")
+region = Rect2(92, 64, 63, 137)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop0"]
+atlas = ExtResource("Frame0")
+region = Rect2(85, 63, 84, 140)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop1"]
+atlas = ExtResource("Frame1")
+region = Rect2(82, 63, 90, 135)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop2"]
+atlas = ExtResource("Frame2")
+region = Rect2(84, 62, 88, 136)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop3"]
+atlas = ExtResource("Frame3")
+region = Rect2(90, 63, 83, 135)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop4"]
+atlas = ExtResource("Frame4")
+region = Rect2(85, 63, 92, 136)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop5"]
+atlas = ExtResource("Frame5")
+region = Rect2(84, 63, 86, 138)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Crop6")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Crop0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop5")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 5.0
+}]

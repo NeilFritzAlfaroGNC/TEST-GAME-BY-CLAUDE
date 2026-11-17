@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://dopltmidahvti"]
 
 [ext_resource type="Resource" uid="uid://bugrmmdqgudk3" path="res://data/tokens/donut_enemy_token.tres" id="donut"]
+[ext_resource type="Resource" path="res://data/tokens/fries_enemy_token.tres" id="fries"]
+[ext_resource type="Resource" path="res://data/tokens/pizza_enemy_token.tres" id="pizza"]
 [ext_resource type="Script" uid="uid://0iyra0hoevr4" path="res://scripts/character_codex/CodexTokenEntry.gd" id="entry"]
 [ext_resource type="Script" uid="uid://d18gboyj8gu6q" path="res://scripts/character_codex/CodexPanel.gd" id="script"]
 [ext_resource type="Resource" uid="uid://3cv77x31dtco" path="res://data/tokens/soda_enemy_token.tres" id="soda"]
@@ -17,10 +19,12 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_preview_placeholder"]
+
 [node name="Codex" type="Panel" unique_id=1477033129]
 theme_override_styles/panel = SubResource("Panel")
 script = ExtResource("script")
-codex_entries = Array[ExtResource("entry")]([ExtResource("soda"), ExtResource("donut")])
+codex_entries = Array[ExtResource("entry")]([ExtResource("soda"), ExtResource("donut"), ExtResource("fries"), ExtResource("pizza")])
 
 [node name="Details" type="Panel" parent="." unique_id=2106715912]
 layout_mode = 0
@@ -66,16 +70,19 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Preview" type="AnimatedSprite2D" parent="Details/Scroll/Content/Art" unique_id=1726529415]
+sprite_frames = SubResource("SpriteFrames_preview_placeholder")
 visible = false
 texture_filter = 1
 position = Vector2(64, 50)
 
 [node name="Stats" type="Label" parent="Details/Scroll/Content" unique_id=1993561972]
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="Text" type="Label" parent="Details/Scroll/Content" unique_id=1388382408]
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
 autowrap_mode = 3
 

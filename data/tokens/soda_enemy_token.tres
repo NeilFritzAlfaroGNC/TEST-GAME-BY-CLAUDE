@@ -9,6 +9,12 @@
 script = ExtResource("3")
 sprite_frames = ExtResource("4")
 
+[sub_resource type="Resource" id="Anim_daze"]
+script = ExtResource("3")
+display_name = "Daze"
+sprite_frames = ExtResource("4")
+animation_name = &"daze"
+
 [sub_resource type="Resource" id="Special"]
 script = ExtResource("3")
 display_name = "Defeated"
@@ -16,9 +22,33 @@ sprite_frames = ExtResource("4")
 animation_name = &"defeated"
 extra_token_copies_required = 2
 
+[sub_resource type="Resource" id="Anim_freeze"]
+script = ExtResource("3")
+display_name = "Freeze"
+sprite_frames = ExtResource("4")
+animation_name = &"freeze"
+
+[sub_resource type="Resource" id="Anim_knockback"]
+script = ExtResource("3")
+display_name = "Knockback"
+sprite_frames = ExtResource("4")
+animation_name = &"knockback"
+
+[sub_resource type="Resource" id="Anim_stun"]
+script = ExtResource("3")
+display_name = "Stun"
+sprite_frames = ExtResource("4")
+animation_name = &"stun"
+
+[sub_resource type="Resource" id="Anim_walk"]
+script = ExtResource("3")
+display_name = "Walk"
+sprite_frames = ExtResource("4")
+animation_name = &"walk"
+
 [resource]
 script = ExtResource("1")
-animations = Array[ExtResource("3")]([SubResource("Attack"), SubResource("Special")])
+animations = Array[ExtResource("3")]([SubResource("Attack"), SubResource("Anim_daze"), SubResource("Special"), SubResource("Anim_freeze"), SubResource("Anim_knockback"), SubResource("Anim_stun"), SubResource("Anim_walk")])
 id = &"soda_enemy"
 display_name = "Soda Enemy"
 category = &"junk_enemies"

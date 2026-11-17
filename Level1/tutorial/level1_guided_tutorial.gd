@@ -64,6 +64,10 @@ func _ready() -> void:
 	_build_overlay()
 	ui_root.hide()
 
+func is_spawn_limit_active() -> bool:
+	return phase != Phase.FINISHED
+
+
 func has_completed_tutorial() -> bool:
 	var config := ConfigFile.new()
 	if config.load(SAVE_PATH) != OK:

@@ -2,6 +2,20 @@
 
 [ext_resource type="Texture2D" path="res://Level1/assets/foods/Go/bread/Eating bread.png" id="1_tfdea"]
 
+[ext_resource type="Texture2D" path="res://Shared/assets/Foods/Go/bread/bread sprite.png" id="food_attack"]
+
+[sub_resource type="AtlasTexture" id="Food_attack_0"]
+atlas = ExtResource("food_attack")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Food_attack_1"]
+atlas = ExtResource("food_attack")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Food_attack_2"]
+atlas = ExtResource("food_attack")
+region = Rect2(0, 128, 128, 128)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_porc0"]
 atlas = ExtResource("1_tfdea")
 region = Rect2(0, 0, 128, 128)
@@ -19,7 +33,8 @@ atlas = ExtResource("1_tfdea")
 region = Rect2(0, 128, 128, 128)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
-animations = [{
+animations = [{"frames": [{"duration": 1.0, "texture": SubResource("Food_attack_0")}, {"duration": 1.0, "texture": SubResource("Food_attack_1")}, {"duration": 1.0, "texture": SubResource("Food_attack_2")}], "loop": true, "name": &"attack", "speed": 5.0},
+{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_porc0")

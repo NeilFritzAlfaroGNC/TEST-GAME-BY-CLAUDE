@@ -2,26 +2,18 @@
 extends Control
 
 # ==================================================
-# VICTORY SCREEN
-# ==================================================
-# Cafeteria victory:
-#   Next Level -> Canteen Story
-#
-# Canteen victory:
-#   Next Level disabled until Level 3 exists
-#
-# Map button:
-#   Always returns to Level Map
+# SHARED VICTORY SCREEN
 # ==================================================
 
 const TOKEN_UNLOCKS := preload("res://scripts/codex/codex_token_unlocks.gd")
+const LEVEL_MAP_SCENE_PATH := "res://Shared/scenes/level_map/level_map.tscn"
+const CANTEEN_STORY_SCENE_PATH := "res://Level2/scenes/story/canteen_story_scene.tscn"
+const TANJANGCO_STORY_SCENE_PATH := "res://Level3/scenes/story/story_scene_level3.tscn"
+const TANJANGCO_BATTLE_SCENE_PATH := "res://Level3/scenes/battle/battle_scene_level3.tscn"
 
-const LEVEL_MAP_SCENE_PATH: String = "res://Shared/scenes/level_map/level_map.tscn"
-
-const CANTEEN_STORY_SCENE_PATH: String = "res://Level2/scenes/story/canteen_story_scene.tscn"
-
-const CAFETERIA_LEVEL_ID: String = "cafeteria_level_1"
-const CANTEEN_LEVEL_ID: String = "canteen_level_2"
+const CAFETERIA_LEVEL_ID := "cafeteria_level_1"
+const CANTEEN_LEVEL_ID := "canteen_level_2"
+const TANJANGCO_LEVEL_ID := "scene3_level_3"
 
 @onready var victory_label: Label = (
 	$ColorRect/CenterContainer/VBoxContainer/VictoryLabel
@@ -94,8 +86,15 @@ func _show_token_rewards() -> void:
 		var count: int = quantities[reward]
 		lines.append("You got %s Token!" % reward if count == 1 else "You got %d %s Tokens!" % [count, reward])
 	label.text = "\n".join(lines)
-	victory_label.get_parent().add_child(label)
-	victory_label.get_parent().move_child(label, stars.get_index() + 1)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var reward_list := ScrollContainer.new()
+	reward_list.name = "TokenRewards"
+	reward_list.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	reward_list.custom_minimum_size = Vector2(440.0, minf(label.get_minimum_size().y, 88.0))
+	reward_list.add_child(label)
+	var column := victory_label.get_parent()
+	column.add_child(reward_list)
+	column.move_child(reward_list, stars.get_index() + 1)
 
 
 func _refresh_stars() -> void:
@@ -137,44 +136,20 @@ func _has_property(
 # ==================================================
 
 func _configure_next_level_button() -> void:
-	var completed_level: String = (
-		ProgressManager.last_completed_level_id
-	)
+	var completed_level: String = ProgressManager.last_completed_level_id
+	next_level_button.text = "RETRY" if completed_level == TANJANGCO_LEVEL_ID else "NEXT LEVEL"
+	next_level_button.disabled = _next_action_path().is_empty()
 
-	next_level_button.text = "NEXT LEVEL"
 
-	match completed_level:
+func _next_action_path() -> String:
+	match ProgressManager.last_completed_level_id:
 		CAFETERIA_LEVEL_ID:
-			if ProgressManager.is_canteen_unlocked():
-				next_level_button.disabled = false
-
-				print(
-					"[Victory] Canteen unlocked. "
-					+ "Next Level is available."
-				)
-			else:
-				next_level_button.disabled = true
-
-				print(
-					"[Victory] Canteen locked. "
-					+ "At least 1 Cafeteria star required."
-				)
-
+			return CANTEEN_STORY_SCENE_PATH if ProgressManager.is_canteen_unlocked() else ""
 		CANTEEN_LEVEL_ID:
-			next_level_button.disabled = true
-
-			print(
-				"[Victory] Canteen completed. "
-				+ "Next level is not configured yet."
-			)
-
-		_:
-			next_level_button.disabled = true
-
-			print(
-				"[Victory] No next level configured for: ",
-				completed_level
-			)
+			return TANJANGCO_STORY_SCENE_PATH
+		TANJANGCO_LEVEL_ID:
+			return TANJANGCO_BATTLE_SCENE_PATH
+	return ""
 
 
 # ==================================================
@@ -195,37 +170,9 @@ func _on_map_pressed() -> void:
 # ==================================================
 
 func _on_next_level_pressed() -> void:
-	if transition_started:
-		return
-
-	var completed_level: String = (
-		ProgressManager.last_completed_level_id
-	)
-
-	if completed_level == CAFETERIA_LEVEL_ID:
-		if not ProgressManager.is_canteen_unlocked():
-			push_warning(
-				"[Victory] Canteen is still locked."
-			)
-			return
-
-		print(
-			"[Victory] Moving from Cafeteria "
-			+ "to Canteen Story."
-		)
-
-		_change_scene(CANTEEN_STORY_SCENE_PATH)
-		return
-
-	if completed_level == CANTEEN_LEVEL_ID:
-		print(
-			"[Victory] Level 3 is not available yet."
-		)
-		return
-
-	print(
-		"[Victory] No next level assigned."
-	)
+	var path := _next_action_path()
+	if not path.is_empty():
+		_change_scene(path)
 
 
 # ==================================================

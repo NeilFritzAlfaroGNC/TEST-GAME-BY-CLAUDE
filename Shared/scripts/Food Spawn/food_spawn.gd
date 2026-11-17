@@ -31,6 +31,8 @@ extends Marker2D
 @export_group("Level Food Settings")
 
 @export var available_foods: Array[PackedScene] = []
+## Fill missing GO, GLOW, and GROW categories before choosing extra foods.
+@export var balance_nutrition_categories := false
 
 
 # ==================================================
@@ -65,6 +67,7 @@ var next_spawn_time: float = 1.0
 var spawning_enabled: bool = true
 
 var food_items: Node2D = null
+var _foods_by_category: Array[Array] = []
 
 
 # ==================================================
@@ -96,6 +99,9 @@ func _ready() -> void:
 		spawning_enabled = false
 		set_process(false)
 		return
+
+	if balance_nutrition_categories:
+		_cache_nutrition_categories()
 
 	next_spawn_time = _get_next_spawn_interval()
 
@@ -236,7 +242,7 @@ func spawn_food() -> void:
 		return
 
 	var scene_to_spawn: PackedScene = (
-		_get_random_food_scene()
+		_get_balanced_food_scene() if balance_nutrition_categories else _get_random_food_scene()
 	)
 
 	if scene_to_spawn == null:
@@ -330,3 +336,36 @@ func _get_random_food_scene() -> PackedScene:
 	)
 
 	return valid_foods[index]
+
+
+func _cache_nutrition_categories() -> void:
+	_foods_by_category = [[], [], []]
+	for scene in _get_valid_food_scenes():
+		var instance := scene.instantiate()
+		var food := instance as FoodData
+		if food != null:
+			for category in range(_foods_by_category.size()):
+				if food.has_category(category):
+					_foods_by_category[category].append(scene)
+		instance.free()
+
+
+func _get_balanced_food_scene() -> PackedScene:
+	var present := [false, false, false]
+	for child in food_items.get_children():
+		var food := child as FoodData
+		if food == null or food.is_queued_for_deletion():
+			continue
+		for category in range(present.size()):
+			if food.has_category(category):
+				present[category] = true
+
+	var missing: Array[int] = []
+	for category in range(present.size()):
+		if not present[category] and not _foods_by_category[category].is_empty():
+			missing.append(category)
+	if missing.is_empty():
+		return _get_random_food_scene()
+
+	var selected_category: int = missing.pick_random()
+	return _foods_by_category[selected_category].pick_random() as PackedScene

@@ -2,12 +2,16 @@ extends Control
 
 const LEVEL_MAP_SCENE_PATH: String = "res://Shared/scenes/level_map/level_map.tscn"
 
+@export_multiline var failure_message: String = ""
+
 @onready var retry_button: Button = $Background/CenterContainer/VBoxContainer/RetryButton
 @onready var main_menu_button: Button = $Background/CenterContainer/VBoxContainer/MainMenuButton
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	if not failure_message.is_empty():
+		$Background/CenterContainer/VBoxContainer/Message.text = failure_message
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	if not retry_button.pressed.is_connected(_on_retry_pressed):

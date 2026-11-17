@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://buo0nxq387gbb"]
+
+[ext_resource type="Texture2D" uid="uid://uk23unxs3uc1" path="res://Level3/assets/healthy child/Female/Rope Sideways/frame_000.png" id="1_8u16m"]
+[ext_resource type="Texture2D" uid="uid://d2frbhpe81du0" path="res://Level3/assets/healthy child/Female/Rope Sideways/frame_001.png" id="2_0i73e"]
+[ext_resource type="Texture2D" uid="uid://du2but5qda0ht" path="res://Level3/assets/healthy child/Female/Rope Sideways/frame_002.png" id="3_skfib"]
+[ext_resource type="Texture2D" uid="uid://yystydje0qyv" path="res://Level3/assets/healthy child/Female/Rope Sideways/frame_003.png" id="4_0yngd"]
+[ext_resource type="Texture2D" uid="uid://iuhk54ur8hh4" path="res://Level3/assets/healthy child/Female/Rope Sideways/frame_004.png" id="5_h0nd0"]
+[ext_resource type="Texture2D" uid="uid://cxv4d8s5redq8" path="res://Level3/assets/healthy child/Female/Rope Sideways/frame_005.png" id="6_sh4qi"]
+[ext_resource type="Texture2D" uid="uid://ikmfku04npoh" path="res://Level3/assets/healthy child/Female/Rope Sideways/frame_006.png" id="7_kylau"]
+[ext_resource type="Texture2D" uid="uid://dox3ovb32r04x" path="res://Level3/assets/healthy child/Female/Rope Sideways/frame_007.png" id="8_etgb8"]
+[ext_resource type="Texture2D" uid="uid://cl8dc2tpo81ra" path="res://Level3/assets/healthy child/Female/Rope Sideways/frame_008.png" id="9_r6554"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8u16m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_0i73e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_skfib")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_0yngd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_h0nd0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_sh4qi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_kylau")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_etgb8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_r6554")
+}],
+"loop": 1,
+"name": &"weightlifting",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="RescueBody"]
+radius = 22.0
+height = 60.0
+
+[node name="Rope" type="CharacterBody2D" unique_id=1231740103]
+collision_layer = 2
+collision_mask = 8
+floor_snap_length = 6.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=78307478]
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"weightlifting"
+autoplay = "weightlifting"
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1659882150]
+shape = SubResource("RescueBody")

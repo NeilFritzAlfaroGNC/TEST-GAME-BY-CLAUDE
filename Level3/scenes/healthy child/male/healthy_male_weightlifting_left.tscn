@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://do43ix6updbc8"]
+
+[ext_resource type="Texture2D" uid="uid://cyjf2mvt37kn4" path="res://Level3/assets/healthy child/Male/Weightlifting Left/frame_000.png" id="1_ebxw0"]
+[ext_resource type="Texture2D" uid="uid://ddts78jvc5o1f" path="res://Level3/assets/healthy child/Male/Weightlifting Left/frame_001.png" id="2_7uypc"]
+[ext_resource type="Texture2D" uid="uid://bhl72d7la430" path="res://Level3/assets/healthy child/Male/Weightlifting Left/frame_002.png" id="3_w28ba"]
+[ext_resource type="Texture2D" uid="uid://dgk21lqiqca0q" path="res://Level3/assets/healthy child/Male/Weightlifting Left/frame_003.png" id="4_5bs6j"]
+[ext_resource type="Texture2D" uid="uid://csf445mi1td7q" path="res://Level3/assets/healthy child/Male/Weightlifting Left/frame_004.png" id="5_uqkmx"]
+[ext_resource type="Texture2D" uid="uid://bdg30ctrdj34t" path="res://Level3/assets/healthy child/Male/Weightlifting Left/frame_005.png" id="6_ioqqc"]
+[ext_resource type="Texture2D" uid="uid://be6phax7bwds" path="res://Level3/assets/healthy child/Male/Weightlifting Left/frame_006.png" id="7_5eoar"]
+[ext_resource type="Texture2D" uid="uid://cms4f0anx0ith" path="res://Level3/assets/healthy child/Male/Weightlifting Left/frame_007.png" id="8_3rvdt"]
+[ext_resource type="Texture2D" uid="uid://bnghie58fe46r" path="res://Level3/assets/healthy child/Male/Weightlifting Left/frame_008.png" id="9_pue15"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_ebxw0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_7uypc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_w28ba")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_5bs6j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_uqkmx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ioqqc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_5eoar")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_3rvdt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_pue15")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="RescueBody"]
+radius = 22.0
+height = 60.0
+
+[node name="WeightliftingLeft" type="CharacterBody2D" unique_id=1231740103]
+collision_layer = 2
+collision_mask = 8
+floor_snap_length = 6.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=78307478]
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"walk"
+autoplay = "walk"
+frame_progress = 0.5511055
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1659882150]
+shape = SubResource("RescueBody")

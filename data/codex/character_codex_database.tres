@@ -3,5 +3,30 @@
 [ext_resource type="Script" uid="uid://d112377gqx3gk" path="res://scripts/codex/CodexDatabase.gd" id="1_db"]
 [ext_resource type="Script" uid="uid://dllabu1sahq6v" path="res://scripts/codex/CodexEntryData.gd" id="1_sxgrj"]
 
+[ext_resource type="Resource" path="res://data/codex/foods/bread.tres" id="bread"]
+[ext_resource type="Resource" path="res://data/codex/foods/corn.tres" id="corn"]
+[ext_resource type="Resource" path="res://data/codex/foods/oats.tres" id="oats"]
+[ext_resource type="Resource" path="res://data/codex/foods/potato.tres" id="potato"]
+[ext_resource type="Resource" path="res://data/codex/foods/rice.tres" id="rice"]
+[ext_resource type="Resource" path="res://data/codex/foods/apple.tres" id="apple"]
+[ext_resource type="Resource" path="res://data/codex/foods/banana.tres" id="banana"]
+[ext_resource type="Resource" path="res://data/codex/foods/carrot.tres" id="carrot"]
+[ext_resource type="Resource" path="res://data/codex/foods/mango.tres" id="mango"]
+[ext_resource type="Resource" path="res://data/codex/foods/papaya.tres" id="papaya"]
+[ext_resource type="Resource" path="res://data/codex/foods/bean.tres" id="bean"]
+[ext_resource type="Resource" path="res://data/codex/foods/chicken.tres" id="chicken"]
+[ext_resource type="Resource" path="res://data/codex/foods/egg.tres" id="egg"]
+[ext_resource type="Resource" path="res://data/codex/foods/fish.tres" id="fish"]
+[ext_resource type="Resource" path="res://data/codex/foods/milk.tres" id="milk"]
+
+[ext_resource type="Resource" path="res://data/codex/children/sick_male.tres" id="sick_male"]
+[ext_resource type="Resource" path="res://data/codex/children/sick_female.tres" id="sick_female"]
+[ext_resource type="Resource" path="res://data/codex/children/healthy_male.tres" id="healthy_male"]
+[ext_resource type="Resource" path="res://data/codex/children/healthy_male_left.tres" id="healthy_male_left"]
+[ext_resource type="Resource" path="res://data/codex/children/healthy_male_right.tres" id="healthy_male_right"]
+[ext_resource type="Resource" path="res://data/codex/children/healthy_female.tres" id="healthy_female"]
+[ext_resource type="Resource" path="res://data/codex/children/healthy_female_sideways.tres" id="healthy_female_sideways"]
+
 [resource]
 script = ExtResource("1_db")
+entries = Array[ExtResource("1_sxgrj")]([ExtResource("bread"), ExtResource("corn"), ExtResource("oats"), ExtResource("potato"), ExtResource("rice"), ExtResource("apple"), ExtResource("banana"), ExtResource("carrot"), ExtResource("mango"), ExtResource("papaya"), ExtResource("bean"), ExtResource("chicken"), ExtResource("egg"), ExtResource("fish"), ExtResource("milk"), ExtResource("sick_male"), ExtResource("sick_female"), ExtResource("healthy_male"), ExtResource("healthy_male_left"), ExtResource("healthy_male_right"), ExtResource("healthy_female"), ExtResource("healthy_female_sideways")])

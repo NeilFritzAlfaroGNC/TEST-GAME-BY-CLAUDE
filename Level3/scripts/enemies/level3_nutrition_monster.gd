@@ -20,6 +20,7 @@ class_name Level3NutritionMonster
 signal selected(monster: Level3NutritionMonster)
 signal nutrition_changed(monster: Level3NutritionMonster)
 signal cured(monster: Level3NutritionMonster)
+signal patrol_exhausted(monster: Level3NutritionMonster)
 
 
 # ==================================================
@@ -116,12 +117,59 @@ var is_active: bool = true
 # INITIALIZATION
 # ==================================================
 
+var patrol_spawn: Marker2D
+var healthy_scene: PackedScene
+var _patrol_start := Vector2.ZERO
+var _patrol_end := Vector2.ZERO
+var _patrol_target := Vector2.ZERO
+var _patrol_travel := 0.0
+var _patrol_escape_distance := 0.0
+
+
+func configure_patrol(marker: Marker2D, endpoint: Marker2D, healed_form: PackedScene, escape_distance: float) -> void:
+	patrol_spawn = marker
+	healthy_scene = healed_form
+	_patrol_start = marker.global_position
+	_patrol_end = endpoint.global_position
+	_patrol_target = _patrol_end
+	_patrol_escape_distance = escape_distance
+
+
+func restart_patrol() -> void:
+	_patrol_target = _patrol_end
+	_patrol_travel = 0.0
+	set_deferred("global_position", _patrol_start)
+
+
+func _advance_patrol(delta: float) -> void:
+	var motion := _patrol_target - global_position
+	var step := movement_speed * delta
+	if motion.length_squared() <= step * step:
+		velocity = Vector2.ZERO
+		_patrol_travel += motion.length()
+		global_position = _patrol_target
+		_patrol_target = _patrol_start if _patrol_target == _patrol_end else _patrol_end
+	else:
+		velocity = motion.normalized() * movement_speed
+		var sprite := get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+		if sprite != null and not is_zero_approx(velocity.x):
+			sprite.flip_h = velocity.x < 0.0
+		var before := global_position
+		move_and_slide()
+		_patrol_travel += before.distance_to(global_position)
+	if _patrol_escape_distance > 0.0 and _patrol_travel >= _patrol_escape_distance:
+		patrol_exhausted.emit(self)
+
+
 func _ready() -> void:
 
 	motion_mode = CharacterBody2D.MOTION_MODE_GROUNDED
 
 	collision_layer = monster_collision_layer
 	collision_mask = environment_collision_mask
+	if patrol_spawn != null:
+		motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
+		collision_mask = 0
 
 	floor_snap_length = floor_snap_distance
 	input_pickable = true
@@ -149,6 +197,12 @@ func _physics_process(delta: float) -> void:
 
 	if not is_active:
 		velocity = Vector2.ZERO
+		return
+
+	if patrol_spawn != null:
+		_advance_patrol(delta)
+		if is_active:
+			_update_nutrition(delta)
 		return
 
 	# ----------------------------------------------

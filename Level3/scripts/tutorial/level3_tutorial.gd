@@ -4,7 +4,7 @@ signal step_changed(step_index: int)
 signal tutorial_completed(skipped: bool)
 const OVERLAY_SCENE = preload("res://Shared/scenes/ui/guided_tutorial_overlay.tscn")
 const SAVE_PATH := "user://food_heroes_tutorials.cfg"
-const SAVE_KEY := "level3_nutrition_rescue_v1"
+const SAVE_KEY := "level3_nutrition_rescue_v2"
 enum Phase { FINISHED, WAIT_MONSTER, EXPLANATION, PRACTICE, COMPLETE }
 
 @export_group("Tutorial")
@@ -18,15 +18,15 @@ enum Phase { FINISHED, WAIT_MONSTER, EXPLANATION, PRACTICE, COMPLETE }
 @export_range(0.0,100.0,1.0,"suffix:%") var tutorial_overlay_opacity: float = 60.0
 @export var tutorial_highlight_color: Color = Color("#ffd54f")
 @export_group("Tutorial Messages")
-@export_multiline var monster_text: String = "Oh no! These monsters are suffering from poor nutrition. We need to help them become healthy again!"
-@export_multiline var bars_text: String = "Every monster has three nutrition bars: GO, GLOW, and GROW. These show the nutrients each monster needs."
-@export_multiline var depletion_text: String = "Watch out! The nutrition bars slowly decrease over time. Feed the monsters before they escape!"
-@export_multiline var conveyor_text: String = "The conveyor belt carries foods that can restore the monsters' nutrition."
-@export_multiline var feeding_text: String = "Drag food from the conveyor belt and drop it onto a monster. The food restores its matching GO, GLOW, or GROW nutrition."
-@export_multiline var locks_text: String = "When a nutrition bar reaches 100%, it stays full! Fill all three bars to rescue the monster."
-@export_multiline var escape_text: String = "Don't let the monsters reach the left side! Too many escapes will end the game."
-@export_multiline var practice_text: String = "Now it's your turn! Feed the monster until all three nutrition bars are full."
-@export_multiline var complete_text: String = "Excellent! You've rescued your first monster. Keep curing monsters to win the challenge!"
+@export_multiline var monster_text: String = "Five healthy children stay in place. The sick child patrols diagonally. Let’s help them recover!"
+@export_multiline var bars_text: String = "Select a sick child to see their three nutrition bars: GO, GLOW, and GROW."
+@export_multiline var depletion_text: String = "Unfilled bars gradually drain. Help each sick child before they finish their patrol and leave."
+@export_multiline var conveyor_text: String = "The conveyor prioritizes any missing category. Look for GO, GLOW, and GROW foods."
+@export_multiline var feeding_text: String = "Drag a food onto the sick child to fill the matching GO, GLOW, or GROW bar."
+@export_multiline var locks_text: String = "A bar stays full at 100%. Fill all three and the child becomes healthy and stays where you helped them."
+@export_multiline var escape_text: String = "Only one sick child appears during practice. Afterwards, fewer can be on screen as you get closer to the cure goal."
+@export_multiline var practice_text: String = "Your turn! Feed the sick child until all three nutrition bars are full."
+@export_multiline var complete_text: String = "You helped your first child! Click any mystery tokens that drop. Clear Level 3 to unlock what you collected."
 
 var battle: Node
 var monster_container: Node
@@ -50,7 +50,13 @@ func _ready() -> void:
 	for actor in monster_container.get_children():
 		_watch_monster(actor)
 	monster_container.child_entered_tree.connect(_watch_monster)
+	phase = Phase.WAIT_MONSTER
 	call_deferred("_begin")
+
+
+func is_spawn_limit_active() -> bool:
+	return phase != Phase.FINISHED
+
 
 func has_completed_tutorial() -> bool:
 	var config := ConfigFile.new()

@@ -61,6 +61,9 @@ var maximum_spawn_interval: float = 4.0
 
 @export_group("Floor Monster Settings")
 
+## Use zero to keep the enemy scene's student height.
+@export_range(0.0, 80.0, 1.0, "suffix:px") var student_height_override := 0.0
+
 @export_range(0.1, 5.0, 0.05)
 var monster_scale_multiplier: float = 1.0
 
@@ -501,6 +504,9 @@ func _get_valid_enemy_scenes() -> Array[PackedScene]:
 # ==================================================
 
 func _spawn_random_enemy() -> void:
+	if is_instance_valid(battle_controller) and battle_controller.tutorial_spawn_limit_reached():
+		return
+
 
 	if not initialized:
 		return
@@ -581,8 +587,11 @@ func _spawn_random_enemy() -> void:
 	# the same remaining quota.
 	# ----------------------------------------------
 
+	var roaming := enemy as Level1EnemyRoaming
+	if roaming != null and student_height_override > 0.0:
+		roaming.target_height = student_height_override
+
 	if config != null:
-		var roaming := enemy as Level1EnemyRoaming
 		if roaming == null:
 			push_error("[Level 1] Configured enemy needs Level1EnemyRoaming: " + selected_scene.resource_path)
 			enemy.free()

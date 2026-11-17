@@ -1,0 +1,78 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://bhc6lcoiajp4e"]
+
+[ext_resource type="Texture2D" uid="uid://cgug1td0tu334" path="res://Level1/assets/student/male students/male student running/frame_000.png" id="Frame0"]
+[ext_resource type="Texture2D" uid="uid://de5ntdew68x5" path="res://Level1/assets/student/male students/male student running/frame_001.png" id="Frame1"]
+[ext_resource type="Texture2D" uid="uid://da738k2q1xyhi" path="res://Level1/assets/student/male students/male student running/frame_002.png" id="Frame2"]
+[ext_resource type="Texture2D" uid="uid://b2ofqro5fvarj" path="res://Level1/assets/student/male students/male student running/frame_003.png" id="Frame3"]
+[ext_resource type="Texture2D" uid="uid://d3cdas7n1n6hv" path="res://Level1/assets/student/male students/male student running/frame_004.png" id="Frame4"]
+[ext_resource type="Texture2D" uid="uid://bs500dnq0dyc5" path="res://Level1/assets/student/male students/male student running/frame_005.png" id="Frame5"]
+[ext_resource type="Texture2D" uid="uid://18hdaq4f3wgg" path="res://Level1/assets/student/male students/male student idle static/east.png" id="Frame6"]
+
+[sub_resource type="AtlasTexture" id="Crop6"]
+atlas = ExtResource("Frame6")
+region = Rect2(40, 17, 43, 102)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop0"]
+atlas = ExtResource("Frame0")
+region = Rect2(61, 36, 51, 99)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop1"]
+atlas = ExtResource("Frame1")
+region = Rect2(58, 35, 54, 98)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop2"]
+atlas = ExtResource("Frame2")
+region = Rect2(63, 36, 50, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop3"]
+atlas = ExtResource("Frame3")
+region = Rect2(63, 36, 49, 96)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop4"]
+atlas = ExtResource("Frame4")
+region = Rect2(57, 35, 54, 100)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Crop5"]
+atlas = ExtResource("Frame5")
+region = Rect2(62, 36, 50, 99)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Crop6")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Crop0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop2")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop3")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop4")
+}, {
+"duration": 1.0,
+"texture": SubResource("Crop5")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 5.0
+}]

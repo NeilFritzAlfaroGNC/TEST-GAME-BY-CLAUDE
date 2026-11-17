@@ -1,0 +1,88 @@
+[gd_resource type="Resource" script_class="CodexTokenEntry" format=3 uid="uid://gm67aapdps8o"]
+
+[ext_resource type="Texture2D" uid="uid://c3u6o0qpobgj4" path="res://Level1/assets/foods/Glow/apple/apple sprite.png" id="1_841k1"]
+[ext_resource type="Texture2D" uid="uid://b225f56rfsrwg" path="res://Level1/assets/foods/Glow/apple/Eating apple.png" id="2_r5lig"]
+[ext_resource type="Script" uid="uid://dcel50qjorutl" path="res://scripts/character_codex/CodexAnimationData.gd" id="anim"]
+[ext_resource type="Script" uid="uid://0iyra0hoevr4" path="res://scripts/character_codex/CodexTokenEntry.gd" id="entry"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_841k1"]
+atlas = ExtResource("1_841k1")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r5lig"]
+atlas = ExtResource("1_841k1")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r2xoh"]
+atlas = ExtResource("1_841k1")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6vgey"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqvm8"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijoag"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_op104"]
+atlas = ExtResource("2_r5lig")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_841k1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r5lig")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r2xoh")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6vgey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gqvm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijoag")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_op104")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="Resource" id="Attack"]
+script = ExtResource("anim")
+sprite_frames = SubResource("Frames")
+
+[sub_resource type="Resource" id="Eaten"]
+script = ExtResource("anim")
+display_name = "Eaten"
+sprite_frames = SubResource("Frames")
+animation_name = &"eaten"
+
+[resource]
+script = ExtResource("entry")
+animations = Array[ExtResource("anim")]([SubResource("Attack"), SubResource("Eaten")])
+id = &"apple"
+display_name = "Apple"
+category = &"healthy_foods"
+icon = SubResource("AtlasTexture_841k1")
+large_image = SubResource("AtlasTexture_841k1")
+description = "Glow food from the Level 1 cafeteria."

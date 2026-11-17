@@ -1,16 +1,16 @@
 [gd_scene format=3 uid="uid://d3cskcheicuhg"]
 
-[ext_resource type="Texture2D" uid="uid://kayqlmiofjiy" path="res://Level1/assets/student/frame_000.png" id="1_466pt"]
+[ext_resource type="Texture2D" uid="uid://kayqlmiofjiy" path="res://Level1/assets/student/female students/female student running/frame_000.png" id="1_466pt"]
 [ext_resource type="Script" uid="uid://66bwgd04v41t" path="res://Level1/scripts/enemy/level1_enemy_roaming.gd" id="1_roaming"]
 [ext_resource type="Texture2D" uid="uid://dxskkxy136m83" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_000.png" id="2_o0rah"]
-[ext_resource type="Texture2D" uid="uid://kgio6cdaiqqh" path="res://Level1/assets/student/frame_001.png" id="2_vvcnd"]
+[ext_resource type="Texture2D" uid="uid://kgio6cdaiqqh" path="res://Level1/assets/student/female students/female student running/frame_001.png" id="2_vvcnd"]
 [ext_resource type="Texture2D" uid="uid://beswlvsw42mf0" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_001.png" id="3_lh0p8"]
-[ext_resource type="Texture2D" uid="uid://vj5211vv3juo" path="res://Level1/assets/student/frame_002.png" id="3_rfdge"]
+[ext_resource type="Texture2D" uid="uid://vj5211vv3juo" path="res://Level1/assets/student/female students/female student running/frame_002.png" id="3_rfdge"]
 [ext_resource type="Texture2D" uid="uid://d11u1j3j1fa5i" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_002.png" id="4_e8uue"]
-[ext_resource type="Texture2D" uid="uid://br0gyvwvfsuj0" path="res://Level1/assets/student/frame_003.png" id="4_lfqr5"]
-[ext_resource type="Texture2D" uid="uid://cb2lweuj3ot88" path="res://Level1/assets/student/frame_004.png" id="5_62cby"]
+[ext_resource type="Texture2D" uid="uid://br0gyvwvfsuj0" path="res://Level1/assets/student/female students/female student running/frame_003.png" id="4_lfqr5"]
+[ext_resource type="Texture2D" uid="uid://cb2lweuj3ot88" path="res://Level1/assets/student/female students/female student running/frame_004.png" id="5_62cby"]
 [ext_resource type="Texture2D" uid="uid://cjn30fa31h0ru" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_003.png" id="5_htyui"]
-[ext_resource type="Texture2D" uid="uid://h55nu1x4ge5n" path="res://Level1/assets/student/frame_005.png" id="6_rn74r"]
+[ext_resource type="Texture2D" uid="uid://h55nu1x4ge5n" path="res://Level1/assets/student/female students/female student running/frame_005.png" id="6_rn74r"]
 [ext_resource type="Texture2D" uid="uid://coj3gx0bryw7d" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_004.png" id="6_vl0xc"]
 [ext_resource type="Texture2D" uid="uid://ddukhyho6ij8j" path="res://Level1/assets/enemies/soda-monster/soda attack/frame_005.png" id="7_rfyyg"]
 [ext_resource type="Texture2D" uid="uid://bnf8lppijuv3l" path="res://Level1/assets/enemies/hambuger-monster/hamburger burn/frame_000.png" id="11_owt2a"]
@@ -347,10 +347,8 @@ script = ExtResource("1_roaming")
 random_starting_direction = true
 gravity_enabled = true
 start_as_student = true
-return_to_student_when_defeated = false
-roaming_collision_mask = 8
 codex_token_id = &"soda_enemy"
-
+roaming_collision_mask = 8
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=899838622]
 sprite_frames = SubResource("SpriteFrames_7vi72")

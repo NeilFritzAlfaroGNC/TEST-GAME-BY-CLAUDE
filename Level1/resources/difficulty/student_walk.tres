@@ -1,11 +1,12 @@
 [gd_resource type="SpriteFrames" format=3]
 
-[ext_resource type="Texture2D" uid="uid://kayqlmiofjiy" path="res://Level1/assets/student/frame_000.png" id="1_466pt"]
-[ext_resource type="Texture2D" uid="uid://kgio6cdaiqqh" path="res://Level1/assets/student/frame_001.png" id="2_vvcnd"]
-[ext_resource type="Texture2D" uid="uid://vj5211vv3juo" path="res://Level1/assets/student/frame_002.png" id="3_rfdge"]
-[ext_resource type="Texture2D" uid="uid://br0gyvwvfsuj0" path="res://Level1/assets/student/frame_003.png" id="4_lfqr5"]
-[ext_resource type="Texture2D" uid="uid://cb2lweuj3ot88" path="res://Level1/assets/student/frame_004.png" id="5_62cby"]
-[ext_resource type="Texture2D" uid="uid://h55nu1x4ge5n" path="res://Level1/assets/student/frame_005.png" id="6_rn74r"]
+[ext_resource type="Texture2D" uid="uid://kayqlmiofjiy" path="res://Level1/assets/student/female students/female student running/frame_000.png" id="1_466pt"]
+[ext_resource type="Texture2D" uid="uid://kgio6cdaiqqh" path="res://Level1/assets/student/female students/female student running/frame_001.png" id="2_vvcnd"]
+[ext_resource type="Texture2D" uid="uid://vj5211vv3juo" path="res://Level1/assets/student/female students/female student running/frame_002.png" id="3_rfdge"]
+[ext_resource type="Texture2D" uid="uid://br0gyvwvfsuj0" path="res://Level1/assets/student/female students/female student running/frame_003.png" id="4_lfqr5"]
+[ext_resource type="Texture2D" uid="uid://cb2lweuj3ot88" path="res://Level1/assets/student/female students/female student running/frame_004.png" id="5_62cby"]
+[ext_resource type="Texture2D" uid="uid://h55nu1x4ge5n" path="res://Level1/assets/student/female students/female student running/frame_005.png" id="6_rn74r"]
+
 
 
 [resource]

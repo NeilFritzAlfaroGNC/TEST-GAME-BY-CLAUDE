@@ -203,6 +203,15 @@ var floor_2_maximum_spawn_interval: float = 4.0
 # DEBUG
 # ==================================================
 
+enum TokenPickupMode { MANUAL, AUTOMATIC, ON_VICTORY }
+
+@export_group("Codex Tokens")
+## Collected tokens are revealed and unlocked only after a win in every mode.
+@export var token_pickup_mode: TokenPickupMode = TokenPickupMode.AUTOMATIC
+## Time a token remains clickable before Automatic mode collects it.
+@export_range(0.0, 30.0, 0.1, "or_greater", "suffix:s")
+var automatic_token_pickup_delay := 1.0
+
 @export_group("Debug")
 
 @export var show_debug_messages: bool = true
@@ -256,6 +265,7 @@ var final_stars: int = 0
 # INITIALIZATION
 # ==================================================
 
+const GAME_OVER_OVERLAY := preload("res://Shared/scripts/ui/battle_game_over_overlay.gd")
 const TOKEN_UNLOCKS := preload("res://scripts/codex/codex_token_unlocks.gd")
 var _pending_tokens: Array[StringName] = []
 var _token_drops: Dictionary = {}
@@ -263,7 +273,7 @@ var _waiting_for_tokens := false
 
 
 func offer_codex_token(id: StringName, chance: float, drop_position: Vector2) -> void:
-	if not battle_running or battle_finished or not TOKEN_UNLOCKS.NAMES.has(id):
+	if not battle_running or battle_finished or not TOKEN_UNLOCKS.ENTRIES.has(id):
 		return
 	if randf() >= chance:
 		return
@@ -292,6 +302,13 @@ func offer_codex_token(id: StringName, chance: float, drop_position: Vector2) ->
 	pickup.global_position = drop_position - Vector2(16, 38)
 	_token_drops[pickup] = reward
 	pickup.pressed.connect(_collect_token.bind(pickup))
+	if token_pickup_mode == TokenPickupMode.AUTOMATIC:
+		var pickup_ref: WeakRef = weakref(pickup)
+		get_tree().create_timer(automatic_token_pickup_delay, false).timeout.connect(func():
+			var live_pickup := pickup_ref.get_ref() as Button
+			if is_instance_valid(live_pickup):
+				_collect_token(live_pickup)
+		)
 
 
 func _collect_token(pickup: Button) -> void:
@@ -317,8 +334,9 @@ func _finish_after_token_pickups() -> void:
 	_waiting_for_tokens = true
 	_stop_floor_spawners()
 	food_drag_controller.set_interactions_enabled(false)
-	await get_tree().create_timer(4.0, false).timeout
-	_complete_battle()
+	if token_pickup_mode == TokenPickupMode.MANUAL:
+		await get_tree().create_timer(4.0, false).timeout
+		_complete_battle()
 
 
 func _ready() -> void:
@@ -610,6 +628,13 @@ func start_battle() -> void:
 # GLOBAL SPAWN QUOTA
 # ==================================================
 
+func tutorial_spawn_limit_reached() -> bool:
+	if total_enemies_spawned == 0:
+		return false
+	var tutorial := get_node_or_null("../Level1Tutorial")
+	return tutorial != null and tutorial.call("is_spawn_limit_active")
+
+
 func can_spawn_more_enemies() -> bool:
 
 	if not battle_running:
@@ -730,7 +755,7 @@ func _on_monster_fed() -> void:
 	_refresh_hud()
 
 	if monsters_fed >= target_monsters:
-		if _token_drops.is_empty():
+		if _token_drops.is_empty() or token_pickup_mode == TokenPickupMode.ON_VICTORY:
 			_complete_battle()
 		else:
 			_finish_after_token_pickups()
@@ -807,6 +832,9 @@ func _complete_battle() -> void:
 	battle_finished = true
 	battle_running = false
 
+	if token_pickup_mode == TokenPickupMode.ON_VICTORY:
+		for reward: StringName in _token_drops.values():
+			_pending_tokens.append(reward)
 	var token_rewards := TOKEN_UNLOCKS.commit_victory(_pending_tokens)
 	_pending_tokens.clear()
 	_clear_token_drops()
@@ -1023,168 +1051,18 @@ func _open_custom_game_over_scene() -> void:
 # ==================================================
 
 func _show_game_over_overlay() -> void:
-
-	if not is_inside_tree():
+	if not is_inside_tree() or is_instance_valid(game_over_layer):
 		return
 
-	if is_instance_valid(game_over_layer):
-		return
-
-	game_over_layer = CanvasLayer.new()
-
-	game_over_layer.name = "Level1GameOver"
-	game_over_layer.layer = 100
-	game_over_layer.process_mode = (
-		Node.PROCESS_MODE_ALWAYS
+	var overlay := GAME_OVER_OVERLAY.new()
+	overlay.name = "Level1GameOver"
+	game_over_layer = overlay
+	add_child(overlay)
+	var menu_action := Callable() if main_menu_scene_path.is_empty() else _return_to_main_menu
+	overlay.show_result(
+		"Time's up!\nMonsters fed: %d / %d\nNo stars earned." % [monsters_fed, target_monsters],
+		"Retry Level 1", _retry_level, menu_action
 	)
-
-	add_child(game_over_layer)
-
-	# Fill the entire screen.
-	var backdrop: ColorRect = ColorRect.new()
-
-	backdrop.name = "Backdrop"
-
-	backdrop.set_anchors_and_offsets_preset(
-		Control.PRESET_FULL_RECT
-	)
-
-	backdrop.color = Color(
-		0.04,
-		0.07,
-		0.09,
-		0.88
-	)
-
-	backdrop.mouse_filter = (
-		Control.MOUSE_FILTER_STOP
-	)
-
-	game_over_layer.add_child(backdrop)
-
-	# Keep the layout centered.
-	var center: CenterContainer = CenterContainer.new()
-
-	center.name = "GameOverCenter"
-
-	center.set_anchors_and_offsets_preset(
-		Control.PRESET_FULL_RECT
-	)
-
-	game_over_layer.add_child(center)
-
-	var panel: PanelContainer = PanelContainer.new()
-
-	panel.custom_minimum_size = Vector2(
-		350.0,
-		250.0
-	)
-
-	center.add_child(panel)
-
-	var style: StyleBoxFlat = StyleBoxFlat.new()
-
-	style.bg_color = Color("#172322")
-	style.border_color = Color("#ce7777")
-
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(12)
-
-	style.content_margin_left = 28
-	style.content_margin_right = 28
-	style.content_margin_top = 22
-	style.content_margin_bottom = 22
-
-	panel.add_theme_stylebox_override(
-		"panel",
-		style
-	)
-
-	var content: VBoxContainer = VBoxContainer.new()
-
-	content.add_theme_constant_override(
-		"separation",
-		16
-	)
-
-	panel.add_child(content)
-
-	var title_label: Label = Label.new()
-
-	title_label.text = "GAME OVER"
-
-	title_label.horizontal_alignment = (
-		HORIZONTAL_ALIGNMENT_CENTER
-	)
-
-	title_label.add_theme_font_size_override(
-		"font_size",
-		32
-	)
-
-	title_label.add_theme_color_override(
-		"font_color",
-		Color("#ff9d9d")
-	)
-
-	content.add_child(title_label)
-
-	var reason_label: Label = Label.new()
-
-	reason_label.text = (
-		"Time's up!\n"
-		+ "Monsters fed: "
-		+ str(monsters_fed)
-		+ " / "
-		+ str(target_monsters)
-		+ "\n"
-		+ "No stars earned."
-	)
-
-	reason_label.horizontal_alignment = (
-		HORIZONTAL_ALIGNMENT_CENTER
-	)
-
-	reason_label.add_theme_font_size_override(
-		"font_size",
-		17
-	)
-
-	content.add_child(reason_label)
-
-	var retry_button: Button = Button.new()
-
-	retry_button.text = "Retry Level 1"
-
-	retry_button.custom_minimum_size = Vector2(
-		220.0,
-		44.0
-	)
-
-	content.add_child(retry_button)
-
-	retry_button.pressed.connect(
-		_retry_level
-	)
-
-	if not main_menu_scene_path.is_empty():
-
-		var menu_button: Button = Button.new()
-
-		menu_button.text = "Main Menu"
-
-		menu_button.custom_minimum_size = Vector2(
-			220.0,
-			40.0
-		)
-
-		content.add_child(menu_button)
-
-		menu_button.pressed.connect(
-			_return_to_main_menu
-		)
-
-	retry_button.grab_focus()
 
 
 # ==================================================

@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://d047csqk1tuy"]
+
+[ext_resource type="Texture2D" uid="uid://b6damgri5rfsv" path="res://Level3/assets/sick child/sick female child/frame_000.png" id="1_y2jdg"]
+[ext_resource type="Texture2D" uid="uid://cg4vl7tmtr32k" path="res://Level3/assets/sick child/sick female child/frame_001.png" id="2_y4ae5"]
+[ext_resource type="Texture2D" uid="uid://mq48ov1eohan" path="res://Level3/assets/sick child/sick female child/frame_002.png" id="3_8wqkv"]
+[ext_resource type="Texture2D" uid="uid://cndvmbe76qte4" path="res://Level3/assets/sick child/sick female child/frame_003.png" id="4_sid4v"]
+[ext_resource type="Texture2D" uid="uid://55axxw1ygxty" path="res://Level3/assets/sick child/sick female child/frame_004.png" id="5_gd31w"]
+[ext_resource type="Texture2D" uid="uid://2u7yoadwl3n0" path="res://Level3/assets/sick child/sick female child/frame_005.png" id="6_ra1kr"]
+
+[ext_resource type="Script" path="res://Level3/scripts/enemies/level3_nutrition_monster.gd" id="Nutrition"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_y2jdg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_y4ae5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_8wqkv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_sid4v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_gd31w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ra1kr")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="RescueBody"]
+radius = 22.0
+height = 60.0
+
+[node name="SickFemale" type="CharacterBody2D" unique_id=1231740103]
+script = ExtResource("Nutrition")
+collision_layer = 2
+collision_mask = 8
+floor_snap_length = 6.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=78307478]
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"walk"
+autoplay = "walk"
+frame_progress = 0.23725943
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1659882150]
+shape = SubResource("RescueBody")

@@ -19,6 +19,8 @@
 [ext_resource type="PackedScene" uid="uid://bk68vb36vu0c6" path="res://Shared/scenes/foods/go/rice.tscn" id="food_rice"]
 [ext_resource type="Script" uid="uid://dciw84ymwe7es" path="res://Level2/scripts/tutorial/level2_tutorial.gd" id="level2_tutorial"]
 
+[ext_resource type="Script" path="res://Shared/scripts/ui/codex_token_drops.gd" id="TokenDrops"]
+
 [sub_resource type="StyleBoxFlat" id="FoodCardStyle"]
 bg_color = Color(0.12, 0.18, 0.19, 0.94)
 border_width_left = 2
@@ -78,6 +80,12 @@ script = ExtResource("1_game")
 food_scenes = Array[PackedScene]([ExtResource("food_bread"), ExtResource("food_corn"), ExtResource("food_oats"), ExtResource("food_potato"), ExtResource("food_rice"), ExtResource("food_apple"), ExtResource("food_banana"), ExtResource("food_carrot"), ExtResource("food_mango"), ExtResource("food_papaya"), ExtResource("food_bean"), ExtResource("food_chicken"), ExtResource("food_egg"), ExtResource("food_fish"), ExtResource("food_milk")])
 canteen_background = ExtResource("2_background")
 save_progress_on_pass = true
+
+
+[node name="CodexTokenDrops" type="CanvasLayer" parent="."]
+layer = 30
+script = ExtResource("TokenDrops")
+drop_chance = 1.0
 
 [node name="Background" type="TextureRect" parent="." unique_id=1465685749]
 unique_name_in_owner = true

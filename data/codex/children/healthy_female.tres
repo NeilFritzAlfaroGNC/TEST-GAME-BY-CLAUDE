@@ -1,0 +1,64 @@
+[gd_resource type="Resource" script_class="CodexTokenEntry" format=3 uid="uid://cfcgae6xt37kq"]
+
+[ext_resource type="Texture2D" uid="uid://butpv864h37f3" path="res://Level3/assets/healthy child/Female/Rope/frame_000.png" id="1_x3swd"]
+[ext_resource type="Texture2D" uid="uid://8y01irv666mo" path="res://Level3/assets/healthy child/Female/Rope/frame_001.png" id="2_qfpim"]
+[ext_resource type="Texture2D" uid="uid://nwlh4fsiea71" path="res://Level3/assets/healthy child/Female/Rope/frame_002.png" id="3_i3x0d"]
+[ext_resource type="Texture2D" uid="uid://dfqs3s3ndk0pa" path="res://Level3/assets/healthy child/Female/Rope/frame_003.png" id="4_ue3u5"]
+[ext_resource type="Texture2D" uid="uid://dradkd3mm4cgt" path="res://Level3/assets/healthy child/Female/Rope/frame_004.png" id="5_nk7q7"]
+[ext_resource type="Texture2D" uid="uid://cfcx2fqhg5wj3" path="res://Level3/assets/healthy child/Female/Rope/frame_005.png" id="6_2s7hs"]
+[ext_resource type="Texture2D" uid="uid://sub33djtlxh7" path="res://Level3/assets/healthy child/Female/Rope/frame_006.png" id="7_xrvux"]
+[ext_resource type="Texture2D" uid="uid://45wt277wlurq" path="res://Level3/assets/healthy child/Female/Rope/frame_007.png" id="8_1pye7"]
+[ext_resource type="Texture2D" uid="uid://c47x0vcrehm8a" path="res://Level3/assets/healthy child/Female/Rope/frame_008.png" id="9_snj5d"]
+[ext_resource type="Script" uid="uid://dcel50qjorutl" path="res://scripts/character_codex/CodexAnimationData.gd" id="animation"]
+[ext_resource type="Script" uid="uid://0iyra0hoevr4" path="res://scripts/character_codex/CodexTokenEntry.gd" id="entry"]
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_x3swd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_qfpim")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_i3x0d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ue3u5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_nk7q7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_2s7hs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_xrvux")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_1pye7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_snj5d")
+}],
+"loop": 1,
+"name": &"weightlifting",
+"speed": 5.0
+}]
+
+[sub_resource type="Resource" id="Animation"]
+script = ExtResource("animation")
+display_name = "Jump Rope"
+sprite_frames = SubResource("Frames")
+animation_name = &"weightlifting"
+
+[resource]
+script = ExtResource("entry")
+animations = Array[ExtResource("animation")]([SubResource("Animation")])
+id = &"healthy_female"
+display_name = "Healthy Female · Jump Rope"
+category = &"sick_child"
+icon = ExtResource("1_x3swd")
+large_image = ExtResource("1_x3swd")
+description = "A healthy child staying active in Tanjangco Hall."

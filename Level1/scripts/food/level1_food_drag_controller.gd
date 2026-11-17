@@ -47,6 +47,10 @@ var food_pickup_fallback_radius: float = 35.0
 @export_flags_2d_physics
 var enemy_collision_mask: int = 2
 
+## Extra distance beyond a monster's hitbox that accepts a food drop.
+@export_range(0.0, 100.0, 1.0, "suffix:px")
+var food_drop_tolerance := 22.0
+
 @export_group("Consumption")
 
 @export var stop_monster_during_eating: bool = true
@@ -356,33 +360,38 @@ func _find_monster_at_position(
 		)
 	)
 
+	var direct_hit := _closest_eligible_monster(results, drop_position)
+	if direct_hit != null or food_drop_tolerance <= 0.0:
+		return direct_hit
+
+	var circle := CircleShape2D.new()
+	circle.radius = food_drop_tolerance
+	var nearby := PhysicsShapeQueryParameters2D.new()
+	nearby.shape = circle
+	nearby.transform = Transform2D(0.0, drop_position)
+	nearby.collision_mask = enemy_collision_mask
+	nearby.collide_with_bodies = true
+	nearby.collide_with_areas = false
+	return _closest_eligible_monster(
+		get_world_2d().direct_space_state.intersect_shape(nearby, 64),
+		drop_position
+	)
+
+
+func _closest_eligible_monster(results: Array[Dictionary], drop_position: Vector2) -> Level1EnemyRoaming:
+	var closest: Level1EnemyRoaming
+	var closest_distance := INF
 	for result in results:
-		var collider: Object = result.get(
-			"collider"
-		)
-
-		if not collider is Node:
+		var monster := result.get("collider") as Level1EnemyRoaming
+		if monster == null or monster.is_queued_for_deletion() or not monster.can_receive_food():
 			continue
-
-		var current_node: Node = collider as Node
-
-		# Find the Level 1 roaming enemy root.
-		while current_node != null:
-			if current_node is Level1EnemyRoaming:
-				var monster: Level1EnemyRoaming = (
-					current_node as Level1EnemyRoaming
-				)
-
-				if not monster.is_queued_for_deletion() and monster.can_receive_food():
-					if not monster.get_meta(
-						"level1_being_consumed",
-						false
-					):
-						return monster
-
-			current_node = current_node.get_parent()
-
-	return null
+		if monster.get_meta("level1_being_consumed", false):
+			continue
+		var distance := drop_position.distance_squared_to(monster.global_position)
+		if distance < closest_distance:
+			closest = monster
+			closest_distance = distance
+	return closest
 
 
 # ==================================================
@@ -434,6 +443,19 @@ func _can_consume_food(
 # ==================================================
 # CONSUME FOOD
 # ==================================================
+
+func _codex_token_id_for(monster: Level1EnemyRoaming) -> StringName:
+	if monster.codex_token_id != &"":
+		return monster.codex_token_id
+	match monster.scene_file_path:
+		"res://Level1/scenes/enemies/fries_enemy.tscn":
+			return &"fries_enemy"
+		"res://Level1/scenes/enemies/pizza_enemy.tscn":
+			return &"pizza_enemy"
+		"res://Level1/scenes/enemies/soda_enemy.tscn":
+			return &"soda_enemy"
+	return &""
+
 
 func _consume_food(
 	food: AnimatedSprite2D,
@@ -516,7 +538,7 @@ func _consume_food(
 	if stop_monster_during_eating:
 		monster.movement_speed = previous_movement_speed
 
-	var token_id := monster.codex_token_id
+	var token_id := _codex_token_id_for(monster)
 	var token_chance := monster.token_drop_chance
 	var token_position := monster.global_position
 	if monster.defeat_by_food():

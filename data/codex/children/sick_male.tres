@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="CodexTokenEntry" format=3 uid="uid://x217w8ttuvod"]
+
+[ext_resource type="Texture2D" uid="uid://b1csb4th6tnjo" path="res://Level3/assets/sick child/sick male child/frame_000.png" id="1_1rx0o"]
+[ext_resource type="Texture2D" uid="uid://ptl3dy4nr24" path="res://Level3/assets/sick child/sick male child/frame_001.png" id="2_3yh6a"]
+[ext_resource type="Texture2D" uid="uid://ic1iv6aa6hnx" path="res://Level3/assets/sick child/sick male child/frame_002.png" id="3_6etn5"]
+[ext_resource type="Texture2D" uid="uid://d3amv7aekrlcc" path="res://Level3/assets/sick child/sick male child/frame_003.png" id="4_e5x4a"]
+[ext_resource type="Texture2D" uid="uid://c48mis46d0f3j" path="res://Level3/assets/sick child/sick male child/frame_004.png" id="5_koicm"]
+[ext_resource type="Texture2D" uid="uid://cdyapi04f1cxi" path="res://Level3/assets/sick child/sick male child/frame_005.png" id="6_14etg"]
+[ext_resource type="Script" uid="uid://dcel50qjorutl" path="res://scripts/character_codex/CodexAnimationData.gd" id="animation"]
+[ext_resource type="Script" uid="uid://0iyra0hoevr4" path="res://scripts/character_codex/CodexTokenEntry.gd" id="entry"]
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_1rx0o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_3yh6a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_6etn5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_e5x4a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_koicm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_14etg")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="Resource" id="Animation"]
+script = ExtResource("animation")
+display_name = "Walk"
+sprite_frames = SubResource("Frames")
+animation_name = &"walk"
+
+[resource]
+script = ExtResource("entry")
+animations = Array[ExtResource("animation")]([SubResource("Animation")])
+id = &"sick_male"
+display_name = "Sick Male"
+category = &"sick_child"
+icon = ExtResource("1_1rx0o")
+large_image = ExtResource("1_1rx0o")
+description = "Feed this sick child to fill all three nutrition bars."

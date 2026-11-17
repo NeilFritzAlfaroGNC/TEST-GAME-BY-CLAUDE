@@ -93,6 +93,7 @@ shape = SubResource("Floor2_RightWall")
 [node name="EnemySpawner" type="Node2D" parent="Level1Floors/Floor2" unique_id=895833501]
 script = ExtResource("20_spawner")
 enemy_scenes = Array[PackedScene]([ExtResource("19_soda")])
+student_height_override = 64.0
 monster_scale_multiplier = 0.6
 enemy_container_path = NodePath("../../../Level1Enemies")
 
@@ -136,17 +137,18 @@ shape = SubResource("Floor1_RightWall")
 [node name="EnemySpawner" type="Node2D" parent="Level1Floors/Floor1" unique_id=791959671]
 script = ExtResource("20_spawner")
 enemy_scenes = Array[PackedScene]([ExtResource("19_soda")])
+student_height_override = 72.0
 monster_scale_multiplier = 0.7999999999999999
 enemy_container_path = NodePath("../../../Level1Enemies")
 
 [node name="SpawnPoint1" type="Marker2D" parent="Level1Floors/Floor1/EnemySpawner" unique_id=1598252226]
-position = Vector2(-240, -6)
+position = Vector2(-240, -5)
 
 [node name="SpawnPoint2" type="Marker2D" parent="Level1Floors/Floor1/EnemySpawner" unique_id=1757577481]
-position = Vector2(0, -6)
+position = Vector2(0, -4)
 
 [node name="SpawnPoint3" type="Marker2D" parent="Level1Floors/Floor1/EnemySpawner" unique_id=927980421]
-position = Vector2(240, -6)
+position = Vector2(240, -5)
 
 [node name="Conveyer Belt" parent="." unique_id=2084871955 instance=ExtResource("4_n2kff")]
 position = Vector2(478, 411)

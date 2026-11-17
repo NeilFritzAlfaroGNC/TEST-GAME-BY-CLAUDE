@@ -5,11 +5,18 @@
 [ext_resource type="Texture2D" uid="uid://dx3lu21ametls" path="res://Shared/assets/BattleScene/GNCI Tanjangco Hall.png" id="3_g7yoc"]
 [ext_resource type="Script" uid="uid://bw4j3x0cxy5sl" path="res://Shared/scripts/Food Spawn/food_spawn.gd" id="4_food_spawn"]
 [ext_resource type="PackedScene" path="res://Shared/scenes/foods/Cafeteria/apple_cafeteria.tscn" id="5_apple"]
+[ext_resource type="PackedScene" uid="uid://do43ix6updbc8" path="res://Level3/scenes/healthy child/male/healthy_male_weightlifting_left.tscn" id="5_phqi7"]
 [ext_resource type="PackedScene" path="res://Shared/scenes/foods/Cafeteria/bread_cafeteria.tscn" id="6_bread"]
+[ext_resource type="PackedScene" uid="uid://divwltm2dm12t" path="res://Level3/scenes/healthy child/male/healthy_male_weightlifting_right.tscn" id="6_idpkx"]
 [ext_resource type="PackedScene" path="res://Shared/scenes/foods/Cafeteria/bean_cafeteria.tscn" id="7_bean"]
-[ext_resource type="PackedScene" path="res://Level3/scenes/enemies/level3_nutrition_monster.tscn" id="8_monster"]
+[ext_resource type="PackedScene" uid="uid://buo0nxq387gbb" path="res://Level3/scenes/healthy child/female/healthy_female_rope_sideways.tscn" id="8_2sjpu"]
 [ext_resource type="Script" uid="uid://c6s2wqij4nagb" path="res://Level3/scripts/battle/level3_escape_zone.gd" id="9_escape"]
+[ext_resource type="PackedScene" uid="uid://bixl1km854bgm" path="res://Level3/scenes/healthy child/female/healthy_female_rope.tscn" id="healthy_female"]
+[ext_resource type="PackedScene" uid="uid://dlf4cwtycjgpc" path="res://Level3/scenes/healthy child/male/healthy_male_weightlifting.tscn" id="healthy_male"]
 [ext_resource type="Script" uid="uid://cxerdt66se41j" path="res://Level3/scripts/tutorial/level3_tutorial.gd" id="level3_tutorial"]
+[ext_resource type="PackedScene" uid="uid://d047csqk1tuy" path="res://Level3/scenes/sick child/sick_female_chid.tscn" id="sick_female"]
+[ext_resource type="PackedScene" uid="uid://ctj314cc5ghiu" path="res://Level3/scenes/sick child/sick_male_child.tscn" id="sick_male"]
+[ext_resource type="Script" uid="uid://jmt73tcvh7qp" path="res://Shared/scripts/ui/codex_token_drops.gd" id="TokenDrops"]
 
 [sub_resource type="RectangleShape2D" id="EscapeRectangle"]
 size = Vector2(40, 440)
@@ -26,7 +33,20 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_rescue")
-monster_scene = ExtResource("8_monster")
+sick_male_scenes = Array[PackedScene]([ExtResource("sick_male")])
+sick_female_scenes = Array[PackedScene]([ExtResource("sick_female")])
+healthy_male_scenes = Array[PackedScene]([ExtResource("healthy_male"), ExtResource("5_phqi7"), ExtResource("6_idpkx")])
+healthy_female_scenes = Array[PackedScene]([ExtResource("healthy_female"), ExtResource("8_2sjpu")])
+easy_food_energy_given = 100.0
+easy_maximum_escapes = 4
+easy_two_star_escape_limit = 1
+easy_one_star_escape_limit = 2
+normal_food_energy_given = 50.0
+normal_maximum_escapes = 4
+
+[node name="CodexTokenDrops" type="CanvasLayer" parent="." unique_id=120438595]
+layer = 30
+script = ExtResource("TokenDrops")
 
 [node name="Background" type="TextureRect" parent="." unique_id=2124599264]
 layout_mode = 1
@@ -51,14 +71,63 @@ queue_right_margin = 25.0
 position = Vector2(468, 412)
 script = ExtResource("4_food_spawn")
 available_foods = Array[PackedScene]([ExtResource("5_apple"), ExtResource("6_bread"), ExtResource("7_bean")])
+balance_nutrition_categories = true
 max_spawn_time = 3.0
 
 [node name="FoodItems" type="Node2D" parent="." unique_id=530829061]
 
 [node name="MonsterContainer" type="Node2D" parent="." unique_id=2024584262]
 
-[node name="SpawnPoint" type="Marker2D" parent="." unique_id=342637010]
-position = Vector2(900, 370)
+[node name="HealthyChildren" type="Node2D" parent="." unique_id=1699214255]
+
+[node name="HealthyChildSpawner" type="Node2D" parent="." unique_id=1057725418]
+
+[node name="SpawnPoint1" type="Marker2D" parent="HealthyChildSpawner" unique_id=846188656]
+position = Vector2(202, 350)
+
+[node name="SpawnPoint2" type="Marker2D" parent="HealthyChildSpawner" unique_id=432076588]
+position = Vector2(93, 344)
+
+[node name="SpawnPoint3" type="Marker2D" parent="HealthyChildSpawner" unique_id=1140492695]
+position = Vector2(749, 362)
+
+[node name="SpawnPoint4" type="Marker2D" parent="HealthyChildSpawner" unique_id=917887951]
+position = Vector2(468, 361)
+
+[node name="SpawnPoint5" type="Marker2D" parent="HealthyChildSpawner" unique_id=392690471]
+position = Vector2(830, 348)
+
+[node name="SickChildSpawner" type="Node2D" parent="." unique_id=1265613282]
+
+[node name="SpawnPoint1" type="Marker2D" parent="SickChildSpawner" unique_id=1088885671]
+position = Vector2(305, 370)
+
+[node name="PatrolEnd" type="Marker2D" parent="SickChildSpawner/SpawnPoint1" unique_id=200814511]
+position = Vector2(-203, -66)
+
+[node name="SpawnPoint2" type="Marker2D" parent="SickChildSpawner" unique_id=925437296]
+position = Vector2(607, 367)
+
+[node name="PatrolEnd" type="Marker2D" parent="SickChildSpawner/SpawnPoint2" unique_id=2016514459]
+position = Vector2(268, -62)
+
+[node name="SpawnPoint3" type="Marker2D" parent="SickChildSpawner" unique_id=325298640]
+position = Vector2(525, 342)
+
+[node name="PatrolEnd" type="Marker2D" parent="SickChildSpawner/SpawnPoint3" unique_id=2069252815]
+position = Vector2(217, -26)
+
+[node name="SpawnPoint4" type="Marker2D" parent="SickChildSpawner" unique_id=826085579]
+position = Vector2(785, 322)
+
+[node name="PatrolEnd" type="Marker2D" parent="SickChildSpawner/SpawnPoint4" unique_id=927435329]
+position = Vector2(-374, 45)
+
+[node name="SpawnPoint5" type="Marker2D" parent="SickChildSpawner" unique_id=414331055]
+position = Vector2(344, 354)
+
+[node name="PatrolEnd" type="Marker2D" parent="SickChildSpawner/SpawnPoint5" unique_id=1719327952]
+position = Vector2(-170, -51)
 
 [node name="EscapeZone" type="Area2D" parent="." unique_id=1221040036]
 position = Vector2(30, 220)

@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://bixl1km854bgm"]
+
+[ext_resource type="Texture2D" uid="uid://butpv864h37f3" path="res://Level3/assets/healthy child/Female/Rope/frame_000.png" id="1_x3swd"]
+[ext_resource type="Texture2D" uid="uid://8y01irv666mo" path="res://Level3/assets/healthy child/Female/Rope/frame_001.png" id="2_qfpim"]
+[ext_resource type="Texture2D" uid="uid://nwlh4fsiea71" path="res://Level3/assets/healthy child/Female/Rope/frame_002.png" id="3_i3x0d"]
+[ext_resource type="Texture2D" uid="uid://dfqs3s3ndk0pa" path="res://Level3/assets/healthy child/Female/Rope/frame_003.png" id="4_ue3u5"]
+[ext_resource type="Texture2D" uid="uid://dradkd3mm4cgt" path="res://Level3/assets/healthy child/Female/Rope/frame_004.png" id="5_nk7q7"]
+[ext_resource type="Texture2D" uid="uid://cfcx2fqhg5wj3" path="res://Level3/assets/healthy child/Female/Rope/frame_005.png" id="6_2s7hs"]
+[ext_resource type="Texture2D" uid="uid://sub33djtlxh7" path="res://Level3/assets/healthy child/Female/Rope/frame_006.png" id="7_xrvux"]
+[ext_resource type="Texture2D" uid="uid://45wt277wlurq" path="res://Level3/assets/healthy child/Female/Rope/frame_007.png" id="8_1pye7"]
+[ext_resource type="Texture2D" uid="uid://c47x0vcrehm8a" path="res://Level3/assets/healthy child/Female/Rope/frame_008.png" id="9_snj5d"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_x3swd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_qfpim")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_i3x0d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ue3u5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_nk7q7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_2s7hs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_xrvux")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_1pye7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_snj5d")
+}],
+"loop": 1,
+"name": &"weightlifting",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="RescueBody"]
+radius = 22.0
+height = 60.0
+
+[node name="Weightlifting" type="CharacterBody2D" unique_id=1231740103]
+collision_layer = 2
+collision_mask = 8
+floor_snap_length = 6.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=78307478]
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"weightlifting"
+autoplay = "weightlifting"
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1659882150]
+shape = SubResource("RescueBody")

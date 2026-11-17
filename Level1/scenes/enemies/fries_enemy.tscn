@@ -1,0 +1,337 @@
+[gd_scene format=3 uid="uid://cdaustedcnete"]
+
+[ext_resource type="Script" uid="uid://66bwgd04v41t" path="res://Level1/scripts/enemy/level1_enemy_roaming.gd" id="1_p3u7b"]
+[ext_resource type="Texture2D" uid="uid://brvopomkpebeh" path="res://Level1/assets/enemies/fries-monster/fries attack/frame_000.png" id="frame_0"]
+[ext_resource type="Texture2D" uid="uid://dpjc3fcwdvmjr" path="res://Level1/assets/enemies/fries-monster/fries attack/frame_001.png" id="frame_1"]
+[ext_resource type="Texture2D" uid="uid://dvj7h111uby2p" path="res://Level1/assets/enemies/fries-monster/fries attack/frame_002.png" id="frame_2"]
+[ext_resource type="Texture2D" uid="uid://c4y2meg7i6fra" path="res://Level1/assets/enemies/fries-monster/fries attack/frame_003.png" id="frame_3"]
+[ext_resource type="Texture2D" uid="uid://b6fff5pso5ho" path="res://Level1/assets/enemies/fries-monster/fries attack/frame_004.png" id="frame_4"]
+[ext_resource type="Texture2D" uid="uid://bajx1m6e82rl2" path="res://Level1/assets/enemies/fries-monster/fries attack/frame_005.png" id="frame_5"]
+[ext_resource type="Texture2D" uid="uid://bucabaobi8bt0" path="res://Level1/assets/enemies/fries-monster/fries attack/frame_006.png" id="frame_6"]
+[ext_resource type="Texture2D" uid="uid://na1n25tprwde" path="res://Level1/assets/enemies/fries-monster/fries attack/frame_007.png" id="frame_7"]
+[ext_resource type="Texture2D" uid="uid://b8sschp6tkrso" path="res://Level1/assets/enemies/fries-monster/fries attack/frame_008.png" id="frame_8"]
+[ext_resource type="Texture2D" uid="uid://bldxqyrbyc1g2" path="res://Level1/assets/enemies/fries-monster/fries burn/frame_000.png" id="frame_9"]
+[ext_resource type="Texture2D" uid="uid://ctya0wlvnsvv5" path="res://Level1/assets/enemies/fries-monster/fries burn/frame_001.png" id="frame_10"]
+[ext_resource type="Texture2D" uid="uid://dno7w7hyvy2h3" path="res://Level1/assets/enemies/fries-monster/fries burn/frame_002.png" id="frame_11"]
+[ext_resource type="Texture2D" uid="uid://bwew6v6fpsl5l" path="res://Level1/assets/enemies/fries-monster/fries burn/frame_003.png" id="frame_12"]
+[ext_resource type="Texture2D" uid="uid://f823up4tp6qa" path="res://Level1/assets/enemies/fries-monster/fries burn/frame_004.png" id="frame_13"]
+[ext_resource type="Texture2D" uid="uid://daylx50nmgsk6" path="res://Level1/assets/enemies/fries-monster/fries burn/frame_005.png" id="frame_14"]
+[ext_resource type="Texture2D" uid="uid://cbjdohkyx5j3h" path="res://Level1/assets/enemies/fries-monster/fries burn/frame_006.png" id="frame_15"]
+[ext_resource type="Texture2D" uid="uid://b5rbhydt3018g" path="res://Level1/assets/enemies/fries-monster/fries burn/frame_007.png" id="frame_16"]
+[ext_resource type="Texture2D" uid="uid://dftfrqcgs2nop" path="res://Level1/assets/enemies/fries-monster/fries burn/frame_008.png" id="frame_17"]
+[ext_resource type="Texture2D" uid="uid://bhf8omlts4nin" path="res://Level1/assets/enemies/fries-monster/fries dazed/frame_000.png" id="frame_18"]
+[ext_resource type="Texture2D" uid="uid://c8vlyed2hdl0t" path="res://Level1/assets/enemies/fries-monster/fries dazed/frame_001.png" id="frame_19"]
+[ext_resource type="Texture2D" uid="uid://cv731drwkys4i" path="res://Level1/assets/enemies/fries-monster/fries dazed/frame_002.png" id="frame_20"]
+[ext_resource type="Texture2D" uid="uid://dx33yrmdjv1lw" path="res://Level1/assets/enemies/fries-monster/fries dazed/frame_003.png" id="frame_21"]
+[ext_resource type="Texture2D" uid="uid://dv83daon4vfb" path="res://Level1/assets/enemies/fries-monster/fries dazed/frame_004.png" id="frame_22"]
+[ext_resource type="Texture2D" uid="uid://bxd6a84xmrcpw" path="res://Level1/assets/enemies/fries-monster/fries dazed/frame_005.png" id="frame_23"]
+[ext_resource type="Texture2D" uid="uid://bj03evyyvvdd0" path="res://Level1/assets/enemies/fries-monster/fries dazed/frame_006.png" id="frame_24"]
+[ext_resource type="Texture2D" uid="uid://cq2mw8auq2nqg" path="res://Level1/assets/enemies/fries-monster/fries dazed/frame_007.png" id="frame_25"]
+[ext_resource type="Texture2D" uid="uid://gwx68knud01c" path="res://Level1/assets/enemies/fries-monster/fries dazed/frame_008.png" id="frame_26"]
+[ext_resource type="Texture2D" uid="uid://d2e1kk4wamxbp" path="res://Level1/assets/enemies/fries-monster/fries defeated/frame_000.png" id="frame_27"]
+[ext_resource type="Texture2D" uid="uid://n01armekgrhi" path="res://Level1/assets/enemies/fries-monster/fries defeated/frame_001.png" id="frame_28"]
+[ext_resource type="Texture2D" uid="uid://s1siahxagh06" path="res://Level1/assets/enemies/fries-monster/fries defeated/frame_002.png" id="frame_29"]
+[ext_resource type="Texture2D" uid="uid://cxdr3phf5j8yx" path="res://Level1/assets/enemies/fries-monster/fries defeated/frame_003.png" id="frame_30"]
+[ext_resource type="Texture2D" uid="uid://eq3ifqccfyn1" path="res://Level1/assets/enemies/fries-monster/fries defeated/frame_004.png" id="frame_31"]
+[ext_resource type="Texture2D" uid="uid://dyyihcco0g471" path="res://Level1/assets/enemies/fries-monster/fries defeated/frame_005.png" id="frame_32"]
+[ext_resource type="Texture2D" uid="uid://cumwg8if8thkm" path="res://Level1/assets/enemies/fries-monster/fries defeated/frame_006.png" id="frame_33"]
+[ext_resource type="Texture2D" uid="uid://djyr3nsgn8yp" path="res://Level1/assets/enemies/fries-monster/fries defeated/frame_007.png" id="frame_34"]
+[ext_resource type="Texture2D" uid="uid://bdc3c4j5c3shg" path="res://Level1/assets/enemies/fries-monster/fries defeated/frame_008.png" id="frame_35"]
+[ext_resource type="Texture2D" uid="uid://dsk12n2tmrex7" path="res://Level1/assets/enemies/fries-monster/fries freeze/frame_000.png" id="frame_36"]
+[ext_resource type="Texture2D" uid="uid://c7nmjdshiavww" path="res://Level1/assets/enemies/fries-monster/fries freeze/frame_001.png" id="frame_37"]
+[ext_resource type="Texture2D" uid="uid://ddmmrtf0ch1c8" path="res://Level1/assets/enemies/fries-monster/fries freeze/frame_002.png" id="frame_38"]
+[ext_resource type="Texture2D" uid="uid://c277qmle0fyjw" path="res://Level1/assets/enemies/fries-monster/fries freeze/frame_003.png" id="frame_39"]
+[ext_resource type="Texture2D" uid="uid://cp7jm1a8k6cie" path="res://Level1/assets/enemies/fries-monster/fries freeze/frame_004.png" id="frame_40"]
+[ext_resource type="Texture2D" uid="uid://o28oxdqonbaa" path="res://Level1/assets/enemies/fries-monster/fries freeze/frame_005.png" id="frame_41"]
+[ext_resource type="Texture2D" uid="uid://b5bkntrfn4h5m" path="res://Level1/assets/enemies/fries-monster/fries freeze/frame_006.png" id="frame_42"]
+[ext_resource type="Texture2D" uid="uid://1eml5hleqkvd" path="res://Level1/assets/enemies/fries-monster/fries freeze/frame_007.png" id="frame_43"]
+[ext_resource type="Texture2D" uid="uid://crvqvrqy13rpn" path="res://Level1/assets/enemies/fries-monster/fries freeze/frame_008.png" id="frame_44"]
+[ext_resource type="Texture2D" uid="uid://d322iu21ibdn0" path="res://Level1/assets/enemies/fries-monster/fries knockback/frame_000.png" id="frame_45"]
+[ext_resource type="Texture2D" uid="uid://bvkdwgi2ddgi" path="res://Level1/assets/enemies/fries-monster/fries knockback/frame_001.png" id="frame_46"]
+[ext_resource type="Texture2D" uid="uid://dq2pvmd1k0acd" path="res://Level1/assets/enemies/fries-monster/fries knockback/frame_002.png" id="frame_47"]
+[ext_resource type="Texture2D" uid="uid://bmmaoqybrbfr5" path="res://Level1/assets/enemies/fries-monster/fries knockback/frame_003.png" id="frame_48"]
+[ext_resource type="Texture2D" uid="uid://bwyk4gb37xo0a" path="res://Level1/assets/enemies/fries-monster/fries knockback/frame_004.png" id="frame_49"]
+[ext_resource type="Texture2D" uid="uid://cy8mp3q0gij84" path="res://Level1/assets/enemies/fries-monster/fries knockback/frame_005.png" id="frame_50"]
+[ext_resource type="Texture2D" uid="uid://07tlyo3pkhrh" path="res://Level1/assets/enemies/fries-monster/fries special attack/frame_000.png" id="frame_51"]
+[ext_resource type="Texture2D" uid="uid://bdbyp3tmlkc7j" path="res://Level1/assets/enemies/fries-monster/fries special attack/frame_001.png" id="frame_52"]
+[ext_resource type="Texture2D" uid="uid://s7ccou83ruob" path="res://Level1/assets/enemies/fries-monster/fries special attack/frame_002.png" id="frame_53"]
+[ext_resource type="Texture2D" uid="uid://bf6aalravne0e" path="res://Level1/assets/enemies/fries-monster/fries special attack/frame_003.png" id="frame_54"]
+[ext_resource type="Texture2D" uid="uid://bw104w4k6jt06" path="res://Level1/assets/enemies/fries-monster/fries special attack/frame_004.png" id="frame_55"]
+[ext_resource type="Texture2D" uid="uid://b5rns2ut5pvml" path="res://Level1/assets/enemies/fries-monster/fries special attack/frame_005.png" id="frame_56"]
+[ext_resource type="Texture2D" uid="uid://dc2g61fwheqro" path="res://Level1/assets/enemies/fries-monster/fries special attack/frame_006.png" id="frame_57"]
+[ext_resource type="Texture2D" uid="uid://bqvberdfl3c6t" path="res://Level1/assets/enemies/fries-monster/fries special attack/frame_007.png" id="frame_58"]
+[ext_resource type="Texture2D" uid="uid://djn5a0jbwm5ag" path="res://Level1/assets/enemies/fries-monster/fries special attack/frame_008.png" id="frame_59"]
+[ext_resource type="Texture2D" uid="uid://b7sgqscps3m8p" path="res://Level1/assets/enemies/fries-monster/fries walk/frame_000.png" id="frame_60"]
+[ext_resource type="Texture2D" uid="uid://bo4fu0bsg02wa" path="res://Level1/assets/enemies/fries-monster/fries walk/frame_001.png" id="frame_61"]
+[ext_resource type="Texture2D" uid="uid://jxh5veeqa7ay" path="res://Level1/assets/enemies/fries-monster/fries walk/frame_002.png" id="frame_62"]
+[ext_resource type="Texture2D" uid="uid://bb3784uxybf67" path="res://Level1/assets/enemies/fries-monster/fries walk/frame_003.png" id="frame_63"]
+[ext_resource type="Texture2D" uid="uid://dd0lejde0jpse" path="res://Level1/assets/enemies/fries-monster/fries walk/frame_004.png" id="frame_64"]
+[ext_resource type="Texture2D" uid="uid://cmt76rwinihbd" path="res://Level1/assets/enemies/fries-monster/fries walk/frame_005.png" id="frame_65"]
+[ext_resource type="Texture2D" uid="uid://cm4gj37vg6bmj" path="res://Level1/assets/enemies/fries-monster/fries walk/frame_006.png" id="frame_66"]
+[ext_resource type="Texture2D" uid="uid://ynsrila17uav" path="res://Level1/assets/enemies/fries-monster/fries walk/frame_007.png" id="frame_67"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7vi72"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("frame_0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_8")
+}],
+"loop": 0,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("frame_9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_10")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_11")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_12")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_13")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_14")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_15")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_16")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_17")
+}],
+"loop": 0,
+"name": &"burn",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("frame_18")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_19")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_20")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_21")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_22")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_23")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_24")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_25")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_26")
+}],
+"loop": 0,
+"name": &"dazed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("frame_27")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_28")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_29")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_30")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_31")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_32")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_33")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_34")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_35")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("frame_36")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_37")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_38")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_39")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_40")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_41")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_42")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_43")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_44")
+}],
+"loop": 0,
+"name": &"freeze",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("frame_45")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_46")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_47")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_48")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_49")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_50")
+}],
+"loop": 0,
+"name": &"knockback",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("frame_51")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_52")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_53")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_54")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_55")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_56")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_57")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_58")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_59")
+}],
+"loop": 0,
+"name": &"special_attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("frame_60")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_61")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_62")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_63")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_64")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_65")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_66")
+}, {
+"duration": 1.0,
+"texture": ExtResource("frame_67")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jtevl"]
+size = Vector2(111, 121)
+
+[node name="Level1Fries" type="CharacterBody2D" unique_id=1718990461]
+collision_layer = 2
+collision_mask = 8
+script = ExtResource("1_p3u7b")
+random_starting_direction = true
+gravity_enabled = true
+roaming_collision_mask = 8
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=276670753]
+sprite_frames = SubResource("SpriteFrames_7vi72")
+animation = &"walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2013601172]
+position = Vector2(6.5, 3.5)
+shape = SubResource("RectangleShape2D_jtevl")

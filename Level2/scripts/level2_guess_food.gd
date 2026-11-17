@@ -9,6 +9,9 @@ const CATEGORIES: Array[FoodData.FoodCategory] = [
 ]
 const CATEGORY_NAMES := ["GO", "GLOW", "GROW"]
 const FEEDBACK_SECONDS := 1.1
+const TOKEN_UNLOCKS := preload("res://scripts/codex/codex_token_unlocks.gd")
+const GAME_OVER_SCENE := preload("res://Shared/scenes/ui/game_over.tscn")
+const VICTORY_SCENE := "res://Shared/scenes/victory/victory_screen.tscn"
 const LEVEL_ID := "canteen_level_2"
 const LEVEL_MAP := "res://Shared/scenes/level_map/level_map.tscn"
 
@@ -64,6 +67,7 @@ var deck: Array[PackedScene] = []
 var previous_scene: PackedScene
 var current_food: FoodData
 var current_categories: Array[int] = []
+@onready var token_drops = $CodexTokenDrops
 
 
 func _ready() -> void:
@@ -98,6 +102,7 @@ func _start_round() -> void:
 	stars = 0
 	previous_scene = null
 	deck.clear()
+	token_drops.discard()
 	available_foods.clear()
 	for scene in food_scenes:
 		if scene == null or available_foods.has(scene):
@@ -217,6 +222,10 @@ func _drop_food(drop_position: Vector2, data: Variant, basket: int) -> void:
 	var answer_is_correct: bool = current_categories.has(CATEGORIES[basket])
 	if answer_is_correct:
 		correct += 1
+		var food_id := StringName(current_food.food_name.strip_edges().to_lower())
+		if not TOKEN_UNLOCKS.ENTRIES.has(food_id):
+			var basket_control := baskets.get_child(basket) as Control
+			token_drops.offer(food_id, basket_control.get_global_transform_with_canvas() * drop_position)
 		feedback.text = "Correct! %s belongs in %s." % [name_text, CATEGORY_NAMES[basket]]
 	else:
 		var valid_names: PackedStringArray = []
@@ -252,20 +261,30 @@ func _finish(timed_out: bool) -> void:
 			stars = 2
 
 	var progress := get_node_or_null("/root/ProgressManager")
-	if stars > 0 and save_progress_on_pass and progress and progress.has_method("save_level_stars"):
+	if stars > 0 and progress:
 		progress.set("current_run_stars", stars)
-		progress.call("save_level_stars", difficulty, LEVEL_ID, stars)
+		progress.set("last_completed_level_id", LEVEL_ID)
+		if save_progress_on_pass and progress.has_method("save_level_stars"):
+			progress.call("save_level_stars", difficulty, LEVEL_ID, stars)
 
 	if timed_out:
 		feedback.text = "Time’s up!"
-	var outcome := "Canteen cleared!" if stars > 0 else "Keep practicing"
-	result_text.text = "%s\n%d correct out of %d  •  %d %s" % [
-		outcome, correct, question_limit, stars, "star" if stars == 1 else "stars"
-	]
-	result.show()
 	baskets.hide()
 	_refresh_status()
 	round_finished.emit()
+	if stars > 0:
+		var rewards: PackedStringArray = await token_drops.finish_victory()
+		if progress:
+			progress.set_meta(TOKEN_UNLOCKS.REWARD_META, rewards)
+		get_tree().call_deferred("change_scene_to_file", VICTORY_SCENE)
+	else:
+		token_drops.discard()
+		var layer := CanvasLayer.new()
+		layer.layer = 100
+		add_child(layer)
+		var screen := GAME_OVER_SCENE.instantiate()
+		screen.set("failure_message", "You didn’t match enough foods correctly!")
+		layer.add_child(screen)
 
 
 func _return_to_map() -> void:

@@ -1,0 +1,64 @@
+[gd_resource type="Resource" script_class="CodexTokenEntry" format=3 uid="uid://bun7h66ix052s"]
+
+[ext_resource type="Texture2D" uid="uid://b7xxhk7i16q4r" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_000.png" id="1_ryhw5"]
+[ext_resource type="Texture2D" uid="uid://dfj0hja77rf2e" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_001.png" id="2_omkae"]
+[ext_resource type="Texture2D" uid="uid://cxyu7yr16gmg2" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_002.png" id="3_3leiw"]
+[ext_resource type="Texture2D" uid="uid://bxy0ck7morfu0" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_003.png" id="4_m5rtc"]
+[ext_resource type="Texture2D" uid="uid://dx3whgpo4uqf4" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_004.png" id="5_ocsv5"]
+[ext_resource type="Texture2D" uid="uid://di4samavpuj08" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_005.png" id="6_f1wss"]
+[ext_resource type="Texture2D" uid="uid://bwm8yvrbir61q" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_006.png" id="7_fj2e4"]
+[ext_resource type="Texture2D" uid="uid://dur8fgasqq45i" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_007.png" id="8_70lq1"]
+[ext_resource type="Texture2D" uid="uid://c73y3jj64cqho" path="res://Level3/assets/healthy child/Male/Weightlifting Right/frame_008.png" id="9_qditv"]
+[ext_resource type="Script" uid="uid://dcel50qjorutl" path="res://scripts/character_codex/CodexAnimationData.gd" id="animation"]
+[ext_resource type="Script" uid="uid://0iyra0hoevr4" path="res://scripts/character_codex/CodexTokenEntry.gd" id="entry"]
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_ryhw5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_omkae")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_3leiw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_m5rtc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ocsv5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_f1wss")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_fj2e4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_70lq1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_qditv")
+}],
+"loop": 1,
+"name": &"weightlifting_right",
+"speed": 5.0
+}]
+
+[sub_resource type="Resource" id="Animation"]
+script = ExtResource("animation")
+display_name = "Weightlifting Right"
+sprite_frames = SubResource("Frames")
+animation_name = &"weightlifting_right"
+
+[resource]
+script = ExtResource("entry")
+animations = Array[ExtResource("animation")]([SubResource("Animation")])
+id = &"healthy_male_right"
+display_name = "Healthy Male · Weightlifting Right"
+category = &"sick_child"
+icon = ExtResource("1_ryhw5")
+large_image = ExtResource("1_ryhw5")
+description = "A healthy child staying active in Tanjangco Hall."

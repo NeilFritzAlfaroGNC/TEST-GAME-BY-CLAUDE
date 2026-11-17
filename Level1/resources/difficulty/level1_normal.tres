@@ -4,18 +4,33 @@
 [ext_resource type="Script" uid="uid://demnirkaxfodu" path="res://Level1/scripts/battle/level1_monster_spawn_config.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://d3cskcheicuhg" path="res://Level1/scenes/students/level1_student_soda.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://cxs6kgdsrkowx" path="res://Level1/scenes/enemies/donut_enemy.tscn" id="3_hagn7"]
+[ext_resource type="PackedScene" uid="uid://cdaustedcnete" path="res://Level1/scenes/enemies/fries_enemy.tscn" id="4_r3406"]
+[ext_resource type="PackedScene" uid="uid://bygtwy1spx8lg" path="res://Level1/scenes/enemies/pizza_enemy.tscn" id="5_760td"]
 
 [sub_resource type="Resource" id="Monster"]
 script = ExtResource("2")
 monster_scene = ExtResource("3")
-monster_count = 10
+monster_count = 5
 
 [sub_resource type="Resource" id="Resource_srdmq"]
 script = ExtResource("2")
 monster_scene = ExtResource("3_hagn7")
-monster_count = 10
+monster_count = 5
+metadata/_custom_type_script = "uid://demnirkaxfodu"
+
+[sub_resource type="Resource" id="Resource_wyh1i"]
+script = ExtResource("2")
+monster_scene = ExtResource("4_r3406")
+monster_count = 5
+metadata/_custom_type_script = "uid://demnirkaxfodu"
+
+[sub_resource type="Resource" id="Resource_pf7rn"]
+script = ExtResource("2")
+monster_scene = ExtResource("5_760td")
+movement_speed = 100.0
+monster_count = 5
 metadata/_custom_type_script = "uid://demnirkaxfodu"
 
 [resource]
 script = ExtResource("1")
-monsters = Array[ExtResource("2")]([SubResource("Monster"), SubResource("Resource_srdmq")])
+monsters = Array[ExtResource("2")]([SubResource("Monster"), SubResource("Resource_srdmq"), SubResource("Resource_wyh1i"), SubResource("Resource_pf7rn")])

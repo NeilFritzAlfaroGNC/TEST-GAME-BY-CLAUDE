@@ -1,0 +1,81 @@
+[gd_resource type="Resource" script_class="CodexTokenEntry" format=3 uid="uid://cuf5jeuw780gv"]
+
+[ext_resource type="Script" uid="uid://dcel50qjorutl" path="res://scripts/character_codex/CodexAnimationData.gd" id="anim"]
+[ext_resource type="Script" uid="uid://0iyra0hoevr4" path="res://scripts/character_codex/CodexTokenEntry.gd" id="entry"]
+[ext_resource type="Texture2D" uid="uid://b3gnis3m6344n" path="res://Shared/assets/Foods/Go/potato/Potato sprite.png" id="food_attack"]
+[ext_resource type="Texture2D" uid="uid://rgx5svl1ya0h" path="res://Shared/assets/Foods/Go/potato/Eating potato.png" id="food_eaten"]
+
+[sub_resource type="AtlasTexture" id="Food_attack_0"]
+atlas = ExtResource("food_attack")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Food_attack_1"]
+atlas = ExtResource("food_attack")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Food_attack_2"]
+atlas = ExtResource("food_attack")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Food_eaten_0"]
+atlas = ExtResource("food_eaten")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Food_eaten_1"]
+atlas = ExtResource("food_eaten")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="Food_eaten_2"]
+atlas = ExtResource("food_eaten")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Food_attack_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Food_attack_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Food_attack_2")
+}],
+"loop": 1,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("Food_eaten_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("Food_eaten_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("Food_eaten_2")
+}],
+"loop": 1,
+"name": &"eaten",
+"speed": 5.0
+}]
+
+[sub_resource type="Resource" id="Attack"]
+script = ExtResource("anim")
+sprite_frames = SubResource("Frames")
+
+[sub_resource type="Resource" id="Eaten"]
+script = ExtResource("anim")
+display_name = "Eaten"
+sprite_frames = SubResource("Frames")
+animation_name = &"eaten"
+
+[resource]
+script = ExtResource("entry")
+animations = Array[ExtResource("anim")]([SubResource("Attack"), SubResource("Eaten")])
+id = &"potato"
+display_name = "Potato"
+category = &"healthy_foods"
+icon = SubResource("Food_attack_0")
+large_image = SubResource("Food_attack_0")
+description = "Go food from the Level 1 cafeteria."

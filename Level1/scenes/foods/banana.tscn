@@ -72,14 +72,11 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_agm21"]
-points = PackedVector2Array(-42, 27, -42, 43, -8, 47, 32, 35, 52, -51, -11, -53, -31, -3)
-
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" unique_id=941647430]
 scale = Vector2(0.5859375, 0.5859375)
 sprite_frames = SubResource("SpriteFrames_7vi72")
 animation = &"attack"
 [node name="Area2D" type="Area2D" parent="." unique_id=424008117]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1865166765]
-shape = SubResource("ConvexPolygonShape2D_agm21")
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="Area2D" unique_id=1865166765]
+polygon = PackedVector2Array(-42, 27, -42, 43, -8, 47, 32, 35, 52, -51, -11, -53, -31, -3)

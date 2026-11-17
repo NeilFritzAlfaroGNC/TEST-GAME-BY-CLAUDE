@@ -9,6 +9,12 @@
 script = ExtResource("3")
 sprite_frames = ExtResource("4")
 
+[sub_resource type="Resource" id="Anim_burn"]
+script = ExtResource("3")
+display_name = "Burn"
+sprite_frames = ExtResource("4")
+animation_name = &"burn"
+
 [sub_resource type="Resource" id="Special"]
 script = ExtResource("3")
 display_name = "Defeated"
@@ -16,9 +22,27 @@ sprite_frames = ExtResource("4")
 animation_name = &"defeated"
 extra_token_copies_required = 2
 
+[sub_resource type="Resource" id="Anim_freeze"]
+script = ExtResource("3")
+display_name = "Freeze"
+sprite_frames = ExtResource("4")
+animation_name = &"freeze"
+
+[sub_resource type="Resource" id="Anim_knockback"]
+script = ExtResource("3")
+display_name = "Knockback"
+sprite_frames = ExtResource("4")
+animation_name = &"knockback"
+
+[sub_resource type="Resource" id="Anim_walk"]
+script = ExtResource("3")
+display_name = "Walk"
+sprite_frames = ExtResource("4")
+animation_name = &"walk"
+
 [resource]
 script = ExtResource("1")
-animations = Array[ExtResource("3")]([SubResource("Attack"), SubResource("Special")])
+animations = Array[ExtResource("3")]([SubResource("Attack"), SubResource("Anim_burn"), SubResource("Special"), SubResource("Anim_freeze"), SubResource("Anim_knockback"), SubResource("Anim_walk")])
 id = &"donut_enemy"
 display_name = "Donut Enemy"
 category = &"junk_enemies"
